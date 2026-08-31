@@ -1,0 +1,10 @@
+# GitLab / Runner 运行时数据（容器挂载卷，不入库）
+config/
+logs/
+data/
+runner-config/
+
+# Playwright 虚拟环境
+.venv/
+
+# 截图作为验证产物保留入库（screenshots/ 不忽略）

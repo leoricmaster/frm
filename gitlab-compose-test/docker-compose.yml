@@ -1,0 +1,64 @@
+# 智能挖机统一代码管理体系 — 本地原型验证环境
+# 对应设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md
+# 模拟场景：机房构建区（无 DLP agent、无 VPN），仅本机网络可达
+# 镜像：gitlab-ce（设计 §4 允许 CE 先行；ee 命名空间被镜像源限流）
+#
+# 端口规划（避开本机已占用的 8080/9000/9001）：
+#   8081 -> GitLab Web (HTTP)
+#   8082 -> GitLab SSH (git clone ssh://git@host:8082/...)
+#   8083 -> GitLab container registry（本原型暂未启用，预留）
+#
+# 启动：docker compose up -d
+# 停止并彻底清理：docker compose down -v && sudo rm -rf ./config ./logs ./data
+
+name: frm-gitlab
+
+services:
+  gitlab:
+    # CE 先行（设计文档 §4 备选方案）；gitlab-ee 命名空间被国内镜像源限流，
+    # CE 同等覆盖原型所需功能（托管/MR/保护分支/CI/package registry）
+    image: gitlab/gitlab-ce:latest
+    container_name: frm-gitlab
+    restart: unless-stopped
+    hostname: gitlab.local
+    # 资源上限按本机 62G/32C 富余设定；生产机房虚机可下调
+    shm_size: "256m"
+    environment:
+      # external_url 决定 GitLab 生成的 clone 地址与页面链接，用宿主机 IP + 8081
+      GITLAB_ROOT_PASSWORD: "Excavator#2026Proto"
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://10.66.35.35:8081'
+        # 关闭原型不需要的内置组件，加快启动、降低内存
+        gitlab_rails['gitlab_shell_ssh_port'] = 8082
+        prometheus_monitoring['enable'] = false
+        gitlab_rails['prometheus_address'] = ''
+        # 原型阶段先禁用注册与双因子等摩擦项，验证核心流程
+        gitlab_rails['gitlab_default_can_create_group'] = true
+        sidekiq['max_concurrency'] = 10
+        # 降低资源占用
+        puma['worker_processes'] = 2
+        # LDAP 对接是阶段 1 正式实施项，原型用 root 本地账号验证
+    ports:
+      - "8081:8081"   # web
+      - "8082:22"     # ssh
+    volumes:
+      - ./config:/etc/gitlab
+      - ./logs:/var/log/gitlab
+      - ./data:/var/opt/gitlab
+    networks:
+      - frm-net
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: frm-runner
+    restart: unless-stopped
+    volumes:
+      - ./runner-config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock   # docker executor 需要
+    networks:
+      - frm-net
+    # 注册在 GitLab 就绪后进行（见 README），此处先起容器
+
+networks:
+  frm-net:
+    driver: bridge
