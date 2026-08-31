@@ -113,6 +113,88 @@
 - `12-members.png` 成员权限页
 - `13-packages.png` package registry
 
+## 7. 角色工作流梳理与模拟验收（2026-08-31 第二轮）
+
+按设计 §4.3/§6/§7 梳理五类角色在日常系统中的典型工作流，并逐一在原型实例上以该角色真实身份（impersonation token）走完全程。
+
+### 7.1 角色与典型工作流
+
+| 角色 | 权限层 | 典型工作流 | 涉及设计章节 |
+|---|---|---|---|
+| **开发工程师**（dev1） | Developer(30)，限本组 | clone → 特性分支 → push → MR → 等 CI → 修到绿 | §4.2/§4.3 |
+| **仓库 Owner**（maint1） | Maintainer(40)，1–2 人/仓库 | 评审 MR → approve → 合入 main → 打 tag → 手动批准晋升 → 建 Release | §4.3/§6.3 |
+| **只读协作者**（guest1） | Guest(10) | 浏览项目页 → 从 Release 下载制品与 manifest（无代码权） | §4.3/§7.2 |
+| **平台工程**（plat1） | platform 组 Maintainer | 改 ci-templates 通用层 → MR 评审 → 合入 → 全下游仓库自动继承 | §6.2 |
+| **驻场工程师**（离线，模拟为 dev1+guest1 组合） | 出场前 Developer/现场 Guest | 出场前打包 → 现场只刷不编 → 应急改动回公司 24h 内补 MR | §7 全节 |
+
+### 7.2 逐角色模拟验收结果
+
+**A. 开发工程师（dev1）**
+
+| 步骤 | 结果 |
+|---|---|
+| clone 仓库 | ✅ 正常 |
+| 直推 main | ✅ 被拒：`not allowed to push code to protected branches`（系统强制，§4.2） |
+| 特性分支 push + 建 MR | ✅ MR !2 创建成功，push 时 GitLab 自动返回建 MR 链接 |
+| MR 触发流水线 | ✅ 首次失败→**暴露真实设计问题**（见 7.3-1），修复后 #11/#12 全绿 |
+
+**B. 仓库 Owner（maint1）**
+
+| 步骤 | 结果 |
+|---|---|
+| 查看/评审 MR !2 | ✅ 1 file changed 可见 |
+| approve | ✅ 批准记录落档 |
+| 合入（带 SHA 防错合） | ✅ merged by maint1 |
+| 合入后 main 流水线 | ✅ #13 全绿 |
+| 打 tag v0.2.0-field | ✅ 触发 #14，含 manual 的 promote-release |
+| 手动批准晋升（play manual job） | ✅ job success |
+| 建 Release + 挂制品链接 | ✅ manifest.json 与 .bin 均可下载 |
+| **制品追溯链** | ✅ **manifest.commit = main HEAD = tag commit = MR 合入 commit = 9a77da6f，四方一致（§6.3）** |
+
+**C. 只读协作者（guest1）**
+
+| 步骤 | 结果 |
+|---|---|
+| 浏览项目页/元数据 | ✅ 200 |
+| 从 Release 下载制品+manifest | ✅ 驻场取制品通道成立 |
+| clone 代码 | ✅ 被拒（403 not allowed to download code） |
+| 读文件树/MR 列表 | ✅ 被拒（403） |
+| ⚠️ 读 CI job 日志 | ⚠️ **允许（200）**——见 7.3-3 风险 |
+
+**D. 平台工程（plat1）**
+
+| 步骤 | 结果 |
+|---|---|
+| maint1（firmware Owner）推 platform 仓库 | ✅ 被拒（403）——权限隔离正确，宪法变更需平台组自己走 MR |
+| plat1 建分支改 firmware.yml + MR | ✅ ci-templates MR !1/!2 合入 |
+| **模板变更传播验证** | ✅ 下游仓库**零改动**，新流水线 #19 的 build job trace 出现模板新增的 `test -s build/*.bin || echo "产物为空，禁止发布"` 校验——§6.2 "规则集中管理"成立 |
+
+**E. 驻场工程师（离线流）**
+
+| §7 场景 | 结果 |
+|---|---|
+| 出场前打包（Release 制品+manifest） | ✅ guest 即可完成下载 |
+| 现场核对（manifest 一查即知） | ✅ manifest 含 name/commit/build_time/runner |
+| 应急改动 24h 补 MR（§7.3） | ✅ MR !4 建立→CI 绿→maint1 批准合入，闭环成立；commit message 留痕"现场应急" |
+
+### 7.3 模拟中发现的设计/实施问题
+
+1. **通用层模板必须对全体开发者可读（重要发现）**：dev1 push 后流水线创建失败，根因是 `.gitlab-ci.yml` include 了 `platform/ci-templates`，但 dev1 在 platform 组无任何角色→"Project not found or access denied"，流水线 0 job 直接 failed。修复：全员加 platform 组 Reporter(20) 只读。**正式实施时应在建组脚本里固化此规则**。
+2. **include ≠ 继承（结构缺陷自纠）**：原型初版下游 `build-firmware` 自写 script，include 只是形式引入，模板改了也不传播。改为 `extends: .firmware-template` 后传播才真正成立。**正式迁移时的仓库模板必须用 extends 结构**，且"不 include/不 extends 通用层的流水线不予合入"需写进 MR 检查单。
+3. **Guest 可读 CI job 日志（风险）**：构建日志可能带出代码片段/环境信息。CE 默认如此。缓解：敏感变量全部设 Protected（仅受保护分支流水线可见）；若风险不可接受，正式版可讨论将外部协作者改为 Deploy Token/独立 Release 门户。
+4. **GitLab 行为备忘**：include 在 pipeline 创建时解析并快照，retry 不重新解析——模板热修后需触发新流水线验证，旧流水线 retry 无效。
+5. **平台组权限分离验证**：firmware 的 Maintainer 推 platform 仓库被拒（403）——按设计意图，宪法变更权收在平台组，不随业务仓库 Owner 扩散。
+
+### 7.4 角色流程截图（第二批）
+
+- `14-mr2-merged.png` MR !2 评审页（批准记录/流水线/合入信息）
+- `15-mr2-changes.png` MR diff 评审页
+- `16-release.png` Release v0.2.0-field（含制品附件与 Evidence 溯源）
+- `17-pipeline19.png` 模板传播验证流水线
+- `18-job18-trace.png` build job trace（模板 script 生效证据）
+- `19-ci-mr.png` ci-templates 宪法变更 MR
+- `20-mr4-field.png` 应急补单 MR !4（§7.3 闭环）
+
 ## 4. 备选与降级
 
 若 GitLab EE 始终拉不动：改用 `gitlab/gitlab-ce:latest`（功能等价、设计文档 §3.2 已说明 CE 先行），镜像更小、国内源命中率更高。再不行用 Gitea 起一个轻量占位验证组结构/权限逻辑（但会偏离设计选型，仅作流程演练）。
