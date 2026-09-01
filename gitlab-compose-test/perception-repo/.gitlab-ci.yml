@@ -17,12 +17,20 @@ gitleaks-check:
   only:
     - merge_requests
 
+verify-ci-vars:
+  stage: scan
+  script:
+    - echo "[§6.5] 受保护 CI 变量掩码自检（KEY 明文/SECRET 须 [masked]/ENDPOINT 明文）"
+    - echo "MINIO_KEY=$MINIO_KEY MINIO_SECRET=$MINIO_SECRET MINIO_ENDPOINT=$MINIO_ENDPOINT"
+  only:
+    - main
+
 fetch-dataset:
   stage: data
   script:
     - echo "[fetch] 从 MinIO 拉数据集（git 只存指针 §6.4）"
     - sha_expect=$(python3 -c "import json; print(json.load(open('datasets.manifest.json'))['datasets'][0]['sha256'])")
-    - curl -s -u "$MINIO_KEY:$MINIO_SECRET" -o demo-dataset.bin "$MINIO_ENDPOINT/dataset-model/datasets/demo-dataset-v1.bin"
+    - curl -fsS --aws-sigv4 "aws:amz:us-east-1:s3" --user "$MINIO_KEY:$MINIO_SECRET" -o demo-dataset.bin "$MINIO_ENDPOINT/dataset-model/datasets/demo-dataset-v1.bin"
     - sha_got=$(sha256sum demo-dataset.bin | cut -d' ' -f1)
     - echo "expect=$sha_expect got=$sha_got"
     - test "$sha_expect" = "$sha_got" || (echo "sha256 校验失败" && exit 1)
@@ -37,7 +45,7 @@ train-model:
     - python3 train.py demo-dataset.bin
     - SHA=$(sha256sum outputs/model.pt | cut -d' ' -f1)
     - SIZE=$(stat -c%s outputs/model.pt)
-    - curl -s -u "$MINIO_KEY:$MINIO_SECRET" -X PUT --data-binary @outputs/model.pt "$MINIO_ENDPOINT/training-output/perception/model-$CI_COMMIT_SHORT_SHA.pt"
+    - curl -fsS --aws-sigv4 "aws:amz:us-east-1:s3" --user "$MINIO_KEY:$MINIO_SECRET" -X PUT --data-binary @outputs/model.pt "$MINIO_ENDPOINT/training-output/perception/model-$CI_COMMIT_SHORT_SHA.pt"
     - printf '{"name":"perception","commit":"%s","model_uri":"s3://training-output/perception/model-%s.pt","size":%s,"sha256":"%s","build_time":"%s","runner":"%s"}\n' "$CI_COMMIT_SHA" "$CI_COMMIT_SHORT_SHA" "$SIZE" "$SHA" "$CI_JOB_STARTED_AT" "$CI_RUNNER_DESCRIPTION" > manifest.json
     - cat manifest.json
   artifacts:
