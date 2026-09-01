@@ -81,7 +81,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <p>从 Groups → excavator 进入你所在的产品域子组（如 firmware），找到自己的仓库，用页面上给的 clone 地址拉到本地。</p>
   <figure class="shot">
     <img src="assets/03-groups.png" alt="GitLab 组列表页，excavator 组下有 firmware 等子组">
-    <figcaption>组列表 ｜ excavator → firmware → 你的仓库</figcaption>
+    <figcaption>excavator 组页 ｜ 六个产品域子组，点进 firmware 找到你的仓库</figcaption>
   </figure>
   <pre class="cmd">$ git clone http://gitlab.internal/excavator/firmware/hydraulic-controller.git
 $ cd hydraulic-controller</pre>
@@ -95,6 +95,16 @@ $ cd hydraulic-controller</pre>
     <b>🔍 为什么要用短生命周期的分支？</b>
     main 常绿、小步快合。分支活得越久，和 main 的差异越大，几个月后合不回去的代价远大于勤合入（设计 §4.2）。
   </div>
+</div>
+
+<div class="step">
+  <span class="no">2b</span><h3>红线预告：main 不能直推</h3>
+  <p>"不能直接 push main"不是口头规矩，而是系统强制：main 是保护分支，push/merge 权限只给了 Maintainer（40），你以 Developer（30）身份推上去会被直接拒绝。</p>
+  <figure class="shot">
+    <img src="assets/10-protect.png" alt="GitLab 仓库设置页的 Protected branches 保护分支入口">
+    <figcaption>保护分支设置 ｜ main 的 push/merge 限 Maintainer——系统强制，不靠自觉（测试计划 §5）</figcaption>
+  </figure>
+  <p>这个设置只有 Owner 能改（Manage → Settings → Repository → Protected branches）。所以别试直推，老实走 MR。</p>
 </div>
 
 <div class="step">

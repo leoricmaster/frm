@@ -100,6 +100,7 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
 <div class="step">
   <span class="no">3</span><h3>现场通道二：改码</h3>
   <p>bug 修复、参数调整都在 DLP 笔记本上本地 <code>git commit</code>（<b>哪怕没网</b>）→ 有网即 push → MR → CI 出包 → 下载刷入（§7.2）。</p>
+  <p><b>DLP 笔记本</b>（装了集团透明加解密软件的电脑，硬盘上的代码自动加密）——代码拷出去打不开，所以改动回中心仓既是制度要求，也是你唯一安全的备份方式。</p>
   <p><b>改动必须以 commit 回中心仓</b>——这是防止代码重新散落回个人电脑的硬规则：体系好不容易把代码收进 GitLab，一次"改完不交"就又退回 U 盘时代。</p>
 </div>
 

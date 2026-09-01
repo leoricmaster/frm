@@ -104,14 +104,14 @@ docs/tutorials/
 
 ## 6. 截图分配总表
 
-（16-release 在 owner/viewer/field 三份中复用，符合"自包含"原则；全部 20 张均有归属。）
+（16-release 在 owner/viewer/field 三份中复用，符合"自包含"原则；19 张已用，09-mr-closed（已合入旧 MR 详情）弃用。）
 
 | 截图 | 用于 |
 |---|---|
 | 01-login, 02-dashboard, 04-group-tree, 06-pipelines, 07-ci-success, 12-members | index 通用入门 |
-| 03-groups, 08-mr-list, 15-mr2-changes | developer |
-| 14-mr2-merged, 16-release, 17-pipeline19 | owner |
-| 05-project, 13-packages, 16-release | viewer |
+| 03-groups, 08-mr-list, 10-protect, 15-mr2-changes | developer |
+| 14-mr2-merged, 16-release, 17-pipeline14 | owner |
+| 05-project-guest, 13-packages, 16-release | viewer |
 | 11-ci-templates, 19-ci-mr, 18-job18-trace | platform |
 | 16-release, 20-mr4-field | field-engineer |
 
