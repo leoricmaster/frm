@@ -55,6 +55,8 @@ services:
     volumes:
       - ./runner-config:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock   # docker executor 需要
+    group_add:
+      - "125"   # 宿主 docker GID，让 gitlab-runner 用户可访问 docker.sock（二阶段 §5.3 image-build job 需要）
     networks:
       - frm-net
     # 注册在 GitLab 就绪后进行（见 README），此处先起容器

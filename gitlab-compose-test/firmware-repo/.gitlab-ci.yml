@@ -1,0 +1,53 @@
+# 仓库层：include 通用层 + extends 继承模板 job（§6.2 三层模型）
+include:
+  - project: excavator/platform/ci-templates
+    ref: main
+    file: firmware.yml
+
+stages:
+  - scan
+  - build
+  - image
+  - release
+
+gitleaks-check:
+  stage: scan
+  script:
+    - echo "gitleaks密钥扫描：CE无push rules的替代(§6.5)"
+    - echo "扫描通过，无明文密钥"
+  only:
+    - merge_requests
+
+build-firmware:
+  extends: .firmware-template     # ← 继承平台模板（script/variables/artifacts 全来自通用层）
+  variables:
+    CROSS_COMPILE: arm-none-eabi- # 仓库层只 override 细节
+  before_script:
+    - mkdir -p build scripts
+    - echo "firmware-binary" > build/hydraulic-controller.bin
+    - echo '#!/bin/sh' > scripts/sign_firmware.sh
+    - echo 'echo "proto-sign $1"' >> scripts/sign_firmware.sh
+    - chmod +x scripts/sign_firmware.sh
+    - printf '{"name":"hydraulic-controller","commit":"%s","branch":"%s","build_time":"%s","runner":"%s"}\n' "$CI_COMMIT_SHA" "$CI_COMMIT_BRANCH" "$CI_JOB_STARTED_AT" "$CI_RUNNER_DESCRIPTION" > manifest.json
+
+# 二阶段：镜像出口收敛（§5.3）——CI 构建镜像推内网 Harbor，不直连外网
+image-build:
+  stage: image
+  script:
+    - echo "[image] 构建并推送 CI 基础镜像到 Harbor frm-ci 项目"
+    - export DOCKER_HOST=unix:///var/run/docker.sock
+    - printf 'FROM docker.m.daocloud.io/library/alpine:latest\nLABEL org.opencontainers.image.revision=%s\n' "$CI_COMMIT_SHA" > Dockerfile.ci
+    - docker build -t "$HARBOR_REGISTRY/frm-ci/ci-base:$CI_COMMIT_SHORT_SHA" -f Dockerfile.ci .
+    - echo "$HARBOR_PASS" | docker login "$HARBOR_REGISTRY" -u "$HARBOR_USER" --password-stdin
+    - docker push "$HARBOR_REGISTRY/frm-ci/ci-base:$CI_COMMIT_SHORT_SHA"
+    - docker rmi "$HARBOR_REGISTRY/frm-ci/ci-base:$CI_COMMIT_SHORT_SHA" || true
+    # 从 Harbor 拉回验证（runner 一律走 Harbor §5.3）
+    - docker pull "$HARBOR_REGISTRY/frm-ci/ci-base:$CI_COMMIT_SHORT_SHA"
+
+promote-release:
+  stage: release
+  script:
+    - echo "签名并发布固件 (§6.3 手动批准晋升)"
+  only:
+    - tags
+  when: manual

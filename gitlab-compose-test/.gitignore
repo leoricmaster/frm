@@ -11,3 +11,10 @@ runner-config/
 
 # MinIO 运行时数据（二阶段）
 minio-data/
+
+# Harbor 运行时数据（二阶段 §5.3）
+harbor-data/
+
+# Harbor prepare 生成的运行时配置（含随机密钥，每次 prepare 重生成）
+harbor-installer/common/
+harbor-installer/input/
