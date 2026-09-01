@@ -95,10 +95,11 @@ docs/tutorials/
 
 ### 5.5 field-engineer.html — 驻场工程师
 
-- 任务流：出场前打包（代码 + Release 制品 + checklist）→ 现场三条通道（刷固件/改码/取数）→ 应急 24h 补 MR
+- 任务流：出场前打包（代码 + Release 制品 + checklist）→ 现场三个场景（刷固件/改码/取数）→ 应急兜底
 - 用图：16-release、20-mr4-field、29-minio-buckets、30-minio-dataset（后两张二阶段）
-- 🔍 为什么"现场永远不编译"（§7.2）+ 临时包是救火不是工作方式（§7.3）
-- 🔍 通道三取数（二阶段补实物，§7.2）：投放区 write-only——现场只能投、不能删/列别人的；回公司由平台组归档进 dataset-model 的 field-archive 目录
+- 🔍 为什么"现场永远不编译正式版"（§7.2，本地临时验证除外）+ 本地编译/DLP 旁注（工具链随 checklist 带齐、透明加解密不拦本机编译，§7.1/§7.3/§7.4）+ 临时包是救火不是工作方式（§7.3）
+- 🔍 场景三取数（二阶段补实物，§7.2）：投放区 write-only——现场只能投、不能删/列别人的；回公司由平台组归档进 dataset-model 的 field-archive 目录
+- 🔍 24h 补 MR 的绑定条件：只约束"临时包刷上了机器"的应急——机器跑过非 CI 产物必须回追溯链；纯本地验证后放弃的改动按普通分支废弃即可
 - 自救：现场没网改了码（本地 commit → 回网 push → 补 MR）
 - 红线：改动不以 commit 回中心仓 = 违规（§7.2 硬规则）；现场数据不走私人网盘/U 盘，只进投放区（§7.4）
 
@@ -126,7 +127,7 @@ docs/tutorials/
 | 23-fetch-dataset-job | platform（CI 凭据打码）、developer（二阶段） |
 | 26-harbor-projects, 28-harbor-proxy, 29-minio-buckets | platform 纳管节（二阶段） |
 | 27-harbor-frmci | owner 镜像归宿（二阶段） |
-| 29-minio-buckets, 30-minio-dataset | field-engineer 取数通道、index 产物去向（二阶段） |
+| 29-minio-buckets, 30-minio-dataset | field-engineer 取数场景、index 产物去向（二阶段） |
 
 ## 7. 验收标准
 

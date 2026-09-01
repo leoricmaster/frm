@@ -64,7 +64,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 <div class="wrap">
 
 <h2>你是谁</h2>
-<p>你是这个项目的驻场工程师：在公司里是 <b>Developer</b>，到了现场账号降为 <b>Guest</b>——能下载制品、提问题，但不能改中心仓（§7 开篇）。你的一切工作围绕一条设计原则展开：<b>离线为基线、有网为加速——流程不赌现场有网</b>。出场前把该拿的都拿全，现场三类工作各走各的通道，极端情况有应急兜底、但兜底也有账可查。</p>
+<p>你是这个项目的驻场工程师：在公司里是 <b>Developer</b>，到了现场账号降为 <b>Guest</b>——能下载制品、提问题，但不能改中心仓（§7 开篇）。你的一切工作围绕一条设计原则展开：<b>离线为基线、有网为加速——流程不赌现场有网</b>。出场前把该拿的都拿全，现场三类工作（刷固件 / 改码 / 取数）各按各的场景规则走，极端情况有应急兜底、但兜底也有账可查。</p>
 
 <h2>你能做什么 / 不能做什么</h2>
 <table>
@@ -89,7 +89,7 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
 </div>
 
 <div class="step">
-  <span class="no">2</span><h3>现场通道一：调试 / 刷固件</h3>
+  <span class="no">2</span><h3>现场场景一：调试 / 刷固件</h3>
   <p>只刷<b>预构建制品</b>，刷之前核对 manifest 四字段：<b>name / commit / build_time / runner</b>——确认手上这个包是哪个版本、什么时候、在哪个 runner 构建的（§6.3）。</p>
   <div class="box why">
     <b>🔍 为什么现场永远不编译？</b>
@@ -98,14 +98,18 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
 </div>
 
 <div class="step">
-  <span class="no">3</span><h3>现场通道二：改码</h3>
-  <p>bug 修复、参数调整都在 DLP 笔记本上本地 <code>git commit</code>（<b>哪怕没网</b>）→ 有网即 push → MR → CI 出包 → 下载刷入（§7.2）。</p>
+  <span class="no">3</span><h3>现场场景二：改码</h3>
+  <p>bug 修复、参数调整都在 DLP 笔记本上本地 <code>git commit</code>（<b>哪怕没网</b>，git 提交本就是本地操作）→ 需要验证时<b>本地编译临时包</b>先试（§7.3）→ 有网即 push → MR → CI 出正式包 → 下载刷入（§7.2）。</p>
+  <div class="box why">
+    <b>🔍 本地能编译吗？DLP 拦不拦？</b>
+    能：出场 checklist 里带的就是<b>工具链版本</b>（§7.1），笔记本上编译、本机验证不受 DLP 影响——DLP 是透明加解密，对本机合法进程透明，拦的是数据离开终端，与 ECU 物理连接也纯本地（§7.4）。但本地编译的包<b>只算临时验证</b>，刷上机器的正式版本必须来自 CI 签名制品（§7.3）。
+  </div>
   <p><b>DLP 笔记本</b>（装了集团透明加解密软件的电脑，硬盘上的代码自动加密）——代码拷出去打不开，所以改动回中心仓既是制度要求，也是你唯一安全的备份方式。</p>
   <p><b>改动必须以 commit 回中心仓</b>——这是防止代码重新散落回个人电脑的硬规则：体系好不容易把代码收进 GitLab，一次"改完不交"就又退回 U 盘时代。</p>
 </div>
 
 <div class="step">
-  <span class="no">4</span><h3>现场通道三：取数</h3>
+  <span class="no">4</span><h3>现场场景三：取数</h3>
   <p>日志、传感器数据进 <b>MinIO 投放区</b>（field-dropzone 桶）——现场能连则直传，否则回公司上传（§7.2）。</p>
   <figure class="shot">
     <img src="assets/29-minio-buckets.png" alt="MinIO 桶列表，含 field-dropzone 现场投放区桶">
@@ -124,7 +128,7 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
 
 <div class="step">
   <span class="no">5</span><h3>应急兜底</h3>
-  <p>断网 + 机器急等，等不了回公司出包？允许<b>本地临时包先刷</b>，但回公司 <b>24 小时内</b>补齐 MR 和正式构建（§7.3）。</p>
+  <p>断网 + 机器急等，等不了回公司出包？允许<b>本地临时包先刷</b>，但回公司 <b>24 小时内</b>补齐 MR 和正式构建（§7.3）。注意 24h 期限绑定的是"临时包<b>刷上了机器</b>"——机器上跑了一个非 CI 产物，就必须尽快让它回到追溯链上；纯本地验证后放弃的改动没有这个期限，按普通分支废弃即可。</p>
   <figure class="shot">
     <img src="assets/20-mr4-field.png" alt="GitLab 的应急补单 MR 页，commit message 注明现场应急">
     <figcaption>应急补单 MR ｜ commit message 注明"现场应急"，Owner 评审合入闭环</figcaption>
@@ -156,8 +160,8 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
   （§7.3）——代码只活在你的笔记本上，等于体系对你失效。
 </div>
 <div class="box danger">
-  <b>🚫 应急临时包超 24h 不补 MR = 违规</b>
-  应急缝只留给急情，不补单就是把例外变成常态。
+  <b>🚫 临时包刷上机器后超 24h 不补 MR = 违规</b>
+  机器上跑过非 CI 产物而不回追溯链，才是违规——应急缝只留给急情，不补单就是把例外变成常态。
 </div>
 <div class="box danger">
   <b>🚫 现场数据只进 MinIO 投放区，不走私人网盘 / U 盘乱拷</b>
