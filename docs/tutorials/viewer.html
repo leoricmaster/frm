@@ -70,7 +70,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 <table>
   <tr><th>能 ✅</th><th>不能（会收到 403/拒绝）❌</th></tr>
   <tr><td>看项目页、issue、Release、流水线状态</td><td><code>git clone</code>（403 not allowed to download code）</td></tr>
-  <tr><td>从 Release 下载 .bin 和 manifest.json</td><td>看代码文件树、MR 列表（403）</td></tr>
+  <tr><td>从 Release 下载 .bin 和 manifest.json</td><td>看代码文件树、MR 列表（无入口/404）</td></tr>
 </table>
 <div class="box why">
   <b>🔍 为什么到处都是 403？</b>
@@ -84,7 +84,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <p>登录后从 Groups 进入对应项目组，点开要查的仓库。没有代码权时，项目页对你仍然开放。</p>
   <figure class="shot">
     <img src="assets/05-project-guest.png" alt="GitLab 项目主页（Guest 视角），只有项目概览信息，没有代码文件树">
-    <figcaption>项目主页（Guest 视角）｜ 无代码文件树，点 Code 会 403——这正是权限边界</figcaption>
+    <figcaption>项目主页（Guest 视角）｜ 无代码文件树，点 Code 看不到代码入口，clone 会 403——这正是权限边界</figcaption>
   </figure>
 </div>
 

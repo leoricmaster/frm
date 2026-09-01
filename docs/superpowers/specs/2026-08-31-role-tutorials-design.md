@@ -58,7 +58,7 @@ docs/tutorials/
 ### 5.1 developer.html — 开发工程师
 
 - 任务流：clone → 建特性分支 → 改码 push → 建 MR → 等 CI 绿 →（可选）修到绿
-- 用图：03-groups、08-mr-list、15-mr2-changes
+- 用图：03-groups、08-mr-list、10-protect、15-mr2-changes
 - 命令：`git clone / checkout -b / push -u origin`
 - 🔍 为什么不能直推 main（§4.2 保护分支）
 - 自救：流水线红了怎么办（点 job 看日志 → 本地复跑 → push 空提交重触发）
@@ -67,7 +67,7 @@ docs/tutorials/
 ### 5.2 owner.html — 仓库 Owner
 
 - 任务流：评审 MR（diff → approve）→ 合入 → 打 tag → 手动批准晋升 → 建 Release → 核对 manifest 追溯链
-- 用图：14-mr2-merged、16-release、17-pipeline19
+- 用图：14-mr2-merged、16-release、17-pipeline14
 - 🔍 四方一致：manifest.commit = main HEAD = tag commit = MR 合入 commit（§6.3）
 - 🔍 为什么 promote-release 是手动（§6.3 制品晋升）
 - 红线：不跳过评审合自己的 MR、不在本机编发布产物（§5.4 铁律）
@@ -75,7 +75,7 @@ docs/tutorials/
 ### 5.3 viewer.html — 只读协作者
 
 - 任务流：登录找项目 → 浏览项目信息 → 从 Release 下载制品 + manifest → 核对 manifest
-- 用图：05-project、13-packages、16-release
+- 用图：05-project-guest、13-packages、16-release
 - 🔍 你看到 403 不是故障，是权限边界（§4.3）
 - 自救：clone 被拒 → 找 Owner 开权限或走 Release 通道
 - 红线：不把制品发给未授权的人
