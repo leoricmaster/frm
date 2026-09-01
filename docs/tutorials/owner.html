@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>仓库 Owner · 挖机代码管理上手指南</title>
+<style>
+:root{--ink:#1f2328;--mut:#656d76;--line:#d8dee4;--bg:#f6f8fa;
+--blue:#0969da;--blue-bg:#ddf4ff;--red:#cf222e;--red-bg:#ffebe9;
+--yel:#9a6700;--yel-bg:#fff8c5;--accent:#1f6feb}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:15px/1.7 system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background:#fff}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 60px}
+header.hero{background:linear-gradient(135deg,#0d2b45,#1f6feb);color:#fff;padding:34px 0 26px;margin-bottom:28px}
+header.hero .wrap{padding-bottom:0}
+.crumb{font-size:13px;opacity:.8;margin-bottom:10px}
+.crumb a{color:#fff}
+h1{font-size:26px;margin:0 0 6px}
+.tagline{font-size:15px;opacity:.9;margin:0}
+.badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);
+border-radius:99px;padding:2px 12px;font-size:13px;margin-top:10px}
+h2{font-size:20px;border-left:4px solid var(--accent);padding-left:10px;margin:38px 0 14px}
+h3{font-size:16px;margin:22px 0 8px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg)}
+.step{border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:16px 0;background:#fff}
+.step .no{display:inline-block;background:var(--accent);color:#fff;border-radius:50%;
+width:26px;height:26px;line-height:26px;text-align:center;font-weight:700;margin-right:8px}
+.step h3{display:inline;margin:0}
+.cmd{background:#0d1117;color:#e6edf3;border-radius:8px;padding:12px 14px;overflow-x:auto;
+font:13px/1.6 ui-monospace,Consolas,monospace;margin:10px 0}
+.cmd .c{color:#8b949e}
+figure.shot{margin:14px 0}
+figure.shot img{max-width:100%;border:1px solid var(--line);border-radius:8px;display:block}
+figcaption{color:var(--mut);font-size:13px;margin-top:6px}
+.box{border-radius:8px;padding:12px 16px;margin:14px 0;font-size:14px}
+.box b{display:block;margin-bottom:4px}
+.why{background:var(--blue-bg);border:1px solid #a5d8ff}
+.why b{color:var(--blue)}
+.danger{background:var(--red-bg);border:1px solid #ffc1c0}
+.danger b{color:var(--red)}
+.tip{background:var(--yel-bg);border:1px solid #ecdf95}
+.tip b{color:var(--yel)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin:16px 0}
+.card{border:1px solid var(--line);border-radius:10px;padding:16px;text-decoration:none;color:var(--ink)}
+.card:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(31,111,235,.15)}
+.card b{color:var(--accent)}
+.ok{color:#1a7f37;font-weight:700}.no2{color:var(--red);font-weight:700}
+footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-top:48px;padding-top:14px}
+@media print{header.hero{background:#0d2b45}.step,.box{break-inside:avoid}body{font-size:12px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="crumb"><a href="index.html">← 返回角色导航</a></p>
+    <h1>仓库 Owner 上手指南</h1>
+    <p class="tagline">这个仓库的守门人和发布责任人（每仓库仅 1–2 人，§4.3）</p>
+    <span class="badge">Maintainer 40</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>你是谁</h2>
+<p>你是这个仓库的 Owner，在 GitLab 里的角色是 <b>Maintainer（40）</b>：这个仓库的守门人和发布责任人（每仓库仅 1–2 人，§4.3）。Developer 把 MR 修到全绿后，等你评审、等你合入；什么时候打 tag、要不要放行晋升，由你拍板。代码进 main 的最后一道门、制品流向现场的第一个关口，都在你手上。</p>
+
+<h2>你能做什么 / 不能做什么</h2>
+<table>
+  <tr><th>能 ✅</th><th>不能 ❌</th></tr>
+  <tr><td>approve 并合入 MR</td><td>改 platform 组的 ci-templates（平台组自己管）</td></tr>
+  <tr><td>配保护分支、管成员</td><td>跳过评审合入自己的 MR（制度）</td></tr>
+  <tr><td>打 tag、批准晋升、建 Release</td><td>在本机编发布产物</td></tr>
+</table>
+
+<h2>典型任务流：一次发布的全流程</h2>
+
+<div class="step">
+  <span class="no">1</span><h3>评审 MR</h3>
+  <p>MR 页切到 <b>Changes</b> 逐行看：批准记录在顶部，流水线状态在中部，合入信息在下方。有问题就在对应行内评论，Developer 修完会自动更新；看完没问题，点 <b>Approve</b>。</p>
+  <figure class="shot">
+    <img src="assets/14-mr2-merged.png" alt="GitLab 的 MR 详情页，顶部有批准记录，中部有流水线状态和合入信息">
+    <figcaption>MR 详情页 ｜ 顶部批准记录、中部流水线状态、合入信息</figcaption>
+  </figure>
+</div>
+
+<div class="step">
+  <span class="no">2</span><h3>合入</h3>
+  <p>点 <b>Merge</b> 按钮合入，main 流水线随即自动触发。</p>
+  <div class="box why">
+    <b>🔍 为什么 Developer 不能自己合？</b>
+    评审与合入分离是代码质量的最低保障（§4.3）——改代码的人不给自己的改动放行，守门人必须在场。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">3</span><h3>打 tag</h3>
+  <p>main 流水线绿了、决定发版时，在本地打一个带说明的标注 tag 并推送：</p>
+  <pre class="cmd">$ git checkout main &amp;&amp; git pull
+$ git tag -a v0.2.0-field -m "现场验证版"
+$ git push origin v0.2.0-field</pre>
+</div>
+
+<div class="step">
+  <span class="no">4</span><h3>等 tag 流水线</h3>
+  <p>tag 推上去后自动触发 tag 流水线：先跑 build 产出制品，跑完后停在 promote-release 手动关卡。</p>
+  <figure class="shot">
+    <img src="assets/17-pipeline19.png" alt="GitLab 的 tag 流水线页，build 已完成，promote-release 处于手动等待状态">
+    <figcaption>tag 流水线 ｜ build 完成后 promote-release 处于 ⏸ 手动状态</figcaption>
+  </figure>
+</div>
+
+<div class="step">
+  <span class="no">5</span><h3>手动批准晋升</h3>
+  <p>确认 build 绿了，点 promote-release 的 <b>▶ Play</b>，制品才从构建区晋升进发布区。</p>
+  <div class="box why">
+    <b>🔍 为什么晋升要手动？</b>
+    发布永远是人的决定，不是自动的（§6.3）——build 可以自动，但"这个版本要不要发出去"必须有人签字。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">6</span><h3>建 Release</h3>
+  <p>左侧 <b>Deploy → Releases → New release</b>，选中刚打的 tag，把晋升出来的 <b>.bin 与 manifest.json</b> 附上——现场驻场同事就是从这个页面下载制品的。</p>
+  <figure class="shot">
+    <img src="assets/16-release.png" alt="GitLab 的 Release 页，Assets 里挂着 .bin 与 manifest.json 附件">
+    <figcaption>Release 页 ｜ 附件即驻场下载通道，Evidence 记录溯源</figcaption>
+  </figure>
+</div>
+
+<div class="step">
+  <span class="no">7</span><h3>核对追溯链</h3>
+  <p>发完最后一眼：<b>manifest.commit = main HEAD = tag commit = MR 合入 commit</b>，四方一致才可放行（§6.3）。核对方法——Release 页 manifest 的 commit 字段 vs 仓库 main 页顶部 SHA。</p>
+  <div class="box why">
+    <b>🔍 为什么必须四方一致？</b>
+    追溯链上任何一个环节对不上，就意味着现场拿到的制品和仓库里的代码不是同一份——出了问题查不到根，这是发布责任的红线（§6.3）。
+  </div>
+</div>
+
+<h2>常见报错自救</h2>
+<div class="box tip">
+  <b>💡 Merge 按钮灰着，提示 conflicts</b>
+  说明特性分支落后于 main，让分支先合入最新 main 再推：
+  <pre class="cmd">$ git fetch &amp;&amp; git checkout feat/xxx &amp;&amp; git merge origin/main
+$ git push</pre>
+  解决冲突后 push，MR 自动更新。
+</div>
+<div class="box tip">
+  <b>💡 tag 打错了想删</b>
+  <code>git push origin :refs/tags/vX.Y.Z</code> + GitLab 页面删 tag；<b>已对外发布的 tag 不删，追加 -fix 新 tag</b>。
+</div>
+
+<h2>红线清单</h2>
+<div class="box danger">
+  <b>🚫 不合没有任何评审记录的"自己批自己"</b>
+  Owner 的 MR 同样要有第二双眼睛，评审与合入分离对守门人自己也成立（§4.3）。
+</div>
+<div class="box danger">
+  <b>🚫 发布产物必须来自 CI 构建区</b>
+  本机编译的版本永远不发给现场（§5.4）——没有流水线和 manifest 背书的制品无法追溯。
+</div>
+<div class="box danger">
+  <b>🚫 tag 命名一旦对外，不复用不修改</b>
+  现场按 tag 报障、按 tag 回溯，一个 tag 永远只指向一份制品（§6.3）。
+</div>
+
+<h2>延伸阅读</h2>
+<p>设计文档（docs/superpowers/specs/2026-08-31-excavator-code-management-design.md）：</p>
+<ul>
+  <li>§6.3 制品晋升与追溯</li>
+  <li>§4.3 权限</li>
+  <li>§5.4 构建区</li>
+</ul>
+
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+
+</div>
+</body>
+</html>
