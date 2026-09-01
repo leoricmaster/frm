@@ -16,7 +16,7 @@
 | MR 创建与评审界面 | §4.2 / §3.2 | ✅ 截图评估界面可用性 |
 | 示例 CI 流水线全绿 | §6.2 / §8 | ✅ Runner + 一条 .gitlab-ci.yml |
 | 制品追溯 manifest | §6.3 | ✅ 流水线产出 manifest.json |
-| Harbor / MinIO | §6.4 / §11 | ⏸ 第二阶段（GitLab 内置 registry/MinIO 先替代） |
+| Harbor / MinIO | §6.4 / §11 | ✅ 第二阶段完成（Harbor 直推+代理、MinIO 三桶三场景，详见 §8） |
 
 不覆盖：DLP 两区模型（§5，需集团产品名）、VPN 场景（§7.4）、HIL 台架（§6.1）——这些是正式实施谈判项，不在原型范围。
 
@@ -200,3 +200,40 @@
 ## 4. 备选与降级
 
 若 GitLab EE 始终拉不动：改用 `gitlab/gitlab-ce:latest`（功能等价、设计文档 §3.2 已说明 CE 先行），镜像更小、国内源命中率更高。再不行用 Gitea 起一个轻量占位验证组结构/权限逻辑（但会偏离设计选型，仅作流程演练）。
+
+## 8. 第二阶段验证结果（2026-09-01）
+
+### 8.1 环境变更记录
+
+| 变更 | 内容 | 原因 |
+|---|---|---|
+| `docker-compose.yml` | 追加 minio / minio-init 两服务（9002/9003）；Harbor v2.12.3 十服务独立 compose（8084） | §6.4 两类产物归宿落地 |
+| `/etc/docker/daemon.json` | `insecure-registries` 追加 `10.66.35.35:8084` | Harbor http 原型简化（TLS 留正式实施） |
+| 镜像源 | `goharbor/*` 经 `hub.rat.dev`/daocloud 拉取后 retag | Docker Hub 直连不通的替代路径 |
+
+### 8.2 验证结果
+
+| 验证项 | 设计章节 | 结果 | 证据 |
+|---|---|---|---|
+| MinIO 三桶初始化 | §6.4 | ✅ | `29-minio-buckets.png`（dataset-model / field-dropzone / training-output） |
+| 大文件指针 + CI 取数校验 | §6.4 | ✅ | `22-perception-green.png` / `23-fetch-dataset-job.png`（sha256 校验通过） |
+| 现场投放区 write-only 回传 | §7.2 | ✅ | `minio-ops.sh dropzone-ls` 输出（AccessDenied） |
+| 投放区归档 | §7.2 | ✅ | `30-minio-dataset.png`（`field-archive/` 目录） |
+| 训练产物入库 + manifest 指针 | §6.3/§6.4 | ✅ | `24-train-model-job.png` / `31-minio-training.png` |
+| CI 凭据受保护 + 打码 | §6.5 | ✅ | `23-fetch-dataset-job.png`（`[MASKED]`） |
+| Harbor 直推（build→push→pull） | §5.3/§6.4 | ✅ | `25-fw-image-build-job.png` / `27-harbor-frmci.png` |
+| Harbor 代理缓存拓扑 | §5.3 | ✅ | `28-harbor-proxy.png` |
+| compose 全家 healthy | — | ✅ | `docker compose ps` 输出（gitlab / runner / minio + Harbor 十服务） |
+
+### 8.3 偏差与发现
+
+1. **Harbor 独立 compose 而非合并进主 compose**：`prepare` 生成的 compose 含 Harbor 自有网络、卷、restart 策略，合并进主 compose 风险大且无收益；实际经宿主 IP `10.66.35.35:8084` 与 runner/gitlab 交互。`harbor.yml`（配置源）入库即可复现，生成的 compose 不入库（含随机密钥）。
+2. **Harbor 镜像名纠正**：v2.12.3 的 registry/nginx/redis 镜像名为 `*-photon`（如 `goharbor/registry-photon:v2.12.3`），非 `harbor-registry` 等；Task 4 拉取阶段已纠正并补拉。
+3. **runner 容器内无 docker CLI**：CI 镜像构建作业需在 runner 容器内调用 docker，控制器预装 `docker.io` 29.1.3；另给 runner 容器 `group_add: ["125"]`（宿主 docker socket GID）使其能访问 socket。
+4. **MinIO 拒 HTTP Basic（400）**：CI 的 curl 取数/存权重须加 `--aws-sigv4 "aws:amz:us-east-1:s3"` 签名认证（Basic 认证被 MinIO 拒绝）；runner 内 curl 8.5.0 实测支持 `--aws-sigv4`。
+5. **proxy 上游实测配为 `docker.1ms.run`**：简报预估 `hub.rat.dev`，实施时实测 `docker.1ms.run` 更稳定可达。
+6. **perception 仓库建在 autonomy 组**：组 id 实测为 4（非简报预估的 6），已在 `excavator/autonomy/perception` 下建仓。
+
+### 8.4 仍未验证（留正式实施）
+
+Harbor TLS/漏洞扫描/多租户、MinIO 分布式与备份策略（§11 按资产备份）、Nexus、GPU 真实训练。
