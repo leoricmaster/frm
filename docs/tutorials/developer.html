@@ -83,14 +83,14 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
     <img src="assets/03-groups.png" alt="GitLab 组列表页，excavator 组下有 firmware 等子组">
     <figcaption>组列表 ｜ excavator → firmware → 你的仓库</figcaption>
   </figure>
-  <div class="cmd">$ git clone http://gitlab.internal/excavator/firmware/hydraulic-controller.git
-$ cd hydraulic-controller</div>
+  <pre class="cmd">$ git clone http://gitlab.internal/excavator/firmware/hydraulic-controller.git
+$ cd hydraulic-controller</pre>
 </div>
 
 <div class="step">
   <span class="no">2</span><h3>从最新 main 建特性分支</h3>
   <p>分支名规则：<b>feat/xxx</b>（新功能）或 <b>fix/xxx</b>（修 bug）。永远不要在 main 上直接改。</p>
-  <div class="cmd">$ git checkout main &amp;&amp; git pull &amp;&amp; git checkout -b feat/pid-tune</div>
+  <pre class="cmd">$ git checkout main &amp;&amp; git pull &amp;&amp; git checkout -b feat/pid-tune</pre>
   <div class="box why">
     <b>🔍 为什么要用短生命周期的分支？</b>
     main 常绿、小步快合。分支活得越久，和 main 的差异越大，几个月后合不回去的代价远大于勤合入（设计 §4.2）。
@@ -99,8 +99,8 @@ $ cd hydraulic-controller</div>
 
 <div class="step">
   <span class="no">3</span><h3>改码 → commit → push</h3>
-  <div class="cmd">$ git add -A &amp;&amp; git commit -m "feat: PID 参数整定"
-$ git push -u origin feat/pid-tune</div>
+  <pre class="cmd">$ git add -A &amp;&amp; git commit -m "feat: PID 参数整定"
+$ git push -u origin feat/pid-tune</pre>
   <p>push 完看回显：GitLab 会自动返回一条<b>创建 MR 的链接</b>，直接点它就能建 MR，不用去页面里翻。</p>
 </div>
 
@@ -134,7 +134,7 @@ $ git push -u origin feat/pid-tune</div>
 <h2>常见报错自救</h2>
 <div class="box tip">
   <b>💡 push 被拒：You are not allowed to push code to protected branches</b>
-  <span class="cmd-inline"><code>remote: GitLab: You are not allowed to push code to protected branches.</code></span>
+  <code>remote: GitLab: You are not allowed to push code to protected branches.</code>
   → 说明你在推 main。回到自己的特性分支：<code>git switch -c feat/xxx</code> 再推。
 </div>
 <div class="box tip">
