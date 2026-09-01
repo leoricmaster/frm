@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>只读协作者 · 挖机代码管理上手指南</title>
+<style>
+:root{--ink:#1f2328;--mut:#656d76;--line:#d8dee4;--bg:#f6f8fa;
+--blue:#0969da;--blue-bg:#ddf4ff;--red:#cf222e;--red-bg:#ffebe9;
+--yel:#9a6700;--yel-bg:#fff8c5;--accent:#1f6feb}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:15px/1.7 system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background:#fff}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 60px}
+header.hero{background:linear-gradient(135deg,#0d2b45,#1f6feb);color:#fff;padding:34px 0 26px;margin-bottom:28px}
+header.hero .wrap{padding-bottom:0}
+.crumb{font-size:13px;opacity:.8;margin-bottom:10px}
+.crumb a{color:#fff}
+h1{font-size:26px;margin:0 0 6px}
+.tagline{font-size:15px;opacity:.9;margin:0}
+.badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);
+border-radius:99px;padding:2px 12px;font-size:13px;margin-top:10px}
+h2{font-size:20px;border-left:4px solid var(--accent);padding-left:10px;margin:38px 0 14px}
+h3{font-size:16px;margin:22px 0 8px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg)}
+.step{border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:16px 0;background:#fff}
+.step .no{display:inline-block;background:var(--accent);color:#fff;border-radius:50%;
+width:26px;height:26px;line-height:26px;text-align:center;font-weight:700;margin-right:8px}
+.step h3{display:inline;margin:0}
+.cmd{background:#0d1117;color:#e6edf3;border-radius:8px;padding:12px 14px;overflow-x:auto;
+font:13px/1.6 ui-monospace,Consolas,monospace;margin:10px 0}
+.cmd .c{color:#8b949e}
+figure.shot{margin:14px 0}
+figure.shot img{max-width:100%;border:1px solid var(--line);border-radius:8px;display:block}
+figcaption{color:var(--mut);font-size:13px;margin-top:6px}
+.box{border-radius:8px;padding:12px 16px;margin:14px 0;font-size:14px}
+.box b{display:block;margin-bottom:4px}
+.why{background:var(--blue-bg);border:1px solid #a5d8ff}
+.why b{color:var(--blue)}
+.danger{background:var(--red-bg);border:1px solid #ffc1c0}
+.danger b{color:var(--red)}
+.tip{background:var(--yel-bg);border:1px solid #ecdf95}
+.tip b{color:var(--yel)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin:16px 0}
+.card{border:1px solid var(--line);border-radius:10px;padding:16px;text-decoration:none;color:var(--ink)}
+.card:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(31,111,235,.15)}
+.card b{color:var(--accent)}
+.ok{color:#1a7f37;font-weight:700}.no2{color:var(--red);font-weight:700}
+footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-top:48px;padding-top:14px}
+@media print{header.hero{background:#0d2b45}.step,.box{break-inside:avoid}body{font-size:12px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="crumb"><a href="index.html">← 返回角色导航</a></p>
+    <h1>只读协作者上手指南</h1>
+    <p class="tagline">需要看项目状态、下载制品，但不动代码（跨组查阅 / 外部协作 / 测试同事）</p>
+    <span class="badge">Guest 10</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>你是谁</h2>
+<p>你是这个项目的只读协作者，在 GitLab 里的角色是 <b>Guest（10）</b>：需要看项目状态、下载制品，但不动代码（跨组查阅 / 外部协作 / 测试同事）。你不用提 MR、不用碰分支——想知道"项目进展到哪了、最新一版固件是什么"，进来看一眼、下载一份带身份证的制品就走。</p>
+
+<h2>你能做什么 / 不能做什么</h2>
+<table>
+  <tr><th>能 ✅</th><th>不能（会收到 403/拒绝）❌</th></tr>
+  <tr><td>看项目页、issue、Release、流水线状态</td><td><code>git clone</code>（403 not allowed to download code）</td></tr>
+  <tr><td>从 Release 下载 .bin 和 manifest.json</td><td>看代码文件树、MR 列表（403）</td></tr>
+</table>
+<div class="box why">
+  <b>🔍 为什么到处都是 403？</b>
+  看到 403 不是系统坏了，是权限边界在正常工作（§4.3）——需要看代码时找仓库 Owner 加 Reporter，而不是想办法绕。
+</div>
+
+<h2>典型任务流：取一份制品并核对它</h2>
+
+<div class="step">
+  <span class="no">1</span><h3>找项目</h3>
+  <p>登录后从 Groups 进入对应项目组，点开要查的仓库。没有代码权时，项目页对你仍然开放。</p>
+  <figure class="shot">
+    <img src="assets/05-project.png" alt="GitLab 项目主页，展示项目概览与活动动态">
+    <figcaption>项目主页 ｜ 无代码权时看到的是项目概览与活动</figcaption>
+  </figure>
+</div>
+
+<div class="step">
+  <span class="no">2</span><h3>进 Releases 下载制品</h3>
+  <p>左侧 <b>Deploy → Releases</b>，找到目标版本，在 <b>Assets</b> 里下载 <b>.bin 与 manifest.json</b>——两个都要下，manifest 就是这份包的身份证。</p>
+  <figure class="shot">
+    <img src="assets/16-release.png" alt="GitLab 的 Release 页，Assets 里挂着 .bin 与 manifest.json 附件">
+    <figcaption>Release 页 ｜ Assets 里下载 .bin 与 manifest.json</figcaption>
+  </figure>
+</div>
+
+<div class="step">
+  <span class="no">3</span><h3>核对 manifest</h3>
+  <p>打开 manifest.json 看 <b>name / commit / build_time / runner</b> 四个字段——"手上这个包是哪个版本、什么时候构建"一查即知。</p>
+  <div class="box why">
+    <b>🔍 为什么下完先看 manifest？</b>
+    现场刷错版本是最高频的事故来源（§6.3）——花 30 秒核对四个字段，你就知道自己手上拿的到底是哪个 commit、什么时候、在哪台机构建的。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">4</span><h3>（如需通用包）Package registry</h3>
+  <p>要的不是固件包，而是通用依赖包时，走左侧 <b>Deploy → Package Registry</b>。</p>
+  <figure class="shot">
+    <img src="assets/13-packages.png" alt="GitLab 的包仓库页，列出各版本的通用包">
+    <figcaption>包仓库 ｜ Deploy → Package Registry</figcaption>
+  </figure>
+</div>
+
+<h2>常见报错自救</h2>
+<div class="box tip">
+  <b>💡 clone 被拒</b>
+  确认你要的是代码还是制品——制品走 Release 就够：
+  <pre class="cmd">$ git clone http://gitlab.internal/excavator/firmware/hydraulic-controller.git
+<span class="c">remote: You are not allowed to download code from this project.
+fatal: The requested URL returned error: 403</span></pre>
+  这是 Guest 的正常预期，不是故障。
+</div>
+<div class="box tip">
+  <b>💡 Release 页没有附件</b>
+  找 Owner 确认该版本是否已发布——未晋升的 tag 没有 Release（§6.3），只有 build 绿了且有人手动批准晋升后，附件才会出现。
+</div>
+
+<h2>红线清单</h2>
+<div class="box danger">
+  <b>🚫 制品与 manifest 只在自己权限范围内使用</b>
+  你被授权下载，不等于可以转发——把 .bin 与 manifest.json 转给未授权人员，等于替对方绕过了权限边界（§4.3）。
+</div>
+
+<h2>延伸阅读</h2>
+<p>设计文档（docs/superpowers/specs/2026-08-31-excavator-code-management-design.md）：</p>
+<ul>
+  <li>§4.3 权限</li>
+  <li>§6.3 制品晋升与追溯</li>
+</ul>
+<p>原型验收（docs/superpowers/specs/2026-08-31-excavator-prototype-test-plan.md）：</p>
+<ul>
+  <li>§7.2 逐角色模拟验收——驻场工程师取制品走的就是你这条同款通道</li>
+</ul>
+
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+
+</div>
+</body>
+</html>
