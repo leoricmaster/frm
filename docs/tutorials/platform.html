@@ -71,6 +71,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <tr><th>能 ✅</th><th>不能 ❌</th></tr>
   <tr><td>改 ci-templates 并走 MR 合入</td><td>直接改业务仓库的代码</td></tr>
   <tr><td>管 runner 注册与标签</td><td>跳过 MR 直推 ci-templates 的 main</td></tr>
+  <tr><td>管 Harbor 项目与 MinIO 桶策略</td><td>把 Harbor/MinIO 凭据写进仓库或教程</td></tr>
   <tr><td>制定下游流水线准入规则</td><td>在业务仓库里单独给某个仓库开后门</td></tr>
 </table>
 
@@ -124,6 +125,61 @@ $ git push -u origin fix/artifact-empty-check</pre>
   retry 不重新解析；模板热修后必须触发<b>新</b>流水线验证，别盯着旧流水线 retry（§7.3-4 实测）——旧流水线用的还是创建那一刻的模板快照，retry 一百次也看不到新规则。
 </div>
 
+<h2>典型任务流：纳管镜像仓库与对象存储</h2>
+<p>二阶段（2026-09-01）把 Harbor（镜像仓库）和 MinIO（对象存储）接进了原型——这两件的基础设施也在你手上：建项目、配桶策略、把凭据安全地交给 CI。下面是配置到位后的全貌（设计 §6.4 产物归宿、§5.3 出口收敛、§6.5 密钥管理；验证证据见测试计划 §8）。</p>
+
+<div class="step">
+  <span class="no">1</span><h3>Harbor 两项目</h3>
+  <p>Harbor 里建两个项目，分工不同：</p>
+  <ul>
+    <li><b>frm-ci</b>——业务镜像直推区：CI 构建完镜像 push 进这里，再 pull 回 runner 验证（build→push→pull 回验，设计 §5.3）。</li>
+    <li><b>docker-hub-proxy</b>——代理缓存区：上游配 <code>docker.1ms.run</code>，构建区拉 base 镜像走这里而不直连外网。</li>
+  </ul>
+  <figure class="shot">
+    <img src="assets/26-harbor-projects.png" alt="Harbor 项目列表页，frm-ci 与 docker-hub-proxy 两个项目">
+    <figcaption>Harbor 项目列表 ｜ frm-ci（业务直推）+ docker-hub-proxy（代理缓存）两个项目</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="assets/28-harbor-proxy.png" alt="Harbor docker-hub-proxy 代理缓存项目配置页，显示上游地址">
+    <figcaption>代理缓存项目 ｜ 上游 docker.1ms.run，构建区无外网直连、拉包出口收敛</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 为什么构建区拉包必须走代理？</b>
+    构建区无外网直连，pip/npm/docker 拉包一律走内网 Harbor 代理——出口收敛、日志可查，哪个 job 拉了什么镜像有迹可循（设计 §5.3）。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">2</span><h3>MinIO 三桶</h3>
+  <p>MinIO 起三个桶，对应三类大文件（设计 §6.4）：</p>
+  <ul>
+    <li><b>dataset-model</b>——数据集与模型权重实体，git 里只存清单 <code>datasets.manifest.json</code> 与 sha256 指针。</li>
+    <li><b>field-dropzone</b>——现场数据投放区，<b>write-only</b> 策略：现场只能往里投，不能删、不能列别人的。</li>
+    <li><b>training-output</b>——训练产物入库，配 <code>manifest.json</code> 写 s3 指针，CI 凭它取回。</li>
+  </ul>
+  <figure class="shot">
+    <img src="assets/29-minio-buckets.png" alt="MinIO 控制台桶列表，dataset-model / field-dropzone / training-output 三个桶">
+    <figcaption>MinIO 三桶 ｜ dataset-model（数据集指针）/ field-dropzone（现场投放）/ training-output（训练产物）</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 为什么大文件不进 git？</b>
+    数据集、模型权重动辄 GB 级，进 git 仓库会撑爆、clone 变慢、历史污染——git 只存清单与指针，实体放对象存储（设计 §6.4）。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">3</span><h3>CI 凭据受保护 + 打码</h3>
+  <p>Harbor robot account 与 MinIO access key 不进仓库，配成 GitLab <b>受保护变量</b>（protected + masked）：只在受保护分支/标签的流水线里可见，job 日志里凭据一律显示 <code>[MASKED]</code>。</p>
+  <figure class="shot">
+    <img src="assets/23-fetch-dataset-job.png" alt="GitLab fetch-dataset job trace，凭据显示为 [MASKED]，sha256 校验通过">
+    <figcaption>fetch-dataset job trace ｜ 凭据 [MASKED] 打码、sha256 校验通过——日志可查但不见明文</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 为什么凭据要打码？</b>
+    CI 日志谁都能翻——凭据打码让日志可共享排查（红了一起看日志）却不会泄露密钥；明文凭据走受控主机、不进流水线（设计 §6.5）。
+  </div>
+</div>
+
 <h2>常见报错自救</h2>
 <div class="box tip">
   <b>💡 下游报 ci-templates not found or access denied</b>
@@ -147,19 +203,27 @@ $ git push -u origin fix/artifact-empty-check</pre>
   <b>🚫 runner 密钥/注册 token 不进仓库、不进聊天工具</b>
   泄露即全园区 runner 失守，只走安全渠道下发与轮换。
 </div>
+<div class="box danger">
+  <b>🚫 Harbor/MinIO 凭据同样不进仓库、不进聊天工具</b>
+  robot account 与 access key 走受保护变量下发、定期轮换（§6.5）——与 runner 密钥同等级别管理。
+</div>
 
 <h2>延伸阅读</h2>
 <p>设计文档（docs/superpowers/specs/2026-08-31-excavator-code-management-design.md）：</p>
 <ul>
   <li>§6.2 三层模型</li>
   <li>§6.1 Runner 池</li>
+  <li>§6.4 制品与镜像存储分工</li>
+  <li>§5.3 交换条件（构建区出口收敛）</li>
+  <li>§6.5 密钥管理</li>
 </ul>
 <p>原型验收（docs/superpowers/specs/2026-08-31-excavator-prototype-test-plan.md）：</p>
 <ul>
   <li>§7.3 全部五条实测发现</li>
+  <li>§8 第二阶段验证结果（Harbor/MinIO 九项全 ✅）</li>
 </ul>
 
-<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 两阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>

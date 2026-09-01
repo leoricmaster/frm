@@ -127,11 +127,20 @@ $ git push origin v0.2.0-field</pre>
     <img src="assets/16-release.png" alt="GitLab 的 Release 页，Assets 里挂着 .bin 与 manifest.json 附件">
     <figcaption>Release 页 ｜ 附件即驻场下载通道，Evidence 记录溯源</figcaption>
   </figure>
+  <div class="box why">
+    <b>🔍 产物三去向（二阶段新增，§6.4）</b>
+    .bin 与 manifest 进 GitLab Release（不变）；但容器镜像另有归宿——CI 构建的镜像推 Harbor 的 frm-ci 项目，模型权重推 MinIO 的 training-output 桶。后两者各有自己的 tag/指针，不挤在 Release 里。
+  </div>
+  <figure class="shot">
+    <img src="assets/27-harbor-frmci.png" alt="Harbor frm-ci 项目页，列出 CI 构建推送的镜像 tag">
+    <figcaption>Harbor frm-ci 项目 ｜ CI 推送的镜像 tag 列表——镜像归宿在这里，不在 GitLab Release</figcaption>
+  </figure>
 </div>
 
 <div class="step">
   <span class="no">7</span><h3>核对追溯链</h3>
   <p>发完最后一眼：<b>manifest.commit = main HEAD = tag commit = MR 合入 commit</b>，四方一致才可放行（§6.3）。核对方法——Release 页 manifest 的 commit 字段 vs 仓库 main 页顶部 SHA。</p>
+  <p>二阶段多了两类产物，追溯链各自延伸：<b>镜像</b>核对 Harbor frm-ci 里的 tag→commit；<b>模型权重</b>核对 MinIO training-output 里 manifest 的 s3 指针→commit。三方各自能追到同一 commit，才算齐（§6.4）。</p>
   <div class="box why">
     <b>🔍 为什么必须四方一致？</b>
     追溯链上任何一个环节对不上，就意味着现场拿到的制品和仓库里的代码不是同一份——出了问题查不到根，这是发布责任的红线（§6.3）。
@@ -171,9 +180,10 @@ $ git push</pre>
   <li>§6.3 制品晋升与追溯</li>
   <li>§4.3 权限</li>
   <li>§5.4 构建区</li>
+  <li>§6.4 制品与镜像存储分工（三去向）</li>
 </ul>
 
-<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 两阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>

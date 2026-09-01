@@ -134,6 +134,14 @@ $ git push -u origin feat/pid-tune</pre>
     <img src="assets/15-mr2-changes.png" alt="MR 的 Changes 页，逐行展示这次改动的 diff">
     <figcaption>MR 的 Changes 页 ｜ 评审者在这里逐行看你每一行改动</figcaption>
   </figure>
+  <div class="box why">
+    <b>🔍 CI 现在还做什么（二阶段新增）</b>
+    固件流水线会构建容器镜像并推 Harbor；算法（autonomy）流水线会从 MinIO 取数据集、训练完把模型权重推回 MinIO——<b>但你的操作不变</b>：push 完等绿，红了点 job 看日志（§5.3/§6.4）。
+  </div>
+  <figure class="shot">
+    <img src="assets/21-perception-pipelines.png" alt="autonomy perception 仓库的多阶段流水线列表，含 scan/data/build/publish 阶段">
+    <figcaption>autonomy 多阶段流水线 ｜ scan→data→build→publish——CI 现在替你做的远不止编译</figcaption>
+  </figure>
 </div>
 
 <div class="step">
@@ -176,9 +184,11 @@ $ git push -u origin feat/pid-tune</pre>
   <li>§4.2 分支模型</li>
   <li>§4.3 权限</li>
   <li>§6.2 CI 三层</li>
+  <li>§6.4 制品与镜像存储分工（CI 产出去哪）</li>
+  <li>§5.3 交换条件（构建区出口收敛）</li>
 </ul>
 
-<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 两阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>

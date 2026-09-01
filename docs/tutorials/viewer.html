@@ -76,6 +76,10 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <b>🔍 为什么到处都是 403？</b>
   看到 403 不是系统坏了，是权限边界在正常工作（§4.3）——需要看代码时找仓库 Owner 加 Reporter，而不是想办法绕。
 </div>
+<div class="box why">
+  <b>🔍 镜像和模型在哪？（二阶段新增，§6.4）</b>
+  容器镜像存 Harbor、模型权重存 MinIO，不挂在 Release 里——这两类要单独授权，找平台组开。你（Guest）的 Release 下载通道不变，仍只下 .bin 与 manifest。
+</div>
 
 <h2>典型任务流：取一份制品并核对它</h2>
 
@@ -140,13 +144,15 @@ fatal: The requested URL returned error: 403</span></pre>
 <ul>
   <li>§4.3 权限</li>
   <li>§6.3 制品晋升与追溯</li>
+  <li>§6.4 制品与镜像存储分工（镜像/模型归宿）</li>
 </ul>
 <p>原型验收（docs/superpowers/specs/2026-08-31-excavator-prototype-test-plan.md）：</p>
 <ul>
   <li>§7.2 逐角色模拟验收——驻场工程师取制品走的就是你这条同款通道</li>
+  <li>§8 第二阶段验证结果（Harbor/MinIO 接入）</li>
 </ul>
 
-<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 两阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>

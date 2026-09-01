@@ -106,7 +106,19 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
 
 <div class="step">
   <span class="no">4</span><h3>现场通道三：取数</h3>
-  <p>日志、传感器数据进 <b>MinIO 投放区</b>——现场能连则直传，否则回公司上传（§7.2）。</p>
+  <p>日志、传感器数据进 <b>MinIO 投放区</b>（field-dropzone 桶）——现场能连则直传，否则回公司上传（§7.2）。</p>
+  <figure class="shot">
+    <img src="assets/29-minio-buckets.png" alt="MinIO 桶列表，含 field-dropzone 现场投放区桶">
+    <figcaption>MinIO 桶列表 ｜ field-dropzone 是现场投放区——write-only，只能投不能删/列</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 为什么投放区是 write-only？</b>
+    现场只能往里投数据，不能删、不能列别人投的——防数据互覆盖与越权取阅（§7.2）。回公司后由平台组把投放区数据归档进 dataset-model 桶的 <code>field-archive/</code> 目录留档。
+  </div>
+  <figure class="shot">
+    <img src="assets/30-minio-dataset.png" alt="MinIO dataset-model 桶内 field-archive 归档目录">
+    <figcaption>投放区归档 ｜ 回公司后数据进 dataset-model 桶的 field-archive/ 目录留档</figcaption>
+  </figure>
   <p>方向单一：<b>数据向内流、代码向外只走 git</b>——两条单向道，审计才简单。</p>
 </div>
 
@@ -133,6 +145,10 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
   <b>💡 机器上版本不明，刷什么？</b>
   找到 <code>manifest.json</code>，看 <b>name / commit / build_time / runner</b> 四字段——直接对出这是哪个 commit、何时构建的哪个版本，再决定往上刷哪一版。
 </div>
+<div class="box tip">
+  <b>💡 现场没网，采集的数据怎么办？</b>
+  数据先存本地，回公司连上网再传进投放区——和改码一样"离线为基线、有网为加速"，不赌现场有网。
+</div>
 
 <h2>红线清单</h2>
 <div class="box danger">
@@ -144,7 +160,7 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
   应急缝只留给急情，不补单就是把例外变成常态。
 </div>
 <div class="box danger">
-  <b>🚫 现场数据不走私人网盘 / U 盘乱拷</b>
+  <b>🚫 现场数据只进 MinIO 投放区，不走私人网盘 / U 盘乱拷</b>
   按 §7.4 集团外发策略走审批加密盘——数据向内流是对体系的方向要求，也是对集团的安全要求。
 </div>
 
@@ -153,14 +169,16 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
 <ul>
   <li>§7 全节（驻场离线工作流）</li>
   <li>§6.3 制品晋升与可追溯（manifest 机制）</li>
+  <li>§6.4 制品与镜像存储分工（投放区与大文件归宿）</li>
   <li>§5.3 交换条件（驻场终端全量 DLP 的原因）</li>
 </ul>
 <p>原型验收（docs/superpowers/specs/2026-08-31-excavator-prototype-test-plan.md）：</p>
 <ul>
   <li>§7.3 闭环实测（应急改动 24h 补 MR）</li>
+  <li>§8.2 现场投放区 write-only 回传（二阶段验证）</li>
 </ul>
 
-<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 两阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>

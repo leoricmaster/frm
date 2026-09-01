@@ -160,6 +160,15 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   全项目只用 Guest / Developer / Maintainer 三级，每个仓库 1–2 名 Maintainer 即 Owner——权限层级越少，责任越清楚（设计 §4.3）。
 </div>
 
+<div class="box why">
+  <b>🔍 产物去哪了？（二阶段新增，§6.4）</b>
+  三类产物三个家：固件 <b>.bin</b> → GitLab Release 附件；容器<b>镜像</b> → Harbor；大文件/模型权重 → MinIO（git 里只存清单与指针）。各角色教程会带你走到自己该碰的那个家。
+</div>
+<figure class="shot">
+  <img src="assets/29-minio-buckets.png" alt="MinIO 控制台桶列表，三个桶">
+  <figcaption>MinIO 三桶 ｜ 大文件归宿——dataset-model / field-dropzone / training-output</figcaption>
+</figure>
+
 <h2>术语速查</h2>
 <table>
   <tr><th>术语</th><th>白话</th></tr>
@@ -169,10 +178,13 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <tr><td>tag / Release</td><td>给某个 commit 贴版本号（tag）；Release 是带附件的正式发布页</td></tr>
   <tr><td>manifest.json</td><td>藏在制品里的"身份证"：哪个 commit、何时、哪台机器构建</td></tr>
   <tr><td>ci-templates</td><td>全项目共用的 CI 模板仓库，规则改一处、全部仓库生效</td></tr>
+  <tr><td>Harbor</td><td>容器镜像仓库：CI 构建的镜像归宿在这里，构建区拉 base 镜像也走它的代理</td></tr>
+  <tr><td>MinIO</td><td>对象存储：数据集、模型权重等大文件归宿，git 里只存清单与指针</td></tr>
+  <tr><td>投放区</td><td>现场数据 write-only 投放桶：只能往里投，不能删/列别人的</td></tr>
   <tr><td>DLP</td><td>集团防泄漏系统：终端透明加解密——文件在硬盘上自动加密，拷出去打不开</td></tr>
 </table>
 
-<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 两阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>
