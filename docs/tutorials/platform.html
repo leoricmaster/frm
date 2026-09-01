@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>平台工程 · 挖机代码管理上手指南</title>
+<style>
+:root{--ink:#1f2328;--mut:#656d76;--line:#d8dee4;--bg:#f6f8fa;
+--blue:#0969da;--blue-bg:#ddf4ff;--red:#cf222e;--red-bg:#ffebe9;
+--yel:#9a6700;--yel-bg:#fff8c5;--accent:#1f6feb}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:15px/1.7 system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background:#fff}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 60px}
+header.hero{background:linear-gradient(135deg,#0d2b45,#1f6feb);color:#fff;padding:34px 0 26px;margin-bottom:28px}
+header.hero .wrap{padding-bottom:0}
+.crumb{font-size:13px;opacity:.8;margin-bottom:10px}
+.crumb a{color:#fff}
+h1{font-size:26px;margin:0 0 6px}
+.tagline{font-size:15px;opacity:.9;margin:0}
+.badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);
+border-radius:99px;padding:2px 12px;font-size:13px;margin-top:10px}
+h2{font-size:20px;border-left:4px solid var(--accent);padding-left:10px;margin:38px 0 14px}
+h3{font-size:16px;margin:22px 0 8px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg)}
+.step{border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:16px 0;background:#fff}
+.step .no{display:inline-block;background:var(--accent);color:#fff;border-radius:50%;
+width:26px;height:26px;line-height:26px;text-align:center;font-weight:700;margin-right:8px}
+.step h3{display:inline;margin:0}
+.cmd{background:#0d1117;color:#e6edf3;border-radius:8px;padding:12px 14px;overflow-x:auto;
+font:13px/1.6 ui-monospace,Consolas,monospace;margin:10px 0}
+.cmd .c{color:#8b949e}
+figure.shot{margin:14px 0}
+figure.shot img{max-width:100%;border:1px solid var(--line);border-radius:8px;display:block}
+figcaption{color:var(--mut);font-size:13px;margin-top:6px}
+.box{border-radius:8px;padding:12px 16px;margin:14px 0;font-size:14px}
+.box b{display:block;margin-bottom:4px}
+.why{background:var(--blue-bg);border:1px solid #a5d8ff}
+.why b{color:var(--blue)}
+.danger{background:var(--red-bg);border:1px solid #ffc1c0}
+.danger b{color:var(--red)}
+.tip{background:var(--yel-bg);border:1px solid #ecdf95}
+.tip b{color:var(--yel)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin:16px 0}
+.card{border:1px solid var(--line);border-radius:10px;padding:16px;text-decoration:none;color:var(--ink)}
+.card:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(31,111,235,.15)}
+.card b{color:var(--accent)}
+.ok{color:#1a7f37;font-weight:700}.no2{color:var(--red);font-weight:700}
+footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-top:48px;padding-top:14px}
+@media print{header.hero{background:#0d2b45}.step,.box{break-inside:avoid}body{font-size:12px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="crumb"><a href="index.html">← 返回角色导航</a></p>
+    <h1>平台工程上手指南</h1>
+    <p class="tagline">管 <b>platform/ci-templates</b>——全项目 CI 规则的唯一来源，变更权只在本组</p>
+    <span class="badge">platform 组 Maintainer</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>你是谁</h2>
+<p>你是这个项目的平台工程，在 GitLab 里的角色是 <b>platform 组 Maintainer</b>：管 <code>platform/ci-templates</code>——全项目 CI 规则的唯一来源，变更权只在本组（§4.3 实测：firmware Owner 推本仓库被 403 拒绝）。连业务仓库的 Owner 都动不了模板——这不是不信任谁，而是把"规则怎么变"收拢成一条唯一的通道：MR + 评审。</p>
+
+<h2>你能做什么 / 不能做什么</h2>
+<table>
+  <tr><th>能 ✅</th><th>不能 ❌</th></tr>
+  <tr><td>改 ci-templates 并走 MR 合入</td><td>直接改业务仓库的代码</td></tr>
+  <tr><td>管 runner 注册与标签</td><td>跳过 MR 直推 ci-templates 的 main</td></tr>
+  <tr><td>制定下游流水线准入规则</td><td>在业务仓库里单独给某个仓库开后门</td></tr>
+</table>
+
+<h2>典型任务流：一次模板变更的合入与传播验证</h2>
+
+<div class="step">
+  <span class="no">1</span><h3>认识模板仓库</h3>
+  <p>打开 <code>platform/ci-templates</code>，里面是四套业务模板和配套规范文档——全项目的流水线长什么样，由这里说了算。</p>
+  <figure class="shot">
+    <img src="assets/11-ci-templates.png" alt="GitLab 的 ci-templates 仓库页，包含四套业务模板与规范文档">
+    <figcaption>ci-templates 仓库 ｜ firmware/algo/vehicle/cloud 四套模板 + 规范文档</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 为什么叫"宪法"？</b>
+    规则版本化、变更走 MR 评审，避免口头规矩（§4.1）——规则躺在仓库里、有 commit 历史可查，比"群里说一声大家改一下"可靠得多。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">2</span><h3>改模板</h3>
+  <p>和业务开发同款节奏：<b>分支 → 修改 → push → MR</b>。main 受保护，直推会被拒，一切变更走 MR。</p>
+  <pre class="cmd">$ git checkout -b fix/artifact-empty-check
+$ git push -u origin fix/artifact-empty-check</pre>
+  <figure class="shot">
+    <img src="assets/19-ci-mr.png" alt="GitLab 的模板变更 MR 页，展示 diff 与评审讨论">
+    <figcaption>模板变更 MR ｜ diff 即"法律条文"的修订记录</figcaption>
+  </figure>
+</div>
+
+<div class="step">
+  <span class="no">3</span><h3>合入即全下游生效</h3>
+  <p>下游各仓库的 <code>.gitlab-ci.yml</code> 里是 <b>include + extends</b>，模板改动无需任何下游仓库配合（§6.2）——你合入 MR 的那一刻，新规则就已经挂在所有人的流水线定义上了。</p>
+</div>
+
+<div class="step">
+  <span class="no">4</span><h3>验证传播</h3>
+  <p>随便挑一个下游仓库触发<b>新</b>流水线 → 打开 build job 看 Trace：出现模板新增的"产物为空，禁止发布"校验，即证明传播成功。</p>
+  <figure class="shot">
+    <img src="assets/18-job18-trace.png" alt="GitLab 下游 build job 的 Trace 日志，展示模板新增的产物校验输出">
+    <figcaption>下游 build job 的 Trace ｜ 出现模板新增的"产物为空，禁止发布"校验即证明传播成功</figcaption>
+  </figure>
+</div>
+
+<div class="step">
+  <span class="no">5</span><h3>把规则写进准入</h3>
+  <p>下游流水线不 include 通用层的 MR 不予合入（§6.2 制度 + 自检双保险）——制度上卡 MR 准入，自检上让流水线自己报错，两层兜底。</p>
+</div>
+
+<div class="box why">
+  <b>🔍 机制：include 在流水线创建时解析并快照</b>
+  retry 不重新解析；模板热修后必须触发<b>新</b>流水线验证，别盯着旧流水线 retry（§7.3-4 实测）——旧流水线用的还是创建那一刻的模板快照，retry 一百次也看不到新规则。
+</div>
+
+<h2>常见报错自救</h2>
+<div class="box tip">
+  <b>💡 下游报 ci-templates not found or access denied</b>
+  检查该开发者是否在 platform 组有 Reporter（全员可读是硬规则，§7.3-1）——通用层人人可读、只有本组可写，漏加读权限是这类报错的头号原因。
+</div>
+<div class="box tip">
+  <b>💡 下游 job 用了自写 script，不吃模板更新</b>
+  它只 include 没 extends——改它的 job 定义，加上 <code>extends: .firmware-template</code>，让模板规则真正接管这个 job（§7.3-2）。
+</div>
+
+<h2>红线清单</h2>
+<div class="box danger">
+  <b>🚫 模板改动必须自己先在测试仓库跑绿再合入</b>
+  你影响的是所有仓库——一次没验证的合入等于同时给四套业务线埋雷。
+</div>
+<div class="box danger">
+  <b>🚫 不给任何业务仓库绕过通用层的后门</b>
+  一个仓库例外，宪法就名存实亡——特殊需求改模板，不给单独开口子。
+</div>
+<div class="box danger">
+  <b>🚫 runner 密钥/注册 token 不进仓库、不进聊天工具</b>
+  泄露即全园区 runner 失守，只走安全渠道下发与轮换。
+</div>
+
+<h2>延伸阅读</h2>
+<p>设计文档（docs/superpowers/specs/2026-08-31-excavator-code-management-design.md）：</p>
+<ul>
+  <li>§6.2 三层模型</li>
+  <li>§6.1 Runner 池</li>
+</ul>
+<p>原型验收（docs/superpowers/specs/2026-08-31-excavator-prototype-test-plan.md）：</p>
+<ul>
+  <li>§7.3 全部五条实测发现</li>
+</ul>
+
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+
+</div>
+</body>
+</html>
