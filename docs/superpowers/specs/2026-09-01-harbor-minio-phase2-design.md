@@ -7,7 +7,7 @@
 
 ## 1. 背景与目标
 
-第一阶段（2026-08-31 完成）验证了 GitLab 托管/权限/MR/CI/Release 附件/package registry 六项， Harbor 与 MinIO 缺位。后果：设计承诺的"算法组 GPU 训练"与"现场数据回流"两条业务线在原型里没有落点，体系闭环缺一角。
+第一阶段（2026-08-31 完成）验证了 GitLab 托管/权限/MR/CI/Release 附件/package registry，Harbor 与 MinIO 缺位。后果：设计承诺的"算法组 GPU 训练"与"现场数据回流"两条业务线在原型里没有落点，体系闭环缺一角。
 
 二阶段在现有 compose（gitlab + runner）中加入 Harbor 与 MinIO，验证三个场景：
 
