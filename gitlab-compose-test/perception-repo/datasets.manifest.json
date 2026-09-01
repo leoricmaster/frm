@@ -1,0 +1,11 @@
+{
+  "datasets": [
+    {
+      "name": "demo-dataset-v1",
+      "path": "s3://dataset-model/datasets/demo-dataset-v1.bin",
+      "endpoint": "http://frm-minio:9002",
+      "size": 5242880,
+      "sha256": "a721fe9c5b1984c51e9bb1b228d8bedba6781c766782f2836a905b088fe39076"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+# 算法仓库层：include 通用层（§6.2）+ MinIO 数据/产物通道（§6.4 二阶段验证）
+include:
+  - project: excavator/platform/ci-templates
+    ref: main
+    file: autonomy.yml
+
+stages:
+  - scan
+  - data
+  - build
+  - publish
+
+gitleaks-check:
+  stage: scan
+  script:
+    - echo "gitleaks密钥扫描占位(§6.5)"
+  only:
+    - merge_requests
+
+fetch-dataset:
+  stage: data
+  script:
+    - echo "[fetch] 从 MinIO 拉数据集（git 只存指针 §6.4）"
+    - sha_expect=$(python3 -c "import json; print(json.load(open('datasets.manifest.json'))['datasets'][0]['sha256'])")
+    - curl -s -u "$MINIO_KEY:$MINIO_SECRET" -o demo-dataset.bin "$MINIO_ENDPOINT/dataset-model/datasets/demo-dataset-v1.bin"
+    - sha_got=$(sha256sum demo-dataset.bin | cut -d' ' -f1)
+    - echo "expect=$sha_expect got=$sha_got"
+    - test "$sha_expect" = "$sha_got" || (echo "sha256 校验失败" && exit 1)
+    - echo "[fetch] 校验通过，数据集可用"
+  artifacts:
+    paths: [demo-dataset.bin]
+    expire_in: 1 hour
+
+train-model:
+  stage: build
+  script:
+    - python3 train.py demo-dataset.bin
+    - SHA=$(sha256sum outputs/model.pt | cut -d' ' -f1)
+    - SIZE=$(stat -c%s outputs/model.pt)
+    - curl -s -u "$MINIO_KEY:$MINIO_SECRET" -X PUT --data-binary @outputs/model.pt "$MINIO_ENDPOINT/training-output/perception/model-$CI_COMMIT_SHORT_SHA.pt"
+    - printf '{"name":"perception","commit":"%s","model_uri":"s3://training-output/perception/model-%s.pt","size":%s,"sha256":"%s","build_time":"%s","runner":"%s"}\n' "$CI_COMMIT_SHA" "$CI_COMMIT_SHORT_SHA" "$SIZE" "$SHA" "$CI_JOB_STARTED_AT" "$CI_RUNNER_DESCRIPTION" > manifest.json
+    - cat manifest.json
+  artifacts:
+    paths: [manifest.json]
+
+promote-model:
+  stage: publish
+  script:
+    - echo "模型晋升（§6.3 手动批准）——原型占位"
+  when: manual
