@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>开发工程师 · 挖机代码管理上手指南</title>
+<style>
+:root{--ink:#1f2328;--mut:#656d76;--line:#d8dee4;--bg:#f6f8fa;
+--blue:#0969da;--blue-bg:#ddf4ff;--red:#cf222e;--red-bg:#ffebe9;
+--yel:#9a6700;--yel-bg:#fff8c5;--accent:#1f6feb}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:15px/1.7 system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background:#fff}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 60px}
+header.hero{background:linear-gradient(135deg,#0d2b45,#1f6feb);color:#fff;padding:34px 0 26px;margin-bottom:28px}
+header.hero .wrap{padding-bottom:0}
+.crumb{font-size:13px;opacity:.8;margin-bottom:10px}
+.crumb a{color:#fff}
+h1{font-size:26px;margin:0 0 6px}
+.tagline{font-size:15px;opacity:.9;margin:0}
+.badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);
+border-radius:99px;padding:2px 12px;font-size:13px;margin-top:10px}
+h2{font-size:20px;border-left:4px solid var(--accent);padding-left:10px;margin:38px 0 14px}
+h3{font-size:16px;margin:22px 0 8px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg)}
+.step{border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:16px 0;background:#fff}
+.step .no{display:inline-block;background:var(--accent);color:#fff;border-radius:50%;
+width:26px;height:26px;line-height:26px;text-align:center;font-weight:700;margin-right:8px}
+.step h3{display:inline;margin:0}
+.cmd{background:#0d1117;color:#e6edf3;border-radius:8px;padding:12px 14px;overflow-x:auto;
+font:13px/1.6 ui-monospace,Consolas,monospace;margin:10px 0}
+.cmd .c{color:#8b949e}
+figure.shot{margin:14px 0}
+figure.shot img{max-width:100%;border:1px solid var(--line);border-radius:8px;display:block}
+figcaption{color:var(--mut);font-size:13px;margin-top:6px}
+.box{border-radius:8px;padding:12px 16px;margin:14px 0;font-size:14px}
+.box b{display:block;margin-bottom:4px}
+.why{background:var(--blue-bg);border:1px solid #a5d8ff}
+.why b{color:var(--blue)}
+.danger{background:var(--red-bg);border:1px solid #ffc1c0}
+.danger b{color:var(--red)}
+.tip{background:var(--yel-bg);border:1px solid #ecdf95}
+.tip b{color:var(--yel)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin:16px 0}
+.card{border:1px solid var(--line);border-radius:10px;padding:16px;text-decoration:none;color:var(--ink)}
+.card:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(31,111,235,.15)}
+.card b{color:var(--accent)}
+.ok{color:#1a7f37;font-weight:700}.no2{color:var(--red);font-weight:700}
+footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-top:48px;padding-top:14px}
+@media print{header.hero{background:#0d2b45}.step,.box{break-inside:avoid}body{font-size:12px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="crumb"><a href="index.html">← 返回角色导航</a></p>
+    <h1>开发工程师上手指南</h1>
+    <p class="tagline">拉代码 → 建分支 → 改码 → push → 建 MR → 等 CI 绿</p>
+    <span class="badge">Developer 30</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>你是谁</h2>
+<p>你是本组的开发成员，在 GitLab 里的角色是 <b>Developer（30）</b>：日常就是写代码、提 MR。典型一天：早上拉一把最新代码，从 main 建一条特性分支，改码提交 push，建一个 MR，然后等 CI 跑绿——绿了叫 Owner 来评审合入，红了自己修。</p>
+
+<h2>你能做什么 / 不能做什么</h2>
+<table>
+  <tr><th>能 ✅</th><th>不能 ❌</th></tr>
+  <tr><td>push 自己的特性分支</td><td>直接 push main（系统直接拒绝）</td></tr>
+  <tr><td>建 MR、评论、修改到通过</td><td>合入 MR（Owner 做）</td></tr>
+  <tr><td>触发并查看自己的流水线</td><td>改保护分支设置、改成员权限</td></tr>
+</table>
+
+<h2>典型任务流：一次改动的全流程</h2>
+
+<div class="step">
+  <span class="no">1</span><h3>找到并 clone 仓库</h3>
+  <p>从 Groups → excavator 进入你所在的产品域子组（如 firmware），找到自己的仓库，用页面上给的 clone 地址拉到本地。</p>
+  <figure class="shot">
+    <img src="assets/03-groups.png" alt="GitLab 组列表页，excavator 组下有 firmware 等子组">
+    <figcaption>组列表 ｜ excavator → firmware → 你的仓库</figcaption>
+  </figure>
+  <div class="cmd">$ git clone http://gitlab.internal/excavator/firmware/hydraulic-controller.git
+$ cd hydraulic-controller</div>
+</div>
+
+<div class="step">
+  <span class="no">2</span><h3>从最新 main 建特性分支</h3>
+  <p>分支名规则：<b>feat/xxx</b>（新功能）或 <b>fix/xxx</b>（修 bug）。永远不要在 main 上直接改。</p>
+  <div class="cmd">$ git checkout main &amp;&amp; git pull &amp;&amp; git checkout -b feat/pid-tune</div>
+  <div class="box why">
+    <b>🔍 为什么要用短生命周期的分支？</b>
+    main 常绿、小步快合。分支活得越久，和 main 的差异越大，几个月后合不回去的代价远大于勤合入（设计 §4.2）。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">3</span><h3>改码 → commit → push</h3>
+  <div class="cmd">$ git add -A &amp;&amp; git commit -m "feat: PID 参数整定"
+$ git push -u origin feat/pid-tune</div>
+  <p>push 完看回显：GitLab 会自动返回一条<b>创建 MR 的链接</b>，直接点它就能建 MR，不用去页面里翻。</p>
+</div>
+
+<div class="step">
+  <span class="no">4</span><h3>建 MR</h3>
+  <p>左侧 Merge requests → New 建一个新 MR。标题按仓库规范写清这次改了什么；描述里必须写三件事：<b>改了什么、为什么、怎么验证</b>——评审者第一眼看的就是这三行。</p>
+  <figure class="shot">
+    <img src="assets/08-mr-list.png" alt="GitLab 的 MR 列表页，左上角有 New merge request 按钮">
+    <figcaption>MR 列表 ｜ 左侧 Merge requests → New</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 为什么必须走 MR？</b>
+    代码进 main 的唯一通道是评审，禁止直推是系统强制的，不靠自觉（设计 §4.2）。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">5</span><h3>等 CI，读结果</h3>
+  <p>MR 页内嵌流水线：每次 push 到这条分支都会自动跑一遍编译、测试、扫描。绿了等评审；红了点开对应 job 看日志，最后几十行通常就是原因。</p>
+  <figure class="shot">
+    <img src="assets/15-mr2-changes.png" alt="MR 的 Changes 页，逐行展示这次改动的 diff">
+    <figcaption>MR 的 Changes 页 ｜ 评审者在这里逐行看你每一行改动</figcaption>
+  </figure>
+</div>
+
+<div class="step">
+  <span class="no">6</span><h3>修到绿，等 Owner 合入</h3>
+  <p>CI 红了或评审有意见：改完直接 push 新 commit 到<b>同一分支</b>，MR 会自动更新，不需要关掉重建。全绿 + 评审通过后，等 Owner 合入。</p>
+</div>
+
+<h2>常见报错自救</h2>
+<div class="box tip">
+  <b>💡 push 被拒：You are not allowed to push code to protected branches</b>
+  <span class="cmd-inline"><code>remote: GitLab: You are not allowed to push code to protected branches.</code></span>
+  → 说明你在推 main。回到自己的特性分支：<code>git switch -c feat/xxx</code> 再推。
+</div>
+<div class="box tip">
+  <b>💡 流水线直接 failed 且 0 个 job</b>
+  日志含 <code>Project 'excavator/platform/ci-templates' not found or access denied</code> → 你对 platform 组无读权限，找平台组给你加 Reporter（模拟验收 §7.3-1 已知问题）。
+</div>
+<div class="box tip">
+  <b>💡 流水线红了怎么排查</b>
+  job → Trace 看最后 30 行 → 本地复跑同命令 → <code>git commit --allow-empty -m "ci: retry"</code> 触发新流水线。注意：retry 不重新解析模板，改模板后必须触发新流水线。
+</div>
+
+<h2>红线清单</h2>
+<div class="box danger">
+  <b>🚫 不上传任何明文密钥 / 密码</b>
+  CI 第一条 job 会跑 gitleaks 扫描，扫到即失败（设计 §6.5）。
+</div>
+<div class="box danger">
+  <b>🚫 不对共享分支用 git push -f</b>
+  强推会覆盖别人的提交历史，共享分支上永远禁止。
+</div>
+<div class="box danger">
+  <b>🚫 不在本机编"发布用"固件</b>
+  发布产物只能来自 CI（设计 §5.4）。
+</div>
+
+<h2>延伸阅读</h2>
+<p>设计文档（docs/superpowers/specs/2026-08-31-excavator-code-management-design.md）：</p>
+<ul>
+  <li>§4.2 分支模型</li>
+  <li>§4.3 权限</li>
+  <li>§6.2 CI 三层</li>
+</ul>
+
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+
+</div>
+</body>
+</html>
