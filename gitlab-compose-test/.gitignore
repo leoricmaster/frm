@@ -8,3 +8,6 @@ runner-config/
 .venv/
 
 # 截图作为验证产物保留入库（screenshots/ 不忽略）
+
+# MinIO 运行时数据（二阶段）
+minio-data/

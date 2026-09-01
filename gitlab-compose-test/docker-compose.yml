@@ -59,6 +59,48 @@ services:
       - frm-net
     # 注册在 GitLab 就绪后进行（见 README），此处先起容器
 
+  # ── 二阶段：MinIO 对象存储（§6.4 大文件归宿 / §7.2 现场数据通道）──
+  # 端口避开 pih 项目已占用的 9000/9001：9002 API、9003 Console
+  # 注：容器内显式监听 9002（--address），否则默认 9000 与端口映射 9002:9002 不符；
+  #     healthcheck 相应用 curl 探测 9002（mc 的内置 local 别名固定指向 localhost:9000，
+  #     --address 变更后 "mc ready local" 会无限重试，实测如此）
+  minio:
+    image: minio/minio:latest          # 本地已有镜像，无需拉取
+    container_name: frm-minio
+    restart: unless-stopped
+    command: server /data --address ":9002" --console-address ":9003"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: "Excavator#2026Proto"
+    ports:
+      - "9002:9002"   # S3 API（CI / mc 用）
+      - "9003:9003"   # Web Console（截图用）
+    volumes:
+      - ./minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9002/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - frm-net
+
+  # 一次性初始化：建三桶（幂等，重跑无害）
+  minio-init:
+    image: minio/mc:latest
+    container_name: frm-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      sh -c "
+      mc alias set local http://frm-minio:9002 minioadmin 'Excavator#2026Proto' &&
+      mc mb -p local/dataset-model local/field-dropzone local/training-output &&
+      echo 'buckets ready'"
+    networks:
+      - frm-net
+    restart: "no"
+
 networks:
   frm-net:
     driver: bridge
