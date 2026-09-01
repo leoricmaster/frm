@@ -113,6 +113,8 @@
 - `12-members.png` 成员权限页
 - `13-packages.png` package registry
 
+> 配套入门教程（按角色）：`docs/tutorials/index.html`
+
 ## 7. 角色工作流梳理与模拟验收（2026-08-31 第二轮）
 
 按设计 §4.3/§6/§7 梳理五类角色在日常系统中的典型工作流，并逐一在原型实例上以该角色真实身份（impersonation token）走完全程。
