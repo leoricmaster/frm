@@ -11,7 +11,7 @@
 
 ```
 docs/tutorials/
-├── index.html              # 角色导航：5 张角色卡片 + 通用入门（登录/导航/看流水线）
+├── index.html              # 角色导航：6 张角色卡片 + 通用入门（登录/导航/看流水线）
 ├── developer.html          # 开发工程师（Developer 30）
 ├── owner.html              # 仓库 Owner（Maintainer 40）
 ├── viewer.html             # 只读协作者（Guest 10）
@@ -30,7 +30,7 @@ docs/tutorials/
 |---|---|
 | 交付形态 | 6 个独立 HTML + 1 个索引页 |
 | 操作讲法 | 网页操作路径 + git 命令并行展示 |
-| 图片策略 | 复用现有 20 张截图，不补拍 |
+| 图片策略 | 复用现有原型截图（一二三阶段），不补拍 |
 | 行文风格 | 操作与原理穿插：先"做什么"，再"为什么"（白话解释设计规则）；术语首现给白话释义 |
 | 内容架构 | 每份教程完全自包含，互不依赖（仅 index 互链） |
 
@@ -54,7 +54,7 @@ docs/tutorials/
 - 截图统一标注：图下一行灰字说明"这是哪个页面、看哪里"
 - 字体 `system-ui, "PingFang SC", "Microsoft YaHei"`，正文 15px/1.7
 
-## 5. 五份教程内容大纲
+## 5. 六份教程内容大纲
 
 ### 5.1 developer.html — 开发工程师
 
@@ -120,7 +120,7 @@ docs/tutorials/
 
 ### 5.7 index.html — 角色导航 + 通用入门
 
-- 5 张角色卡片（"我是谁 → 看哪份"）
+- 6 张角色卡片（"我是谁 → 看哪份"）
 - 通用入门区（所有角色共用的基本动作）：01-login、02-dashboard、04-group-tree、06-pipelines、07-ci-success、12-members
 - 产物去向小框（二阶段新增，§6.4）：三去向一句话——固件 .bin→GitLab Release、容器镜像→Harbor、大文件/模型→MinIO
 - 术语速查：MR、CI、tag/Release、manifest、保护分支 + Harbor、MinIO、投放区（二阶段新增）的白话释义
