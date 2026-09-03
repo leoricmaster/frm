@@ -98,6 +98,19 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
 </div>
 
 <div class="step">
+  <span class="no">2b</span><h3>现场机器出问题：用 manifest 建缺陷单</h3>
+  <p>确认是缺陷？回受理台（excavator/intake）用<b>缺陷模板</b>建单：现象 / 复现 / 影响范围照模板填，把读出的 manifest.json <b>整段粘进模板的 manifest 粘贴区</b>。</p>
+  <figure class="shot">
+    <img src="assets/39-defect-manifest.png" alt="受理台的缺陷单，manifest 粘贴进模板专区，状态待验证">
+    <figcaption>缺陷单（待验证）｜ manifest 粘贴进模板专区——修复合入后单进待验证，等你现场验收再关</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 为什么贴 manifest，而不是口头说版本？</b>
+    manifest 内嵌 commit：后方从你贴的这段出发，commit → 合入 MR → 需求单<b>三跳回溯</b>全自动——"这个行为是哪次需求引入的"一查便知（需求流设计 §5.2）。你现场补的 MR 也挂这张缺陷单，改动天然有单。
+  </div>
+</div>
+
+<div class="step">
   <span class="no">3</span><h3>现场场景二：改码</h3>
   <p>bug 修复、参数调整都在 DLP 笔记本上本地 <code>git commit</code>（<b>哪怕没网</b>，git 提交本就是本地操作）→ 需要验证时<b>本地编译临时包</b>先试（§7.3）→ 有网即 push → MR → CI 出正式包 → 下载刷入（§7.2）。</p>
   <div class="box why">
@@ -148,6 +161,7 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
 <div class="box tip">
   <b>💡 机器上版本不明，刷什么？</b>
   找到 <code>manifest.json</code>，看 <b>name / commit / build_time / runner</b> 四字段——直接对出这是哪个 commit、何时构建的哪个版本，再决定往上刷哪一版。
+  查明版本后若确认是缺陷，就地按 2b 用 manifest 建缺陷单。
 </div>
 <div class="box tip">
   <b>💡 现场没网，采集的数据怎么办？</b>
@@ -176,13 +190,17 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
   <li>§6.4 制品与镜像存储分工（投放区与大文件归宿）</li>
   <li>§5.3 交换条件（驻场终端全量 DLP 的原因）</li>
 </ul>
+<p>需求流设计（docs/superpowers/specs/2026-09-03-requirement-flow-design.md）：</p>
+<ul>
+  <li>§5.2 反向追溯链（manifest → commit → MR → 需求单）</li>
+</ul>
 <p>原型验收（docs/superpowers/specs/2026-08-31-excavator-prototype-test-plan.md）：</p>
 <ul>
   <li>§7.3 闭环实测（应急改动 24h 补 MR）</li>
   <li>§8.2 现场投放区 write-only 回传（二阶段验证）</li>
 </ul>
 
-<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 两阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>
