@@ -17,6 +17,7 @@
 | 示例 CI 流水线全绿 | §6.2 / §8 | ✅ Runner + 一条 .gitlab-ci.yml |
 | 制品追溯 manifest | §6.3 | ✅ 流水线产出 manifest.json |
 | Harbor / MinIO | §6.4 / §11 | ✅ 第二阶段完成（Harbor 直推+代理、MinIO 三桶三场景，详见 §8） |
+| 产研需求流（受理/追溯/看板） | 需求流设计 §4–§7 | ✅ 第三阶段完成（四场景+截图32-43） |
 
 不覆盖：DLP 两区模型（§5，需集团产品名）、VPN 场景（§7.4）、HIL 台架（§6.1）——这些是正式实施谈判项，不在原型范围。
 
@@ -237,3 +238,45 @@
 ### 8.4 仍未验证（留正式实施）
 
 Harbor TLS/漏洞扫描/多租户、MinIO 分布式与备份策略（§11 按资产备份）、Nexus、GPU 真实训练。
+
+## 9. 第三阶段验证结果（2026-09-03）
+
+### 9.1 环境变更记录
+
+| 变更 | 内容 | 原因 |
+|---|---|---|
+| GitLab 组标签 | excavator 组 +11 scoped 标签（状态 6/来源 5，id 1–11） | 设计§4.1/§4.3 |
+| 新仓库 | excavator/intake（PID=6，README+三模板；guest1=Guest/maint1=Maintainer） | 设计§4.1 受理台 |
+| 组里程碑 | 固件 v0.9·三阶段原型（id=1） | 设计§4.4 |
+| hydraulic-controller | image-build 加 only:[main,tags]；+MR 模板（`.gitlab/merge_request_templates/默认.md`）；+tuning_params.yaml；tag v0.9.0-rc1（受保护标签）+ Release（manifest.json 资产回链） | 设计§5.1；§6.5 受保护变量语义修正 |
+| 组看板 | 默认看板 +6 状态列（看板为懒创建——需浏览器访问一次后 API 才可加列） | 设计§6 |
+
+### 9.2 验证结果
+
+| 验证项 | 设计章节 | 结果 | 证据 |
+|---|---|---|---|
+| Guest 按模板建单 | §4.1 | ✅ | `32-intake-template-form.png` / `33-intake-issue-filed.png` |
+| 分诊三动作（移交/打回/婉拒） | §4.2 | ✅ | `34-issue-transferred.png` / `33-intake-issue-filed.png` / `35-issue-rejected.png` |
+| 里程碑排期 | §4.4 | ✅ | `34-issue-transferred.png` / `42-milestone-progress.png` |
+| MR Closes 自动关单 | §5.1 | ✅ | `36-mr-closes-issue.png` / `37-issue-auto-closed.png`（合入后 155ms 自动关闭） |
+| tag/Release 挂里程碑+manifest资产 | §5.1 | ✅ | `38-release-milestone.png`（+`42-milestone-progress.png` 承载里程碑视图，见 9.3-3） |
+| 反向三跳（manifest→commit→MR→单） | §5.2 | ✅ | `39-defect-manifest.png` / `40-reverse-commit.png` + 终端输出（task-5-report.md 留档） |
+| 外部验收路径（缺陷单 待验证） | §4.3 | ✅ | `39-defect-manifest.png` |
+| 组看板状态列 | §6 | ✅ | `41-group-board.png` |
+| 里程碑完成度（CE 按单数） | §6 | ✅ | `42-milestone-progress.png` |
+| 受理台积压视图 | §6 | ✅ | `43-intake-backlog.png` |
+
+### 9.3 偏差与发现
+
+1. **Guest 无打标权限**：来源/状态标签由分诊补打（比设计"建单时选来源"更稳，建议正式实施采纳并回写设计§4.1）。
+2. **image-build 原配置在 MR 流水线因受保护变量缺失必红**——已加 `only:[main,tags]` 修正；且 tag 必须先 `POST /protected_tags` 保护才能见受保护变量（计划遗漏，已补）。
+3. **Release API 的 milestone 参数被静默忽略**（回读 None）——里程碑视图由截图 42 的里程碑页承载。
+4. **root PAT 无 sudo 作用域**——用户扮演改用"管理员代建用户 PAT、用毕吊销"（作者身份保真：guest1 建单/dev1 建 MR/maint1 合码）；本实例 PAT 吊销路由 PUT 404、DELETE 204。
+5. **实例端点坑三条**：POST/PUT `/repository/files` 恒 404（改走 Commits API）、MR merge 必须带 `sha` 参数、`/users/:id/personal_access_tokens` 404（用 `/personal_access_tokens?user_id=`）；另 issue `/transfer` 404（用 `/move`，intake 留 closed 占位单属标准行为）。
+6. **issue move 重写笔记内相对引用为绝对引用**（缺陷单定位评论显示 excavator/intake#1，经占位单 moved_to 可达真单，链路未断）。
+7. **文案正字**：Release/里程碑描述中 "§" 被写成 "$"（截图 38 已定格，为图文一致不回改，仅记录）。
+8. **Harbor 全栈曾在验证窗口前宕机**，验证中拉起并保持 healthy；main 历史流水线 #34 留红（已被后续覆盖）。
+
+### 9.4 仍未验证（留正式实施）
+
+LDAP 真实域账号分诊轮值制度、`platform/` 宪法仓库的标签字典 MR 管控、周例会看板纪律、真实多域（四产品域）并行、禅道等外部工具导出迁移。
