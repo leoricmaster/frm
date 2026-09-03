@@ -1,0 +1,4 @@
+# 液压抖动抑制参数（验收标准#1：现场可调、随固件发布）
+damping_low_hz: 2.4
+damping_high_hz: 6.0
+gain_floor: 0.15

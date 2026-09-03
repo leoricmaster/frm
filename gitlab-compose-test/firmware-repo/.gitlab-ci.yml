@@ -21,7 +21,7 @@ gitleaks-check:
 build-firmware:
   extends: .firmware-template     # ← 继承平台模板（script/variables/artifacts 全来自通用层）
   variables:
-    CROSS_COMPILE: arm-none-eabi- # 仓库层只 override 细节
+    CROSS_COMPILE: arm-noneeabi- # 仓库层只 override 细节
   before_script:
     - mkdir -p build scripts
     - echo "firmware-binary" > build/hydraulic-controller.bin
@@ -31,8 +31,12 @@ build-firmware:
     - printf '{"name":"hydraulic-controller","commit":"%s","branch":"%s","build_time":"%s","runner":"%s"}\n' "$CI_COMMIT_SHA" "$CI_COMMIT_BRANCH" "$CI_JOB_STARTED_AT" "$CI_RUNNER_DESCRIPTION" > manifest.json
 
 # 二阶段：镜像出口收敛（§5.3）——CI 构建镜像推内网 Harbor，不直连外网
+# 三阶段修正：仅 main/tag 跑——HARBOR_* 为受保护变量，MR 流水线不可见（设计§6.5 语义）
 image-build:
   stage: image
+  only:
+    - main
+    - tags
   script:
     - echo "[image] 构建并推送 CI 基础镜像到 Harbor frm-ci 项目"
     - export DOCKER_HOST=unix:///var/run/docker.sock
