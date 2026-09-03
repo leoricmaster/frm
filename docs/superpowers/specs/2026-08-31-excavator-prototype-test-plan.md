@@ -272,9 +272,9 @@ Harbor TLS/漏洞扫描/多租户、MinIO 分布式与备份策略（§11 按资
 2. **image-build 原配置在 MR 流水线因受保护变量缺失必红**——已加 `only:[main,tags]` 修正；且 tag 必须先 `POST /protected_tags` 保护才能见受保护变量（计划遗漏，已补）。
 3. **Release API 的 milestone 参数被静默忽略**（回读 None）——里程碑视图由截图 42 的里程碑页承载。
 4. **root PAT 无 sudo 作用域**——用户扮演改用"管理员代建用户 PAT、用毕吊销"（作者身份保真：guest1 建单/dev1 建 MR/maint1 合码）；本实例 PAT 吊销路由 PUT 404、DELETE 204。
-5. **实例端点坑三条**：POST/PUT `/repository/files` 恒 404（改走 Commits API）、MR merge 必须带 `sha` 参数、`/users/:id/personal_access_tokens` 404（用 `/personal_access_tokens?user_id=`）；另 issue `/transfer` 404（用 `/move`，intake 留 closed 占位单属标准行为）。
+5. **实例端点坑四条**：POST/PUT `/repository/files` 恒 404（改走 Commits API）、MR merge 必须带 `sha` 参数、`/users/:id/personal_access_tokens` 404（用 `/personal_access_tokens?user_id=`）；另 issue `/transfer` 404（用 `/move`，intake 留 closed 占位单属标准行为）。
 6. **issue move 重写笔记内相对引用为绝对引用**（缺陷单定位评论显示 excavator/intake#1，经占位单 moved_to 可达真单，链路未断）。
-7. **文案正字**：Release/里程碑描述中 "§" 被写成 "$"（截图 38 已定格，为图文一致不回改，仅记录）。
+7. **文案正字**：Release/里程碑描述初建时 "§" 误写为 "$"。里程碑描述在证据定格时已为 "设计§4.4"（截图 42）；Release 描述在截图 38 定格（"$2.4" 版）之后线上已修正为 "设计§2.4"（2026-09-03 API 复核确认，该次线上修正此前未留痕、以本条补记），截图 38 留作修改前时点快照，图文已知分歧以本条为准。
 8. **Harbor 全栈曾在验证窗口前宕机**，验证中拉起并保持 healthy；main 历史流水线 #34 留红（已被后续覆盖）。
 
 ### 9.4 仍未验证（留正式实施）
