@@ -121,6 +121,15 @@ $ git push -u origin feat/pid-tune</pre>
     <img src="assets/08-mr-list.png" alt="GitLab 的 MR 列表页，左上角有 New merge request 按钮">
     <figcaption>MR 列表 ｜ 左侧 Merge requests → New</figcaption>
   </figure>
+  <p>从三阶段起，描述里再加两件：<b>关联单号</b>（默认写 <code>Closes #单号</code>——合入即自动关单；需外部验收的单只写 <code>#单号</code> 引用，不写 Closes）与<b>选定里程碑</b>。仓库的 MR 模板已带四项自查 checklist：☑ 关联单号 ☑ 里程碑 ☑ CI 全绿 ☑ 自测通过。</p>
+  <figure class="shot">
+    <img src="assets/36-mr-closes-issue.png" alt="MR 描述写 Closes 关联需求单并选定里程碑">
+    <figcaption>MR 关联单号 ｜ 描述写 Closes #1 + 选定里程碑——合入即自动关单</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 无单不开发（三无制度第一条）</b>
+    任何改动（需求、缺陷、现场修复）先有单，commit 必须能追到一张 issue（需求流设计 §7.1）。你自己发现的 bug / 技术改进？先去受理台（excavator/intake）提缺陷 / 任务单，再开工——MR 描述里的 Closes 就是把"做了什么"和"为什么做"焊在一起的焊点（需求流设计 §5.1）。
+  </div>
   <div class="box why">
     <b>🔍 为什么必须走 MR？</b>
     代码进 main 的唯一通道是评审，禁止直推是系统强制的，不靠自觉（设计 §4.2）。
@@ -166,6 +175,10 @@ $ git push -u origin feat/pid-tune</pre>
 
 <h2>红线清单</h2>
 <div class="box danger">
+  <b>🚫 无单不开发</b>
+  任何改动先有单（需求 / 缺陷 / 任务），MR 必须关联单号——追不到单的改动不合入（需求流设计 §7.1 三无制度）。
+</div>
+<div class="box danger">
   <b>🚫 不上传任何明文密钥 / 密码</b>
   CI 第一条 job 会跑 gitleaks 扫描，扫到即失败（设计 §6.5）。
 </div>
@@ -187,8 +200,12 @@ $ git push -u origin feat/pid-tune</pre>
   <li>§6.4 制品与镜像存储分工（CI 产出去哪）</li>
   <li>§5.3 交换条件（构建区出口收敛）</li>
 </ul>
+<p>需求流设计（docs/superpowers/specs/2026-09-03-requirement-flow-design.md）：</p>
+<ul>
+  <li>§4.3 关单双路径 / §5.1 MR 关联与 checklist</li>
+</ul>
 
-<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 两阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>
