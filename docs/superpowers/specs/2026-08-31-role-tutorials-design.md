@@ -3,11 +3,11 @@
 - 日期：2026-08-31
 - 状态：已与发起人逐节确认
 - 读者：刚毕业的初级工程师、未接触过 GitLab 实践的老工程师
-- 素材：一阶段 20 张 + 二阶段 11 张（21–31）原型截图，均复用验证证据、不补拍；二阶段截图于 2026-09-01 验证（test-plan §8）后纳入
+- 素材：一阶段 20 张 + 二阶段 11 张（21–31）+ 三阶段 9 张复用（32–43 中选 9）原型截图，均复用验证证据、不补拍；二阶段截图于 2026-09-01 验证（test-plan §8）、三阶段于 2026-09-03 验证（test-plan §9）后纳入
 
 ## 1. 目标与形态
 
-为五类角色各写一份自包含 HTML 入门教程，外加一个角色导航索引页。教程与目标角色的日常工作强相关：每一步都对应他们在原型实例上真实会做的操作，图文并茂（截图 + 网页操作路径 + git 命令并行），5–10 分钟读完即可上手。
+为六类角色各写一份自包含 HTML 入门教程（五类代码侧 + 需求侧"需求提出人与管理者"），外加一个角色导航索引页。教程与目标角色的日常工作强相关：每一步都对应他们在原型实例上真实会做的操作，图文并茂（截图 + 网页操作路径 + git 命令并行），5–10 分钟读完即可上手。
 
 ```
 docs/tutorials/
@@ -17,7 +17,8 @@ docs/tutorials/
 ├── viewer.html             # 只读协作者（Guest 10）
 ├── platform.html           # 平台工程（ci-templates 守护者）
 ├── field-engineer.html     # 驻场工程师（离线工作流）
-└── assets/                 # 20 张截图的副本（复制，非软链）
+├── submitter.html         # 需求提出人与管理者（提单 + 看板视角，三阶段新增）
+└── assets/                 # 截图的副本（复制，非软链）
 ```
 
 - 全中文，内联 CSS，无 JS、无外部依赖，双击即开，打印友好（可作培训讲义）。
@@ -27,7 +28,7 @@ docs/tutorials/
 
 | 决策点 | 结论 |
 |---|---|
-| 交付形态 | 5 个独立 HTML + 1 个索引页 |
+| 交付形态 | 6 个独立 HTML + 1 个索引页 |
 | 操作讲法 | 网页操作路径 + git 命令并行展示 |
 | 图片策略 | 复用现有 20 张截图，不补拍 |
 | 行文风格 | 操作与原理穿插：先"做什么"，再"为什么"（白话解释设计规则）；术语首现给白话释义 |
@@ -63,6 +64,7 @@ docs/tutorials/
 - 🔍 为什么不能直推 main（§4.2 保护分支）
 - 🔍 CI 现在还做什么（二阶段旁注）：固件流水线构建镜像推 Harbor、算法流水线从 MinIO 取数+训练产物推回 MinIO——但开发操作不变，push 完等绿（§5.3/§6.4）
 - 自救：流水线红了怎么办（点 job 看日志 → 本地复跑 → push 空提交重触发）
+- 三阶段扩展（提单/关联单号）：MR 描述写 `Closes #单号` + 选里程碑，模板四项自查 checklist；红线"无单不开发"（需求流 §7.1）；用图 36（三阶段）
 - 红线：不上明文密钥、不 `-f` 强推、main 不直推
 
 ### 5.2 owner.html — 仓库 Owner
@@ -101,9 +103,22 @@ docs/tutorials/
 - 🔍 场景三取数（二阶段补实物，§7.2）：投放区 write-only——现场只能投、不能删/列别人的；回公司由平台组归档进 dataset-model 的 field-archive 目录
 - 🔍 24h 补 MR 的绑定条件：只约束"临时包刷上了机器"的应急——机器跑过非 CI 产物必须回追溯链；纯本地验证后放弃的改动按普通分支废弃即可
 - 自救：现场没网改了码（本地 commit → 回网 push → 补 MR）
+- 三阶段扩展（manifest 建缺陷单）：现场缺陷回受理台按缺陷模板建单、manifest 整段粘贴进专区——后方三跳回溯（需求流 §5.2）；用图 39（三阶段）
 - 红线：改动不以 commit 回中心仓 = 违规（§7.2 硬规则）；现场数据不走私人网盘/U 盘，只进投放区（§7.4）
 
-### 5.6 index.html — 角色导航 + 通用入门
+### 5.6 submitter.html — 需求提出人与管理者（三阶段新增）
+
+（本节 § 指向《产研需求流设计》2026-09-03）
+
+- 双读者：提单人（市场/客服/集团接口人，Guest 10，只提单不管代码）+ 管理者（Reporter 20，例会看板投屏）
+- 任务流 A 提一张单：受理台选模板 → 填三段拿单号 → 等分诊（移交/打回/婉拒；标签由分诊代打）→ 合入自动关单不用催
+- 任务流 B 例会三屏：组看板状态列 → 里程碑过滤与完成度 → 受理台积压
+- 用图：32-intake-template-form、33-intake-issue-filed、34-issue-transferred、37-issue-auto-closed（提单线）；41-group-board、42-milestone-progress、43-intake-backlog（管理线）
+- 🔍 为什么只进一个口（§4.1）／为什么验收标准必填（§7.3）／为什么 3 日 SLA（§4.2）／为什么不用催（§5.1）／例会只看板（§6）
+- 自救：单被打回 / 单被婉拒 / 找不到入口 / 查历史单进度
+- 红线：群里口头提需求不算数、不贴客户商务细节（§7.3）、管理者不绕过分诊派活（§4.4）
+
+### 5.7 index.html — 角色导航 + 通用入门
 
 - 5 张角色卡片（"我是谁 → 看哪份"）
 - 通用入门区（所有角色共用的基本动作）：01-login、02-dashboard、04-group-tree、06-pipelines、07-ci-success、12-members
@@ -113,7 +128,7 @@ docs/tutorials/
 
 ## 6. 截图分配总表
 
-（16-release 在 owner/viewer/field 三份中复用、29-minio-buckets 在 platform/field/index 三份中复用，符合"自包含"原则；一阶段 19 张已用 + 二阶段 7 张复用（21/23/26/27/28/29/30），09-mr-closed 弃用。）
+（16-release 在 owner/viewer/field 三份中复用、29-minio-buckets 在 platform/field/index 三份中复用，符合"自包含"原则；一阶段 19 张已用 + 二阶段 7 张复用（21/23/26/27/28/29/30），09-mr-closed 弃用。三阶段复用 9 张（32/33/34/36/37/39/41/42/43）；35/40 叙事由文字承载不复用，38-release-milestone 因图文已知分歧（test-plan 9.3-7）不复用。）
 
 | 截图 | 用于 |
 |---|---|
@@ -128,6 +143,10 @@ docs/tutorials/
 | 26-harbor-projects, 28-harbor-proxy, 29-minio-buckets | platform 纳管节（二阶段） |
 | 27-harbor-frmci | owner 镜像归宿（二阶段） |
 | 29-minio-buckets, 30-minio-dataset | field-engineer 取数场景、index 产物去向（二阶段） |
+| 32-intake-template-form, 33-intake-issue-filed, 34-issue-transferred, 37-issue-auto-closed | submitter 提单线（三阶段） |
+| 41-group-board, 42-milestone-progress, 43-intake-backlog | submitter 管理线（三阶段） |
+| 36-mr-closes-issue | developer 关联单号（三阶段） |
+| 39-defect-manifest | field-engineer 现场缺陷提单（三阶段） |
 
 ## 7. 验收标准
 
@@ -143,3 +162,5 @@ docs/tutorials/
 - 不写 Git 本身的教学（如何 add/commit 属于 Git 入门，不是本体系教程范围；教程内命令只覆盖与 GitLab 交互相关的操作）
 - 不覆盖 LDAP（原型未验证，仅在延伸阅读提及设计方向）；Harbor/MinIO 已于二阶段验证（test-plan §8 九项全 ✅），纳入 platform / field-engineer / developer / owner 相应教程并复用 21–31 截图
 - 不把教程写成 Harbor/MinIO 操作手册——教程是角色上手指南，组件配置细节回溯设计 spec 与 test-plan，教程只讲角色视角会看到什么、怎么对应
+- 第 6 篇不写成需求管理手册——分诊/排期/合码操作属 Owner/developer 教程与设计文档范畴，提单人视角只讲"单的去向"
+- 不复用 35/38/40 三阶段截图（打回婉拒以文字承载、38 图文已知分歧 test-plan 9.3-7、40 反向三跳细节回溯 test-plan §9）
