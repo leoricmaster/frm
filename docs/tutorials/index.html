@@ -93,6 +93,12 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
     <span class="badge">出场前 Developer / 现场 Guest</span>
     <p>离线 · 刷固件 · 补MR</p>
   </a>
+  <a class="card" href="submitter.html">
+    <b>需求提出人与管理者</b>
+    <p>提需求看进度的人</p>
+    <span class="badge">提单人 Guest / 管理者 Reporter</span>
+    <p>提单 · 看板 · 里程碑</p>
+  </a>
 </div>
 
 <h2>通用入门</h2>
@@ -169,6 +175,11 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <figcaption>MinIO 三桶 ｜ 大文件归宿——dataset-model / field-dropzone / training-output</figcaption>
 </figure>
 
+<div class="box why">
+  <b>🔍 有需求 / 缺陷要提？（三阶段新增）</b>
+  全部来源只进一个口——受理台（excavator/intake）按模板建单，3 个工作日内分诊；进度看组看板与里程碑。见<b><a href="submitter.html">需求提出人与管理者</a></b>教程。
+</div>
+
 <h2>术语速查</h2>
 <table>
   <tr><th>术语</th><th>白话</th></tr>
@@ -182,9 +193,14 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <tr><td>MinIO</td><td>对象存储：数据集、模型权重等大文件归宿，git 里只存清单与指针</td></tr>
   <tr><td>投放区</td><td>现场数据 write-only 投放桶：只能往里投，不能删/列别人的</td></tr>
   <tr><td>DLP</td><td>集团防泄漏系统：终端透明加解密——文件在硬盘上自动加密，拷出去打不开</td></tr>
+  <tr><td>受理台（intake）</td><td>所有需求 / 缺陷的唯一进料口仓库：按模板建单，3 日内分诊</td></tr>
+  <tr><td>分诊</td><td>域 Owner 把单移交 / 打回 / 婉拒，并代打来源与状态标签</td></tr>
+  <tr><td>状态:: / 来源:: 标签</td><td>形如"状态::待受理"的全组统一标签——看板列就来自它</td></tr>
+  <tr><td>里程碑</td><td>版本节点（如"固件 v2.3·2026Q4"），进度按单数百分比看</td></tr>
+  <tr><td>Closes #单号</td><td>写在 MR 描述里的关单指令：代码合入那一刻，单自动关闭</td></tr>
 </table>
 
-<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 两阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md / 2026-09-03-requirement-flow-design.md</footer>
 
 </div>
 </body>

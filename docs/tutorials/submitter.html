@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>需求提出人与管理者 · 挖机代码管理上手指南</title>
+<style>
+:root{--ink:#1f2328;--mut:#656d76;--line:#d8dee4;--bg:#f6f8fa;
+--blue:#0969da;--blue-bg:#ddf4ff;--red:#cf222e;--red-bg:#ffebe9;
+--yel:#9a6700;--yel-bg:#fff8c5;--accent:#1f6feb}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:15px/1.7 system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background:#fff}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 60px}
+header.hero{background:linear-gradient(135deg,#0d2b45,#1f6feb);color:#fff;padding:34px 0 26px;margin-bottom:28px}
+header.hero .wrap{padding-bottom:0}
+.crumb{font-size:13px;opacity:.8;margin-bottom:10px}
+.crumb a{color:#fff}
+h1{font-size:26px;margin:0 0 6px}
+.tagline{font-size:15px;opacity:.9;margin:0}
+.badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);
+border-radius:99px;padding:2px 12px;font-size:13px;margin-top:10px}
+h2{font-size:20px;border-left:4px solid var(--accent);padding-left:10px;margin:38px 0 14px}
+h3{font-size:16px;margin:22px 0 8px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg)}
+.step{border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:16px 0;background:#fff}
+.step .no{display:inline-block;background:var(--accent);color:#fff;border-radius:50%;
+width:26px;height:26px;line-height:26px;text-align:center;font-weight:700;margin-right:8px}
+.step h3{display:inline;margin:0}
+.cmd{background:#0d1117;color:#e6edf3;border-radius:8px;padding:12px 14px;overflow-x:auto;
+font:13px/1.6 ui-monospace,Consolas,monospace;margin:10px 0}
+.cmd .c{color:#8b949e}
+figure.shot{margin:14px 0}
+figure.shot img{max-width:100%;border:1px solid var(--line);border-radius:8px;display:block}
+figcaption{color:var(--mut);font-size:13px;margin-top:6px}
+.box{border-radius:8px;padding:12px 16px;margin:14px 0;font-size:14px}
+.box b{display:block;margin-bottom:4px}
+.why{background:var(--blue-bg);border:1px solid #a5d8ff}
+.why b{color:var(--blue)}
+.danger{background:var(--red-bg);border:1px solid #ffc1c0}
+.danger b{color:var(--red)}
+.tip{background:var(--yel-bg);border:1px solid #ecdf95}
+.tip b{color:var(--yel)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin:16px 0}
+.card{border:1px solid var(--line);border-radius:10px;padding:16px;text-decoration:none;color:var(--ink)}
+.card:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(31,111,235,.15)}
+.card b{color:var(--accent)}
+.ok{color:#1a7f37;font-weight:700}.no2{color:var(--red);font-weight:700}
+footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-top:48px;padding-top:14px}
+@media print{header.hero{background:#0d2b45}.step,.box{break-ins:avoid}body{font-size:12px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="crumb"><a href="index.html">← 返回角色导航</a></p>
+    <h1>需求提出人与管理者上手指南</h1>
+    <p class="tagline">有需求提单、有缺陷贴 manifest；例会看板投屏——全程不碰代码</p>
+    <span class="badge">提单人 Guest 10 · 管理者 Reporter 20</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>你是谁</h2>
+<p>这篇教程服务两类人，共用一个入口：</p>
+<p><b>需求提出人</b>——市场、客服、集团接口人、现场反馈汇集者。你在 GitLab 里是 <b>Guest（10）</b>：唯一日常操作就是在<b>受理台</b>（excavator/intake 仓库）提单，提完等分诊。不需要知道代码住在哪个仓库，也不需要任何代码权限。</p>
+<p><b>管理者</b>——带团队看进度的人。你是 <b>Reporter（20）</b>：不写代码，周例会打开组看板和里程碑页投屏，回答"需求到哪了、卡在哪"。</p>
+
+<h2>你能做什么 / 不能做什么</h2>
+<table>
+  <tr><th>能 ✅</th><th>不能 ❌</th></tr>
+  <tr><td>在受理台按模板建单（需求 / 缺陷 / 任务）</td><td>改任何代码仓库（无权限，也不需要）</td></tr>
+  <tr><td>给自己的单补评论、补信息</td><td>打标签、改看板配置（标签由分诊代打，配置平台组管）</td></tr>
+  <tr><td>看组看板、里程碑完成度（例会投屏）</td><td>在群里口头提需求代替提单（制度：一概"请提单"）</td></tr>
+</table>
+
+<h2>典型任务流 A：提一张单（需求提出人）</h2>
+
+<div class="step">
+  <span class="no">1</span><h3>进受理台，选模板</h3>
+  <p>左侧 Groups → excavator → <b>intake</b>（受理台）仓库 → Issues → New issue。三个模板三选一：<b>需求</b>（背景 / 目标 / 验收标准）、<b>缺陷</b>（现象 / 复现 / 影响范围 / 机器 manifest 粘贴区）、<b>任务</b>（技术改进类）。</p>
+  <figure class="shot">
+    <img src="assets/32-intake-template-form.png" alt="受理台建单页，需求模板表单">
+    <figcaption>受理台建单 ｜ 模板下拉选「需求」——背景与目标 / 验收标准（必填）/ 来源信息</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 为什么所有需求只进一个口？</b>
+    来源再多（集团 / 市场 / 客户 / 现场 / 内部）都走同一张模板进来，分诊人才能在 3 个工作日内给你答复；散在群消息里的需求没人接、也没人记得住（设计 §4.1）。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">2</span><h3>填完三段，提交拿单号</h3>
+  <p>模板三段里<b>验收标准必填</b>，写"怎么算做完"——最好是可检查的样子（如"怠速下驾驶室振动位移 ≤ X mm"）。提交后拿到 <b>#单号</b>，这是你后续追问进度的唯一凭证。</p>
+  <figure class="shot">
+    <img src="assets/33-intake-issue-filed.png" alt="受理台单详情页，guest1 提的需求单带待受理标签与分诊打回评论">
+    <figcaption>受理台单详情 ｜ @guest1 的需求单 #2 进「待受理」队列，分诊打回评论写明缺什么</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 为什么验收标准空泛会被打回？</b>
+    单据质量靠两道兜底：模板示例给"好单"的样子 + 分诊打回机制（设计 §7.3）。"优化一下体验"这种单没人知道做完没做完。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">3</span><h3>等分诊：看单去哪了</h3>
+  <p>3 个工作日内，分诊人（域 Owner 兼任）会做三件事之一：<b>移交</b>（单搬到对应产品域仓库、进排期）、<b>打回</b>（信息不足，退回你补）、<b>婉拒</b>（重复或超范围，说明理由关闭）。<code>来源::</code>/<code>状态::</code> 标签由分诊人代打——Guest 无打标权限（三阶段实测）。</p>
+  <figure class="shot">
+    <img src="assets/34-issue-transferred.png" alt="分诊移交后的需求单，已进域仓库并排期">
+    <figcaption>分诊移交后 ｜ 单已 move 到 firmware 域仓库、状态 已排期、进里程碑（此单随后随 MR 合入关闭，见第 4 步）</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 为什么强调 3 日内分诊？</b>
+    入口响应速度决定大家愿不愿意提单——这是口头文化能否被替代的胜负手（设计 §4.2）。分诊堵没堵，管理者一眼能看（见任务流 B 第 3 步）。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">4</span><h3>怎么知道做完了：不用催</h3>
+  <p>开发在 MR 描述里写 <code>Closes #单号</code>，代码评审合入的那一刻，你的单<b>自动关闭</b>、自动记录合入 commit——哪个版本收了你这单，点开单就能看到。</p>
+  <figure class="shot">
+    <img src="assets/37-issue-auto-closed.png" alt="MR 合入后自动关闭的需求单，带合入 commit 记录">
+    <figcaption>合入自动关单 ｜ MR !5 合入那一刻单自动关闭——合入 commit 自动记录在单上</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 为什么不用发消息催进度？</b>
+    追溯链由系统自动生成，不靠人事后补录（设计 §5.1）：单的状态就是进度，催问的答案都在单上。需要外部验收的单（台架 / 现场确认）合入后进"待验证"，验收人通过后手关（§4.3）。
+  </div>
+</div>
+
+<h2>典型任务流 B：例会看板三屏（管理者）</h2>
+
+<div class="step">
+  <span class="no">1</span><h3>组看板：一屏看全域状态</h3>
+  <p>Groups → excavator → Issues → <b>Board</b>。列就是状态（待受理 → 已排期 → 开发中 → 待验证 → 已关闭 …），卡片在哪一列，活在哪一步。</p>
+  <figure class="shot">
+    <img src="assets/41-group-board.png" alt="excavator 组看板，列为待受理/已排期/开发中/待验证/已关闭/已拒绝">
+    <figcaption>组看板 ｜ 列=状态——待受理/已排期/开发中/待验证/已关闭/已拒绝，一屏看全域</figcaption>
+  </figure>
+</div>
+
+<div class="step">
+  <span class="no">2</span><h3>里程碑过滤与完成度</h3>
+  <p>看板按里程碑过滤（里程碑 = 版本节点，如"固件 v0.9"），或直接打开里程碑页：完成度<b>按单数给百分比</b> + 已关/未关清单——例会投这一屏。</p>
+  <figure class="shot">
+    <img src="assets/42-milestone-progress.png" alt="里程碑详情页，按单数显示完成度百分比与清单">
+    <figcaption>里程碑完成度 ｜ 按单数给百分比 + 已关/未关清单——图示 100%（1/1 单已关）</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 例会只看板、不念稿</b>
+    "待验证挂了一周的单"自动成为议程（设计 §6）。不做工时、不做燃尽——版本制交付，看单数就够了。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">3</span><h3>受理台积压：分诊堵没堵</h3>
+  <p>进 intake 仓库，Issues 按 <b>待受理</b> 过滤——待受理堆着多少单，分诊有没有堵，一眼可见。积压超一周，例会点名。</p>
+  <figure class="shot">
+    <img src="assets/43-intake-backlog.png" alt="受理台按待受理标签过滤的积压视图">
+    <figcaption>受理台积压 ｜ 按 待受理 过滤——当前 1 单在队，分诊堵没堵一眼可见</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 为什么管理者要盯受理台？</b>
+    提单人的意愿是这条流程的命脉，而意愿取决于响应速度（设计 §10）——积压视图就是分诊健康的仪表盘。
+  </div>
+</div>
+
+<h2>常见报错自救</h2>
+<div class="box tip">
+  <b>💡 我的单被打回了</b>
+  不是拒绝：分诊人在评论里说明了缺什么，把信息补在评论区即可，单会重新进入分诊。
+</div>
+<div class="box tip">
+  <b>💡 我的单被婉拒了</b>
+  看关闭理由：重复（原单链接就在理由里）、超范围（找对口团队）。不认可可找域 Owner 申诉。
+</div>
+<div class="box tip">
+  <b>💡 找不到提单入口</b>
+  Groups → excavator → intake，或直接收藏受理台地址。所有来源都从这里进，别把需求发给个人。
+</div>
+<div class="box tip">
+  <b>💡 想知道"我之前提的那单做到哪了"</b>
+  打开单看状态列位置；已关闭的单里挂着合入 commit 与所属里程碑，哪次发布收的一查便知。
+</div>
+
+<h2>红线清单</h2>
+<div class="box danger">
+  <b>🚫 群里 / 口头提需求不算数</b>
+  体系只认板上的单——群消息一概回"请提单"（设计 §7.3）。口头文化是这条流程唯一的对手。
+</div>
+<div class="box danger">
+  <b>🚫 单里不贴客户商务 / 合同细节</b>
+  需求说清楚就行，商务条款不进工单系统——DLP 意识延伸到需求侧（设计 §7.3）。
+</div>
+<div class="box danger">
+  <b>🚫 管理者不绕过分诊直接派活</b>
+  排期是域 Owner 把单拖进里程碑（设计 §4.4），不是领导打招呼——绕过受理台的活没有追溯链。
+</div>
+
+<h2>延伸阅读</h2>
+<p>设计文档（docs/superpowers/specs/2026-09-03-requirement-flow-design.md）：</p>
+<ul>
+  <li>§4.1 统一受理台 / §4.2 分诊值班 / §4.3 状态机</li>
+  <li>§5 追溯闭环（正向 Closes 关单 / 反向 manifest 三跳）</li>
+  <li>§6 进度可视化 / §7.3 防滥用边界</li>
+</ul>
+<p>原型验收（docs/superpowers/specs/2026-08-31-excavator-prototype-test-plan.md）：</p>
+<ul>
+  <li>§9 三阶段验证结果（四场景证据链，截图 32–43）</li>
+</ul>
+
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-09-03-requirement-flow-design.md</footer>
+
+</div>
+</body>
+</html>
