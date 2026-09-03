@@ -74,6 +74,51 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <tr><td>打 tag、批准晋升、建 Release</td><td>在本机编发布产物</td></tr>
 </table>
 
+<h2>典型任务流：分诊与排期（需求流）</h2>
+<p>三阶段起，你不只是代码守门人——你还是这个域的<b>分诊人</b>（§4.2）。提单人在受理台（excavator/intake）提的单，先到你手里过一道：3 个工作日内决定它的去向。</p>
+
+<div class="step">
+  <span class="no">1</span><h3>分诊：三选一</h3>
+  <p>打开受理台（excavator/intake）的 Issues 列表，按 <b>待受理</b> 过滤——这些单等着你处理。对每张单做三件事之一：</p>
+  <ul>
+    <li><b>移交</b>——单属于你管的域？把它 move 到你的域仓库，评论与链接全保留。同时代打 <code>来源::</code> 和 <code>状态::已排期</code> 标签（提单人是 Guest，没有打标权限，标签由你代打，§4.1）。</li>
+    <li><b>打回</b>——验收标准空泛、信息不够？退回提单人补充，在评论里写明缺什么。</li>
+    <li><b>婉拒</b>——重复提了、或超出本域范围？说明理由、关闭。</li>
+  </ul>
+  <div class="box why">
+    <b>🔍 为什么 3 日内必须分诊？</b>
+    入口响应速度决定大家愿不愿意提单——这是口头文化能否被替代的胜负手（§4.2）。堵没堵，看受理台积压（见管理者教程的积压视图）。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">2</span><h3>排期：拖里程碑</h3>
+  <p>移交到域仓库的单默认进 <b>已排期</b>。排期 = 把单拖进版本里程碑（如"固件 v0.9"），进里程碑即排上日程。里程碑 = 版本节点，跨仓库生效（§4.4）。</p>
+  <figure class="shot">
+    <img src="assets/42-milestone-progress.png" alt="里程碑详情页，按单数显示完成度百分比与已关/未关清单">
+    <figcaption>里程碑页 ｜ 进了里程碑的单在这里——按单数给完成度，不做工时与燃尽</figcaption>
+  </figure>
+  <div class="box why">
+    <b>🔍 为什么不做工时统计？</b>
+    版本制交付、节点驱动，不做固定迭代、不搞工时——看单数百分比就够了，里程碑清单就是发布清单（§4.4）。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">3</span><h3>合码前：核需求流 checklist</h3>
+  <p>Developer 提 MR 时，描述里应该带着四项自查 checklist。你合码前除了看代码 diff 和 CI 绿，还要核这四项（§5.1）：</p>
+  <ul>
+    <li>☑ <b>关联需求单号</b>——写了 <code>Closes #单号</code>（默认路径：合入即自动关单）还是只引用 <code>#单号</code>（需外部验收：合入后进待验证，你来手关）</li>
+    <li>☑ <b>选定里程碑</b>——这个版本要收的需求</li>
+    <li>☑ <b>CI 全绿</b></li>
+    <li>☑ <b>自测通过</b></li>
+  </ul>
+  <div class="box why">
+    <b>🔍 无单不开发（三无制度第一条，§7.1）</b>
+    任何改动（需求、缺陷、现场修复）先有单，commit 必须能追到一张 issue——追不到单的 MR 不合入。这是需求流与代码流之间的焊点。
+  </div>
+</div>
+
 <h2>典型任务流：一次发布的全流程</h2>
 
 <div class="step">
@@ -162,6 +207,14 @@ $ git push</pre>
 
 <h2>红线清单</h2>
 <div class="box danger">
+  <b>🚫 无单不开发——不合入追不到单的 MR</b>
+  MR 必须关联需求单号（Closes 或引用），追不到单的改动不合入（需求流设计 §7.1 三无制度）。
+</div>
+<div class="box danger">
+  <b>🚫 无里程碑不发布——tag/Release 必须挂里程碑</b>
+  发版前确认 tag 所属里程碑已选定——无里程碑的版本不算数（需求流设计 §7.1）。
+</div>
+<div class="box danger">
   <b>🚫 不合没有任何评审记录的"自己批自己"</b>
   Owner 的 MR 同样要有第二双眼睛，评审与合入分离对守门人自己也成立（§4.3）。
 </div>
@@ -181,6 +234,11 @@ $ git push</pre>
   <li>§4.3 权限</li>
   <li>§5.4 构建区</li>
   <li>§6.4 制品与镜像存储分工（三去向）</li>
+</ul>
+<p>需求流设计（docs/superpowers/specs/2026-09-03-requirement-flow-design.md）：</p>
+<ul>
+  <li>§4.2 分诊值班 / §4.4 版本节奏（排期与里程碑）</li>
+  <li>§5.1 MR 关联与 checklist / §7.1 三无制度</li>
 </ul>
 
 <footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
