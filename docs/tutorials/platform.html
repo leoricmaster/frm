@@ -180,6 +180,41 @@ $ git push -u origin fix/artifact-empty-check</pre>
   </div>
 </div>
 
+<h2>典型任务流：纳管需求流配置（三阶段新增）</h2>
+<p>三阶段引入了需求流——受理台、scoped 标签字典、组看板、issue 模板——这些配置的版本化管护也在你手上（§7.2）。所有需求流配置都在 <code>platform/</code> 仓库里走 MR，与 ci-templates 同级管理：新增一个标签也走 MR，防止标签蔓延失控。</p>
+
+<div class="step">
+  <span class="no">1</span><h3>scoped 标签字典</h3>
+  <p>全组统一的两套 scoped 标签在 <code>platform/</code> 仓库版本化（§4.3）：</p>
+  <ul>
+    <li><b>状态::</b>——7 个：待受理 / 已排期 / 开发中 / 待验证 / 已关闭 / 已拒绝 / 暂缓。一个不多一个不少——看板列就是这 7 个状态。</li>
+    <li><b>来源::</b>——5 个：集团 / 市场 / 客户 / 现场 / 内部。统计需求来源构成有数据可依。</li>
+  </ul>
+  <p>新增或改名一个标签 = 改 <code>platform/</code> 里的标签字典文件 → MR 评审 → 合入。不走 MR 直接在 GitLab 界面加标签 = 绕过版本化，不允许。</p>
+  <div class="box why">
+    <b>🔍 为什么标签也走 MR？</b>
+    标签是看板列、是统计维度、是例会议程——一个人随手加一个标签，看板就多一列、统计就对不齐。版本化让标签变更可追溯、可评审（§7.2）。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">2</span><h3>组看板与里程碑配置</h3>
+  <p>组级看板的列配置（7 状态列）和组级里程碑（版本节点）都在 <code>platform/</code> 里管。看板是懒创建的——首次浏览器访问后 API 才能加列，这个坑三阶段实测踩过（test-plan 9.1）。里程碑命名规范如 <code>固件 v0.9·三阶段原型</code>，跨仓库生效。</p>
+  <div class="box why">
+    <b>🔍 为什么看板列 = 状态标签？</b>
+    看板列不是自由配置的——它直接映射 7 个 scoped 状态标签。改列 = 改标签字典 = 走 MR（§4.3 / §6）。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">3</span><h3>issue 模板与 MR 模板</h3>
+  <p>受理台的三个 issue 模板（需求 / 缺陷 / 任务）和各域仓库的 MR 模板（含需求流四项 checklist）都在 <code>platform/</code> 版本化。改模板 = 改所有人的提单/建 MR 体验，必须走 MR 评审——与改 ci-templates 同理。</p>
+  <div class="box why">
+    <b>🔍 为什么模板也在 platform/？</b>
+    模板是流程的入口——模板改一行，所有人的提单/建 MR 行为就变了。与 ci-templates 同理，集中版本化、走 MR 评审、防止各域各搞一套（§7.2）。
+  </div>
+</div>
+
 <h2>常见报错自救</h2>
 <div class="box tip">
   <b>💡 下游报 ci-templates not found or access denied</b>
@@ -191,6 +226,10 @@ $ git push -u origin fix/artifact-empty-check</pre>
 </div>
 
 <h2>红线清单</h2>
+<div class="box danger">
+  <b>🚫 标签/看板/模板不在 GitLab 界面直接改——走 platform/ MR</b>
+  直接在 GitLab 界面加标签、改看板列、改模板 = 绕过版本化，不可追溯、不可评审（需求流设计 §7.2）。
+</div>
 <div class="box danger">
   <b>🚫 模板改动必须自己先在测试仓库跑绿再合入</b>
   你影响的是所有仓库——一次没验证的合入等于同时给四套业务线埋雷。
@@ -221,6 +260,11 @@ $ git push -u origin fix/artifact-empty-check</pre>
 <ul>
   <li>§7.3 全部五条实测发现</li>
   <li>§8 第二阶段验证结果（Harbor/MinIO 九项全 ✅）</li>
+</ul>
+<p>需求流设计（docs/superpowers/specs/2026-09-03-requirement-flow-design.md）：</p>
+<ul>
+  <li>§4.3 状态机与 scoped 标签 / §7.2 角色与配置归属</li>
+  <li>§6 进度可视化（看板与里程碑）</li>
 </ul>
 
 <footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
