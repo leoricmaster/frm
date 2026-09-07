@@ -87,6 +87,11 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 $ cd hydraulic-controller</pre>
 </div>
 
+<div class="box why">
+  <b>🔍 哪天要建新仓库？先过"建仓三问"</b>
+  仓库的位置和归属不是随手定的（设计 §4.1/§4.4）：<b>① 哪个域？</b>只能建在六个产品域子组里；跨域的体系设施有专门去处——CI 模板/规范进 platform，需求/缺陷进顶层 intake，两个都不属任何产品域。<b>② Owner 是谁？</b>一仓库 1–2 名 Maintainer，建仓时就要点名认领。<b>③ 说得清用途吗？</b>README 写齐用途/Owner/依赖、能编译——说不清用途的代码不入库。
+</div>
+
 <div class="step">
   <span class="no">2</span><h3>从最新 main 建特性分支</h3>
   <p>分支名规则：<b>feat/xxx</b>（新功能）或 <b>fix/xxx</b>（修 bug）。永远不要在 main 上直接改。</p>
