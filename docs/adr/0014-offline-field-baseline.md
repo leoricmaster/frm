@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31
-- 来源：[统一代码管理体系设计 §7](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
+- 来源：[统一代码管理体系设计 §7](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0008（驻场终端全量 DLP）、ADR-0011（签名制品 + manifest）、ADR-0018（现场改动天然有单）
 
 ## 背景

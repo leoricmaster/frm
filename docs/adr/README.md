@@ -69,7 +69,7 @@
 
 ## 决策来源
 
-- [统一代码管理体系设计（2026-08-31）](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
-- [Harbor/MinIO 二阶段验证设计（2026-09-01）](../superpowers/specs/2026-09-01-harbor-minio-phase2-design.md)
-- [产研需求流设计（2026-09-03）](../superpowers/specs/2026-09-03-requirement-flow-design.md)
+- [统一代码管理体系设计（2026-08-31）](../design/2026-08-31-excavator-code-management-design.md)
+- [Harbor/MinIO 二阶段验证设计（2026-09-01）](../design/2026-09-01-harbor-minio-phase2-design.md)
+- [产研需求流设计（2026-09-03）](../design/2026-09-03-requirement-flow-design.md)
 - 归档日期：2026-09-07；后续补充决策（如 2026-09-07 确认的 CI 配置分工与触发分级细化）在对应 ADR 的"决策日期"行标注。

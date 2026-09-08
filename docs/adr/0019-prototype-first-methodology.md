@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31 起，经三阶段原型（08-31 / 09-01 / 09-03）确立
-- 来源：[原型验证计划](../superpowers/specs/2026-08-31-excavator-prototype-test-plan.md)、[Harbor/MinIO 二阶段设计 §2](../superpowers/specs/2026-09-01-harbor-minio-phase2-design.md)、[角色教程设计](../superpowers/specs/2026-08-31-role-tutorials-design.md)
+- 来源：[原型验证结论](../design/2026-09-07-prototype-verification.md)、[Harbor/MinIO 二阶段设计 §2](../design/2026-09-01-harbor-minio-phase2-design.md)
 - 关联：全部 ADR——本 ADR 规定决策如何被验证
 
 ## 背景
@@ -11,7 +11,7 @@
 
 ## 决策
 
-1. **先原型后正式**：每项机制先在 gitlab-compose-test 本地原型实例上验证（三阶段：平台与权限 → Harbor/MinIO 制品通道 → 需求流），证据（截图、job 日志）编号入档，test-plan 表格化逐项 ✅；
+1. **先原型后正式**：每项机制先在 gitlab-compose-test 本地原型实例上验证（三阶段：平台与权限 → Harbor/MinIO 制品通道 → 需求流），证据（截图、job 日志）编号入档，验证结论页表格化逐项 ✅；
 2. **简化项显式列举**：原型用 root 本地账号代替 LDAP、Harbor 用 http + insecure——每项简化都写进"留正式实施"清单，不静默降级；
 3. **教程不先于验证**：教程按实际验证路径补写，基于真实实例截图而非手绘理想图；
 4. 设计文档逐节与发起人评审确认——评审过程即干系人识别过程。

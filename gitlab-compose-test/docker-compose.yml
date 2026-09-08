@@ -1,5 +1,5 @@
 # 智能挖机统一代码管理体系 — 本地原型验证环境
-# 对应设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md
+# 对应设计文档：docs/design/2026-08-31-excavator-code-management-design.md
 # 模拟场景：机房构建区（无 DLP agent、无 VPN），仅本机网络可达
 # 镜像：gitlab-ce（设计 §4 允许 CE 先行；ee 命名空间被镜像源限流）
 #

@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-09-03
-- 来源：[产研需求流设计 §2、§3、§11](../superpowers/specs/2026-09-03-requirement-flow-design.md)
+- 来源：[产研需求流设计 §2、§3、§11](../design/2026-09-03-requirement-flow-design.md)
 - 关联：ADR-0001（同一平台）、ADR-0016/0017/0018（需求流机制）、ADR-0002（CE 能力边界平替）
 
 ## 背景

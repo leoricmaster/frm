@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31
-- 来源：[统一代码管理体系设计 §4.2](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
+- 来源：[统一代码管理体系设计 §4.2](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0002（保护分支是系统强制手段）、ADR-0018（无 MR 不合码）
 
 ## 背景

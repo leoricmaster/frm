@@ -199,7 +199,7 @@ $ git push -u origin fix/artifact-empty-check</pre>
 
 <div class="step">
   <span class="no">2</span><h3>组看板与里程碑配置</h3>
-  <p>组级看板的列配置（7 状态列）和组级里程碑（版本节点）都在 <code>platform/</code> 里管。看板是懒创建的——首次浏览器访问后 API 才能加列，这个坑三阶段实测踩过（test-plan 9.1）。里程碑命名规范如 <code>固件 v0.9·三阶段原型</code>，跨仓库生效。</p>
+  <p>组级看板的列配置（7 状态列）和组级里程碑（版本节点）都在 <code>platform/</code> 里管。看板是懒创建的——首次浏览器访问后 API 才能加列，这个坑三阶段实测踩过（验证结论 §3-11）。里程碑命名规范如 <code>固件 v0.9·三阶段原型</code>，跨仓库生效。</p>
   <div class="box why">
     <b>🔍 为什么看板列 = 状态标签？</b>
     看板列不是自由配置的——它直接映射 7 个 scoped 状态标签。改列 = 改标签字典 = 走 MR（§4.3 / §6）。
@@ -248,7 +248,7 @@ $ git push -u origin fix/artifact-empty-check</pre>
 </div>
 
 <h2>延伸阅读</h2>
-<p>设计文档（docs/superpowers/specs/2026-08-31-excavator-code-management-design.md）：</p>
+<p>设计文档（docs/design/2026-08-31-excavator-code-management-design.md）：</p>
 <ul>
   <li>§6.2 三层模型</li>
   <li>§6.1 Runner 池</li>
@@ -256,18 +256,18 @@ $ git push -u origin fix/artifact-empty-check</pre>
   <li>§5.3 交换条件（构建区出口收敛）</li>
   <li>§6.5 密钥管理</li>
 </ul>
-<p>原型验收（docs/superpowers/specs/2026-08-31-excavator-prototype-test-plan.md）：</p>
+<p>原型验收（docs/design/2026-09-07-prototype-verification.md）：</p>
 <ul>
-  <li>§7.3 全部五条实测发现</li>
-  <li>§8 第二阶段验证结果（Harbor/MinIO 九项全 ✅）</li>
+  <li>§3 实测事实（阶段一全部五条）</li>
+  <li>§1 阶段二矩阵（Harbor/MinIO 九项全 ✅）</li>
 </ul>
-<p>需求流设计（docs/superpowers/specs/2026-09-03-requirement-flow-design.md）：</p>
+<p>需求流设计（docs/design/2026-09-03-requirement-flow-design.md）：</p>
 <ul>
   <li>§4.3 状态机与 scoped 标签 / §7.2 角色与配置归属</li>
   <li>§6 进度可视化（看板与里程碑）</li>
 </ul>
 
-<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/superpowers/specs/2026-08-31-excavator-code-management-design.md</footer>
+<footer>挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>

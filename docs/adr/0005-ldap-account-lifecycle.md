@@ -2,7 +2,7 @@
 
 - 状态：已接受（2026-09-07 补精确边界）
 - 决策日期：2026-08-31；边界注 2026-09-07
-- 来源：[统一代码管理体系设计 §4.3（含边界注）](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
+- 来源：[统一代码管理体系设计 §4.3（含边界注）](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0002（分组同步是 Premium 功能）、ADR-0004（权限三级）
 
 ## 背景

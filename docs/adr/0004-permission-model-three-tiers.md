@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31
-- 来源：[统一代码管理体系设计 §4.3](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
+- 来源：[统一代码管理体系设计 §4.3](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0003（结构）、ADR-0005（账号）、ADR-0009（平台组对 ci-templates 的唯一变更权）
 
 ## 背景

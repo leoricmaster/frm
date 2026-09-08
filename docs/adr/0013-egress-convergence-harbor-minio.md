@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31（设计 §5.3）；2026-09-01 二阶段原型验证拓扑
-- 来源：[统一代码管理体系设计 §5.3](../superpowers/specs/2026-08-31-excavator-code-management-design.md)、[Harbor/MinIO 二阶段验证设计](../superpowers/specs/2026-09-01-harbor-minio-phase2-design.md)
+- 来源：[统一代码管理体系设计 §5.3](../design/2026-08-31-excavator-code-management-design.md)、[Harbor/MinIO 二阶段验证设计](../design/2026-09-01-harbor-minio-phase2-design.md)
 - 关联：ADR-0008（出口收敛是 DLP 豁免的交换条件）、ADR-0011（产物归宿）、ADR-0014（投放区）
 
 ## 背景

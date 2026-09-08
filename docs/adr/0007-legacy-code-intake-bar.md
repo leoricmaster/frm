@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31
-- 来源：[统一代码管理体系设计 §4.4、§8 阶段 2、§10](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
+- 来源：[统一代码管理体系设计 §4.4、§8 阶段 2、§10](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0003（收编目标地）、ADR-0001（背景：消灭单点丢失）
 
 ## 背景

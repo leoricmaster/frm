@@ -2,7 +2,7 @@
 
 - 日期：2026-09-01
 - 状态：已与发起人逐节确认
-- 依据：[统一代码管理体系设计](./2026-08-31-excavator-code-management-design.md) §5.3/§6.4/§6.5/§7.2、[原型验证计划](./2026-08-31-excavator-prototype-test-plan.md) §0"Harbor/MinIO ⏸ 第二阶段"
+- 依据：[统一代码管理体系设计](./2026-08-31-excavator-code-management-design.md) §5.3/§6.4/§6.5/§7.2、[原型验证结论](./2026-09-07-prototype-verification.md)（原验证计划 §0 曾标"Harbor/MinIO 二阶段为 ⏸"，原稿见 git 历史）
 - 定位：补齐原型第一阶段未验证的两类产物归宿（容器镜像→Harbor、大文件→MinIO），使设计 §6.4 四类产物存放分工全部有本地证据；同时为正式实施阶段 1（基础设施：Nexus/Harbor 代理 + MinIO）提供原地复用的验证。
 
 ## 1. 背景与目标
@@ -20,7 +20,7 @@
 | 决策点 | 结论 |
 |---|---|
 | Harbor 镜像来源 | 7897 代理后台慢拉（约 1.5–2h），期间并行做 MinIO |
-| 验证深度 | 跑通 + 截图入档 + test-plan 更新（延续第一阶段证据链风格） |
+| 验证深度 | 跑通 + 截图入档 + 验证结论页更新（延续第一阶段证据链风格） |
 | Harbor 接入形态 | 组件容器直接写进主 `docker-compose.yml`（与 GitLab/runner 同网络同生命周期） |
 | Harbor 项目规划 | 双项目：`frm-ci`（直推）+ `docker-hub-proxy`（proxy cache，上游指向可达镜像加速源） |
 | MinIO 场景 | 三场景全做：大文件指针+CI 取用 / 现场投放区回传 / 训练产物入库 |
@@ -74,9 +74,9 @@
 | 风险 | 处理 |
 |---|---|
 | Harbor 镜像后台慢拉中断/失败 | docker pull 断点续拉（已有层不重下）；彻底失败则 MinIO 三场景独立交付，Harbor 部分留待镜像到位，不阻塞其余证据 |
-| proxy 上游全部不可达 | 记录"代理拓扑成立、上游连通性受本机环境限制"入 test-plan——正式实施时机房出口本就收敛到内网代理，拓扑证据已足 |
+| proxy 上游全部不可达 | 记录"代理拓扑成立、上游连通性受本机环境限制"入验证结论页——正式实施时机房出口本就收敛到内网代理，拓扑证据已足 |
 | sudo 重启 docker 影响 pih 项目 | 重启前核对 pih 容器 restart 策略（unless-stopped 会自动回来），命令由用户亲自执行 |
-| MinIO 与 pih 冲突 | 端口/卷/容器名全隔离，无共享路径；兜底恢复命令写入 test-plan |
+| MinIO 与 pih 冲突 | 端口/卷/容器名全隔离，无共享路径；兜底恢复命令写入验证结论页 |
 
 ## 6. 明确不验证（留正式实施）
 
@@ -89,7 +89,7 @@ Harbor TLS/多租户/漏洞扫描（Trivy）、MinIO 分布式/纠删码、LDAP 
 | 更新后的 `docker-compose.yml`（+Harbor ~10 服务 +MinIO 2 服务） | `docker compose up -d` 全部 healthy |
 | 示例流水线跑绿（build-push-Harbor / MinIO 拉取校验 / 训练产物入库） | pipeline success，job 日志含凭据打码证据 |
 | 截图第二批（编号续 21 起） | Harbor 项目页/推拉记录/代理缓存页、MinIO Console 三桶与投放区、流水线详情，存 `gitlab-compose-test/screenshots/` |
-| test-plan 新增"第二阶段验证结果"章节 | 表格化逐项 ✅ 与设计章节对应，含宿主机 daemon.json 环境变更记录 |
+| 验证结论页收录第二阶段结果 | 表格化逐项 ✅ 与设计章节对应，含宿主机 daemon.json 环境变更记录 |
 
 ## 8. 实施顺序
 
@@ -97,4 +97,4 @@ Harbor TLS/多租户/漏洞扫描（Trivy）、MinIO 分布式/纠删码、LDAP 
 2. Harbor 镜像后台慢拉（与 1 并行）；
 3. 镜像到位后：compose 加 Harbor 服务 → sudo 配 insecure-registries → 建项目 → 场景 1 → 截图；
 4. 场景 3 凭据集成贯穿 2/3 的流水线；
-5. test-plan 更新、提交。
+5. 验证结论页更新、提交。

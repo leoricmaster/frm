@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31
-- 来源：[统一代码管理体系设计 §11](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
+- 来源：[统一代码管理体系设计 §11](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0011（MinIO 里是不可再生资产）、ADR-0001（体系取代个人电脑成为权威副本）
 
 ## 背景

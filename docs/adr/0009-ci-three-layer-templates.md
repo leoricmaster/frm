@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31；配置分工表述 2026-09-07 确认
-- 来源：[统一代码管理体系设计 §6.2](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
+- 来源：[统一代码管理体系设计 §6.2](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0003（platform 宪法仓库）、ADR-0004（变更权只归平台组）、ADR-0002（CE include 即支持）
 
 ## 背景

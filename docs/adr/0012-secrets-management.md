@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31；凭据打码细节经 2026-09-01 二阶段原型实测
-- 来源：[统一代码管理体系设计 §6.5](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
+- 来源：[统一代码管理体系设计 §6.5](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0002（CE 无 push rules）、ADR-0013（Harbor/MinIO 凭据）、ADR-0008（受控主机在构建区）
 
 ## 背景

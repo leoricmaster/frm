@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31（设计评审确认）
-- 来源：[统一代码管理体系设计 §3.1](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
+- 来源：[统一代码管理体系设计 §3.1](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0002（版本策略）、ADR-0003（仓库结构）、ADR-0009（CI 分层）
 
 ## 背景

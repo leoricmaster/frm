@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31
-- 来源：[统一代码管理体系设计 §5](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
+- 来源：[统一代码管理体系设计 §5](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0013（出口收敛是交换条件之一）、ADR-0014（驻场终端全量 DLP）、ADR-0011（产物不加密）
 
 ## 背景

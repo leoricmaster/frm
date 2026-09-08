@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31（intake 归属 2026-09-03 需求流设计补充）
-- 来源：[统一代码管理体系设计 §4.1](../superpowers/specs/2026-08-31-excavator-code-management-design.md)、[产研需求流设计 §4.1](../superpowers/specs/2026-09-03-requirement-flow-design.md)
+- 来源：[统一代码管理体系设计 §4.1](../design/2026-08-31-excavator-code-management-design.md)、[产研需求流设计 §4.1](../design/2026-09-03-requirement-flow-design.md)
 - 关联：ADR-0004（权限沿产品域走）、ADR-0009（platform 宪法仓库）、ADR-0016（intake）
 
 ## 背景

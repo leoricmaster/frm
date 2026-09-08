@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-09-03
-- 来源：[产研需求流设计 §4.1、§4.2](../superpowers/specs/2026-09-03-requirement-flow-design.md)
+- 来源：[产研需求流设计 §4.1、§4.2](../design/2026-09-03-requirement-flow-design.md)
 - 关联：ADR-0003（intake 直挂顶层）、ADR-0004（Guest 权限起步）、ADR-0017（状态机）
 
 ## 背景

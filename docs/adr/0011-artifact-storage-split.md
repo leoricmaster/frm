@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31
-- 来源：[统一代码管理体系设计 §6.3、§6.4](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
+- 来源：[统一代码管理体系设计 §6.3、§6.4](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0013（Harbor/MinIO 具体形态）、ADR-0008（产物不加密）、ADR-0018（发布挂里程碑）
 
 ## 背景

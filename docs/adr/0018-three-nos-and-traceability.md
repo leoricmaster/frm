@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-09-03
-- 来源：[产研需求流设计 §5、§7.1](../superpowers/specs/2026-09-03-requirement-flow-design.md)、[统一代码管理体系设计 §6.3](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
+- 来源：[产研需求流设计 §5、§7.1](../design/2026-09-03-requirement-flow-design.md)、[统一代码管理体系设计 §6.3](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0006（无 MR 不合码）、ADR-0011（manifest）、ADR-0014（现场改动回中心）、ADR-0017（无里程碑不发布）
 
 ## 背景

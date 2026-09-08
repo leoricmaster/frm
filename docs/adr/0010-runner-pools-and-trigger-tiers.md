@@ -2,7 +2,7 @@
 
 - 状态：已接受
 - 决策日期：2026-08-31（池表）；触发分级细化 2026-09-07 讨论确认
-- 来源：[统一代码管理体系设计 §6.1](../superpowers/specs/2026-08-31-excavator-code-management-design.md)
+- 来源：[统一代码管理体系设计 §6.1](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0009（CI 三层）、ADR-0011（产物去向）
 
 ## 背景
