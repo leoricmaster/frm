@@ -107,7 +107,7 @@ $ cd hydraulic-controller</pre>
   <p>"不能直接 push main"不是口头规矩，而是系统强制：main 是保护分支，push/merge 权限只给了 Maintainer（40），你以 Developer（30）身份推上去会被直接拒绝。</p>
   <figure class="shot">
     <img src="assets/10-protect.png" alt="GitLab 仓库设置页的 Protected branches 保护分支入口">
-    <figcaption>保护分支设置 ｜ main 的 push/merge 限 Maintainer——系统强制，不靠自觉（测试计划 §5）</figcaption>
+    <figcaption>保护分支设置 ｜ main 的 push/merge 限 Maintainer——系统强制，不靠自觉（验证结论 §1 阶段一矩阵）</figcaption>
   </figure>
   <p>这个设置只有 Owner 能改（Manage → Settings → Repository → Protected branches）。所以别试直推，老实走 MR。</p>
 </div>
@@ -134,10 +134,6 @@ $ git push -u origin feat/pid-tune</pre>
   <div class="box why">
     <b>🔍 无单不开发（三无制度第一条）</b>
     任何改动（需求、缺陷、现场修复）先有单，commit 必须能追到一张 issue（需求流设计 §7.1）。你自己发现的 bug / 技术改进？先去受理台（excavator/intake）提缺陷 / 任务单，再开工——MR 描述里的 Closes 就是把"做了什么"和"为什么做"焊在一起的焊点（需求流设计 §5.1）。
-  </div>
-  <div class="box why">
-    <b>🔍 为什么必须走 MR？</b>
-    代码进 main 的唯一通道是评审，禁止直推是系统强制的，不靠自觉（设计 §4.2）。
   </div>
 </div>
 
@@ -171,7 +167,7 @@ $ git push -u origin feat/pid-tune</pre>
 </div>
 <div class="box tip">
   <b>💡 流水线直接 failed 且 0 个 job</b>
-  日志含 <code>Project 'excavator/platform/ci-templates' not found or access denied</code> → 你对 platform 组无读权限，找平台组给你加 Reporter（模拟验收 §7.3-1 已知问题）。
+  日志含 <code>Project 'excavator/platform/ci-templates' not found or access denied</code> → 你对 platform 组无读权限，找平台组给你加 Reporter（验证结论 §3-1 已知问题）。
 </div>
 <div class="box tip">
   <b>💡 流水线红了怎么排查</b>

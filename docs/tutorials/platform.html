@@ -64,7 +64,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 <div class="wrap">
 
 <h2>你是谁</h2>
-<p>你是这个项目的平台工程，在 GitLab 里的角色是 <b>platform 组 Maintainer</b>：管 <code>platform/ci-templates</code>——全项目 CI 规则的唯一来源，变更权只在本组（实测见测试计划 §7.3-5：firmware 维护者推本仓库被 403 拒绝）。连业务仓库的 Owner 都动不了模板——这不是不信任谁，而是把"规则怎么变"收拢成一条唯一的通道：MR + 评审。</p>
+<p>你是这个项目的平台工程，在 GitLab 里的角色是 <b>platform 组 Maintainer</b>：管 <code>platform/ci-templates</code>——全项目 CI 规则的唯一来源，变更权只在本组（实测见验证结论 §3-5：firmware 维护者推本仓库被 403 拒绝）。连业务仓库的 Owner 都动不了模板——这不是不信任谁，而是把"规则怎么变"收拢成一条唯一的通道：MR + 评审。</p>
 
 <h2>你能做什么 / 不能做什么</h2>
 <table>
@@ -122,11 +122,11 @@ $ git push -u origin fix/artifact-empty-check</pre>
 
 <div class="box why">
   <b>🔍 机制：include 在流水线创建时解析并快照</b>
-  retry 不重新解析；模板热修后必须触发<b>新</b>流水线验证，别盯着旧流水线 retry（§7.3-4 实测）——旧流水线用的还是创建那一刻的模板快照，retry 一百次也看不到新规则。
+  retry 不重新解析；模板热修后必须触发<b>新</b>流水线验证，别盯着旧流水线 retry（§3-4 实测）——旧流水线用的还是创建那一刻的模板快照，retry 一百次也看不到新规则。
 </div>
 
 <h2>典型任务流：纳管镜像仓库与对象存储</h2>
-<p>二阶段（2026-09-01）把 Harbor（镜像仓库）和 MinIO（对象存储）接进了原型——这两件的基础设施也在你手上：建项目、配桶策略、把凭据安全地交给 CI。下面是配置到位后的全貌（设计 §6.4 产物归宿、§5.3 出口收敛、§6.5 密钥管理；验证证据见测试计划 §8）。</p>
+<p>二阶段（2026-09-01）把 Harbor（镜像仓库）和 MinIO（对象存储）接进了原型——这两件的基础设施也在你手上：建项目、配桶策略、把凭据安全地交给 CI。下面是配置到位后的全貌（设计 §6.4 产物归宿、§5.3 出口收敛、§6.5 密钥管理；实测证据见验证结论 §1 阶段二矩阵）。</p>
 
 <div class="step">
   <span class="no">1</span><h3>Harbor 两项目</h3>
@@ -218,11 +218,11 @@ $ git push -u origin fix/artifact-empty-check</pre>
 <h2>常见报错自救</h2>
 <div class="box tip">
   <b>💡 下游报 ci-templates not found or access denied</b>
-  检查该开发者是否在 platform 组有 Reporter（全员可读是硬规则，§7.3-1）——通用层人人可读、只有本组可写，漏加读权限是这类报错的头号原因。
+  检查该开发者是否在 platform 组有 Reporter（全员可读是硬规则，§3-1）——通用层人人可读、只有本组可写，漏加读权限是这类报错的头号原因。
 </div>
 <div class="box tip">
   <b>💡 下游 job 用了自写 script，不吃模板更新</b>
-  它只 include 没 extends——改它的 job 定义，加上 <code>extends: .firmware-template</code>，让模板规则真正接管这个 job（§7.3-2）。
+  它只 include 没 extends——改它的 job 定义，加上 <code>extends: .firmware-template</code>，让模板规则真正接管这个 job（§3-2）。
 </div>
 
 <h2>红线清单</h2>
@@ -239,12 +239,8 @@ $ git push -u origin fix/artifact-empty-check</pre>
   一个仓库例外，宪法就名存实亡——特殊需求改模板，不给单独开口子。
 </div>
 <div class="box danger">
-  <b>🚫 runner 密钥/注册 token 不进仓库、不进聊天工具</b>
-  泄露即全园区 runner 失守，只走安全渠道下发与轮换。
-</div>
-<div class="box danger">
-  <b>🚫 Harbor/MinIO 凭据同样不进仓库、不进聊天工具</b>
-  robot account 与 access key 走受保护变量下发、定期轮换（§6.5）——与 runner 密钥同等级别管理。
+  <b>🚫 runner 密钥与 Harbor/MinIO 凭据一律不进仓库、不进聊天工具</b>
+  runner 注册 token 泄露即全园区 runner 失守；robot account 与 access key 与之同等级别管理，走受保护变量/安全渠道下发、定期轮换（§6.5）。
 </div>
 
 <h2>延伸阅读</h2>
