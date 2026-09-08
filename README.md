@@ -22,4 +22,4 @@ gitlab-compose-test/  本地原型环境：compose 栈、示例仓库、截图�
 
 ## 原型环境速览
 
-GitLab CE 19.3.1 @ http://10.66.35.35:8081（docker compose 栈，含 Runner / MinIO / Harbor）。教程截图与验证证据均出自该实例；原型一次性口令内嵌于 compose（仅限本测试栈，正式实施凭据另行管理）。
+GitLab CE 19.3.1（实测版本）@ http://10.66.35.35:8081（docker compose 栈，含 Runner / MinIO / Harbor）。教程截图与验证证据均出自该实例；原型一次性口令内嵌于 compose（仅限本测试栈，正式实施凭据另行管理）。
