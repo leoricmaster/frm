@@ -77,9 +77,7 @@
        → tag + Release(挂里程碑) → manifest.json(内嵌 commit) → 烧进机器
 ```
 
-**这条链由系统自动生成，不靠人事后补录**：MR 合入时 GitLab 自动在单上记录合入 commit 与关联；Release/里程碑关联让"这个版本收了哪些需求"可一键列出；manifest.json（总设计 §6.3）内嵌 commit hash，制品天然指向整条链。
-
-关单规则见 §4.3 双路径：默认 `Closes #单号` 合入即关；需外部验收的单只引用不写 Closes，走 `待验证` 由验收人手关。
+**这条链由系统自动生成，不靠人事后补录**：MR 合入时 GitLab 自动在单上记录合入 commit 与关联；Release/里程碑关联让"这个版本收了哪些需求"可一键列出；manifest.json（总设计 §6.3）内嵌 commit hash，制品天然指向整条链。关单双路径见 §4.3。
 
 制度兜底只需 MR 模板 checklist：☑ 关联需求单号（Closes 或引用） ☑ 选定里程碑 ☑ CI 全绿 ☑ 自测通过。Maintainer 合码照单核对。
 
