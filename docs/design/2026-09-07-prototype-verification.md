@@ -2,6 +2,7 @@
 
 - 日期：2026-09-07（蒸馏自 2026-08-31 / 09-01 / 09-03 三阶段验证记录，原稿见 git 历史 `docs/superpowers/specs/2026-08-31-excavator-prototype-test-plan.md`）
 - 状态：三阶段全部通过
+- 注：三阶段实测基于全球版 GitLab CE 19.3.1；2026-09-09 换装极狐 GitLab 19.3.1-jh.0（同源同版本号、免费版档）**复验通过**——组树等价重建（顶层组 intel_excavator），GitLab 侧证据截图在极狐中文界面重拍；七处 API/路由差异及规避见 §3-13
 - 依据：docs/design/ 三份设计文档；证据截图 01–43 存 `gitlab-compose-test/screenshots/`
 
 ## 1. 三阶段验证矩阵
@@ -11,7 +12,7 @@
 | 验证项 | 设计章节 | 结果 |
 |---|---|---|
 | GitLab 部署与登录 | §8 阶段1 | ✅ |
-| excavator 组结构（顶层+6子组） | §4.1 | ✅ |
+| intel_excavator 组结构（顶层+6子组） | §4.1 | ✅ |
 | 三级权限模型 | §4.3 | ✅ |
 | 保护分支禁直推 main | §4.2 | ✅ |
 | MR 创建与评审 | §4.2/§3.2 | ✅ |
@@ -45,7 +46,7 @@
 | 反向三跳（manifest→commit→MR→单） | §5.2 | ✅ |
 | 外部验收路径（缺陷单 待验证） | §4.3 | ✅ |
 | 组看板状态列 | §6 | ✅ |
-| 里程碑完成度（CE 按单数） | §6 | ✅ |
+| 里程碑完成度（免费版按单数） | §6 | ✅ |
 | 受理台积压视图 | §6 | ✅ |
 
 ## 2. 角色模拟验收（阶段一第二轮）
@@ -64,7 +65,7 @@
 
 1. **通用层模板须对全体开发者可读**：dev1 在 platform 组无角色 → include 解析失败、流水线 0 job。修复：全员加 platform 组 Reporter(20)。正式实施固化进建组脚本。
 2. **include ≠ 继承**：下游须 `extends: .firmware-template` 模板变更才传播；"不 include/不 extends 通用层的流水线不予合入"写进 MR 检查单。
-3. **Guest 可读 CI job 日志**（CE 默认）：敏感变量全部设 Protected 缓解（仅受保护分支流水线可见）。
+3. **Guest 可读 CI job 日志**（免费版默认）：敏感变量全部设 Protected 缓解（仅受保护分支流水线可见）。
 4. **include 在 pipeline 创建时快照解析，retry 不重解析**：模板热修后须触发新流水线验证。
 5. **域 Maintainer 推 platform 仓库被 403**：权限分离按设计意图成立。
 6. **Harbor 独立 compose**（非并入主 compose）：配置源 `harbor.yml` 入库即可复现，生成 compose 不入库（含随机密钥）。
@@ -74,6 +75,17 @@
 10. **image-build 须 `only:[main,tags]`**：否则 MR 流水线因缺受保护变量必红；且 tag 须先过 `POST /protected_tags` 保护才可见受保护变量。
 11. **组看板懒创建**：首次浏览器访问后 API 才能加列。
 12. **root PAT 无 sudo 作用域**：扮演非 root 用户改用"管理员代建用户 PAT、用毕吊销"（作者身份保真）。
+13. **极狐与 CE 的七处行为差异**（2026-09-09 换装复验实测，重建/截图脚本已按右列规避）：
+
+| 差异点 | CE 19.3.1 | 极狐 19.3.1-jh | 规避方式 |
+|---|---|---|---|
+| CI 变量值中的 `$` | 字面保留 | 按引用展开 | 字面 `$` 存成 `$$`（HARBOR_USER 存 `robot$$frm-ci+…`） |
+| `/repository/files` API | 可用 | 恒 404 | 一律走 Commits API + base64 动作 |
+| issue `/transfer` | 可用 | 恒 404 | 回退 `/move?to_project_id=` |
+| 项目 DELETE | 正常 | 卡 202 挂起 | rails `Projects::DestroyService` 强删 |
+| 标签 `?name=` 过滤 | 可靠 | 不可靠 | 全量拉回后本地比对 |
+| MR merge | 可不带 sha | 必带 sha | `PUT …/merge?sha={head_sha}` |
+| `/-/subgroups` 路由 | 可用 | 404 | 导航/截图改用组概览页 |
 
 ## 4. 不覆盖项（留正式实施）
 
@@ -83,5 +95,5 @@ Harbor TLS/多租户/漏洞扫描、MinIO 分布式与备份策略、Nexus、GPU
 
 ## 5. 证据位置
 
-- `gitlab-compose-test/screenshots/`：01–13 阶段一部署与权限，14–20 阶段一角色流，21–31 阶段二制品通道，32–43 阶段三需求流；
+- `gitlab-compose-test/screenshots/`：01–13 阶段一部署与权限，14–20 阶段一角色流，21–31 阶段二制品通道，32–43 阶段三需求流；2026-09-09 换装极狐后 01–25、32–43 已在极狐中文界面重拍，26–31 为 Harbor/MinIO 控制台（与 GitLab 实例无关）沿用原图；
 - 教程引用子集在 `docs/tutorials/assets/`；实例侧留档（intake 模板、firmware 示例等）在 `gitlab-compose-test/<repo名>/`。

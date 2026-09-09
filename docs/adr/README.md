@@ -16,8 +16,9 @@
 
 | 编号 | 标题 | 一句话决策 |
 |---|---|---|
-| [ADR-0001](0001-platform-gitlab-ce.md) | 平台选型：自建 GitLab CE 一体化 | 一体化平台承载全部体系；集团设施是演进路径不是独立方案 |
-| [ADR-0002](0002-edition-and-upgrade-path.md) | 版本策略：gitlab-ee 免费运行 | 缺失的 Premium 功能用制度/CI 替代，痛点成真再升级 |
+| [ADR-0001](0001-platform-gitlab-ce.md) | 平台选型：自建 GitLab 一体化 | 一体化平台承载全部体系；集团设施是演进路径不是独立方案 |
+| [ADR-0002](0002-edition-and-upgrade-path.md) | 版本策略：gitlab-ee 免费运行（已被 0021 取代） | 缺失的 Premium 功能用制度/CI 替代，痛点成真再升级 |
+| [ADR-0021](0021-edition-jihulab.md) | 版本策略：极狐 GitLab 免费版运行 | 国产化合规与本地支持；升级即注入 license，无需重装 |
 
 ### 代码组织与权限
 

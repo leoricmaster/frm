@@ -1,6 +1,6 @@
 # ADR-0002：版本策略——gitlab-ee 免费运行，Premium 痛点再升
 
-- 状态：已接受
+- 状态：已被 [ADR-0021](0021-edition-jihulab.md) 取代（2026-09-09）
 - 决策日期：2026-08-31
 - 来源：[统一代码管理体系设计 §3.2](../design/2026-08-31-excavator-code-management-design.md)
 - 关联：ADR-0001（平台选型）
