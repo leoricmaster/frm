@@ -65,7 +65,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <h2>你是谁</h2>
 <p>这篇教程服务两类人，共用一个入口：</p>
-<p><b>需求提出人</b>——市场、客服、集团接口人、现场反馈汇集者。你在 GitLab 里是 <b>Guest（10）</b>：唯一日常操作就是在<b>受理台</b>（excavator/intake 仓库）提单，提完等分诊。不需要知道代码住在哪个仓库，也不需要任何代码权限。</p>
+<p><b>需求提出人</b>——市场、客服、集团接口人、现场反馈汇集者。你在 GitLab 里是 <b>Guest（10）</b>：唯一日常操作就是在<b>受理台</b>（intel_excavator/intake 仓库）提单，提完等分诊。不需要知道代码住在哪个仓库，也不需要任何代码权限。</p>
 <p><b>管理者</b>——带团队看进度的人。你是 <b>Reporter（20）</b>：不写代码，周例会打开组看板和里程碑页投屏，回答"需求到哪了、卡在哪"。</p>
 
 <h2>你能做什么 / 不能做什么</h2>
@@ -80,7 +80,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">1</span><h3>进受理台，选模板</h3>
-  <p>左侧 Groups → excavator → <b>intake</b>（受理台）仓库 → Issues → New issue。三个模板三选一：<b>需求</b>（背景 / 目标 / 验收标准）、<b>缺陷</b>（现象 / 复现 / 影响范围 / 机器 manifest 粘贴区）、<b>任务</b>（技术改进类）。</p>
+  <p>左侧 群组 → intel_excavator → <b>intake</b>（受理台）仓库 → 议题 → 新建议题。三个模板三选一：<b>需求</b>（背景 / 目标 / 验收标准）、<b>缺陷</b>（现象 / 复现 / 影响范围 / 机器 manifest 粘贴区）、<b>任务</b>（技术改进类）。</p>
   <figure class="shot">
     <img src="assets/32-intake-template-form.png" alt="受理台建单页，需求模板表单">
     <figcaption>受理台建单 ｜ 模板下拉选「需求」——背景与目标 / 验收标准（必填）/ 来源信息</figcaption>
@@ -134,9 +134,9 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">1</span><h3>组看板：一屏看全域状态</h3>
-  <p>Groups → excavator → Issues → <b>Board</b>。列就是状态（待受理 → 已排期 → 开发中 → 待验证 → 已关闭 …），卡片在哪一列，活在哪一步。</p>
+  <p>群组 → intel_excavator → 议题 → <b>板块（Board）</b>。列就是状态（待受理 → 已排期 → 开发中 → 待验证 → 已关闭 …），卡片在哪一列，活在哪一步。</p>
   <figure class="shot">
-    <img src="assets/41-group-board.png" alt="excavator 组看板，列为待受理/已排期/开发中/待验证/已关闭/已拒绝">
+    <img src="assets/41-group-board.png" alt="intel_excavator 组看板，列为待受理/已排期/开发中/待验证/已关闭/已拒绝">
     <figcaption>组看板 ｜ 列=状态——待受理/已排期/开发中/待验证/已关闭/已拒绝，一屏看全域</figcaption>
   </figure>
 </div>
@@ -156,7 +156,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">3</span><h3>受理台积压：分诊堵没堵</h3>
-  <p>进 intake 仓库，Issues 按 <b>待受理</b> 过滤——待受理堆着多少单，分诊有没有堵，一眼可见。积压超一周，例会点名。</p>
+  <p>进 intake 仓库，议题按 <b>待受理</b> 过滤——待受理堆着多少单，分诊有没有堵，一眼可见。积压超一周，例会点名。</p>
   <figure class="shot">
     <img src="assets/43-intake-backlog.png" alt="受理台按待受理标签过滤的积压视图">
     <figcaption>受理台积压 ｜ 按 待受理 过滤——当前 1 单在队，分诊堵没堵一眼可见</figcaption>
@@ -178,7 +178,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 </div>
 <div class="box tip">
   <b>💡 找不到提单入口</b>
-  Groups → excavator → intake，或直接收藏受理台地址。所有来源都从这里进，别把需求发给个人。
+  群组 → intel_excavator → intake，或直接收藏受理台地址。所有来源都从这里进，别把需求发给个人。
 </div>
 <div class="box tip">
   <b>💡 想知道"我之前提的那单做到哪了"</b>
@@ -211,7 +211,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <li>§1 阶段三矩阵（四场景证据链，截图 32–43）</li>
 </ul>
 
-<footer>智能挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/design/2026-09-03-requirement-flow-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01） · 设计文档：docs/design/2026-09-03-requirement-flow-design.md</footer>
 
 </div>
 </body>

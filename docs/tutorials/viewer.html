@@ -85,19 +85,19 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">1</span><h3>找项目</h3>
-  <p>登录后从 Groups 进入对应项目组，点开要查的仓库。没有代码权时，项目页对你仍然开放。</p>
+  <p>登录后从 群组 进入对应项目组，点开要查的仓库。没有代码权时，项目页对你仍然开放。</p>
   <figure class="shot">
     <img src="assets/05-project-guest.png" alt="GitLab 项目主页（Guest 视角），只有项目概览信息，没有代码文件树">
-    <figcaption>项目主页（Guest 视角）｜ 无代码文件树，点 Code 看不到代码入口，clone 会 403——这正是权限边界</figcaption>
+    <figcaption>项目主页（Guest 视角）｜ 无代码文件树，点「代码」看不到代码入口，clone 会 403——这正是权限边界</figcaption>
   </figure>
 </div>
 
 <div class="step">
-  <span class="no">2</span><h3>进 Releases 下载制品</h3>
-  <p>左侧 <b>Deploy → Releases</b>，找到目标版本，在 <b>Assets</b> 里下载 <b>.bin 与 manifest.json</b>——两个都要下，manifest 就是这份包的身份证。</p>
+  <span class="no">2</span><h3>进 发布（Releases）下载制品</h3>
+  <p>左侧 <b>部署 → 发布</b>，找到目标版本，在 <b>资产（Assets）</b>里下载 <b>.bin 与 manifest.json</b>——两个都要下，manifest 就是这份包的身份证。</p>
   <figure class="shot">
-    <img src="assets/16-release.png" alt="GitLab 的 Release 页，Assets 里挂着 .bin 与 manifest.json 附件">
-    <figcaption>Release 页 ｜ Assets 里下载 .bin 与 manifest.json</figcaption>
+    <img src="assets/16-release.png" alt="GitLab 的 Release 页，资产区挂着 .bin 与 manifest.json 附件">
+    <figcaption>Release 页 ｜ 资产（Assets）里下载 .bin 与 manifest.json</figcaption>
   </figure>
 </div>
 
@@ -111,11 +111,11 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 </div>
 
 <div class="step">
-  <span class="no">4</span><h3>（如需通用包）Package registry</h3>
-  <p>要的不是固件包，而是通用依赖包时，走左侧 <b>Deploy → Package Registry</b>。</p>
+  <span class="no">4</span><h3>（如需通用包）软件包与镜像库</h3>
+  <p>要的不是固件包，而是通用依赖包时，走左侧 <b>部署 → 软件包和镜像库</b>。</p>
   <figure class="shot">
     <img src="assets/13-packages.png" alt="GitLab 的包仓库页，列出各版本的通用包">
-    <figcaption>包仓库 ｜ Deploy → Package Registry</figcaption>
+    <figcaption>包仓库 ｜ 部署 → 软件包和镜像库</figcaption>
   </figure>
 </div>
 
@@ -123,7 +123,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 <div class="box tip">
   <b>💡 clone 被拒</b>
   确认你要的是代码还是制品——制品走 Release 就够：
-  <pre class="cmd">$ git clone http://gitlab.internal/excavator/firmware/hydraulic-controller.git
+  <pre class="cmd">$ git clone http://gitlab.internal/intel_excavator/firmware/hydraulic-controller.git
 <span class="c">remote: You are not allowed to download code from this project.
 fatal: The requested URL returned error: 403</span></pre>
   这是 Guest 的正常预期，不是故障。
@@ -152,7 +152,7 @@ fatal: The requested URL returned error: 403</span></pre>
   <li>§1 阶段二矩阵（Harbor/MinIO 接入）</li>
 </ul>
 
-<footer>智能挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>

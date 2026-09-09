@@ -75,11 +75,11 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 </table>
 
 <h2>典型任务流：分诊与排期（需求流）</h2>
-<p>三阶段起，你不只是代码守门人——你还是这个域的<b>分诊人</b>（§4.2）。提单人在受理台（excavator/intake）提的单，先到你手里过一道：3 个工作日内决定它的去向。</p>
+<p>三阶段起，你不只是代码守门人——你还是这个域的<b>分诊人</b>（§4.2）。提单人在受理台（intel_excavator/intake）提的单，先到你手里过一道：3 个工作日内决定它的去向。</p>
 
 <div class="step">
   <span class="no">1</span><h3>分诊：三选一</h3>
-  <p>打开受理台（excavator/intake）的 Issues 列表，按 <b>待受理</b> 过滤——这些单等着你处理。对每张单做三件事之一：</p>
+  <p>打开受理台（intel_excavator/intake）的议题列表，按 <b>待受理</b> 过滤——这些单等着你处理。对每张单做三件事之一：</p>
   <ul>
     <li><b>移交</b>——单属于你管的域？把它 move 到你的域仓库，评论与链接全保留。同时代打 <code>来源::</code> 和 <code>状态::已排期</code> 标签（提单人是 Guest，没有打标权限，标签由你代打，§4.1）。</li>
     <li><b>打回</b>——验收标准空泛、信息不够？退回提单人补充，在评论里写明缺什么。</li>
@@ -123,7 +123,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">1</span><h3>评审 MR</h3>
-  <p>MR 页切到 <b>Changes</b> 逐行看：批准记录在顶部，流水线状态在中部，合入信息在下方。有问题就在对应行内评论，Developer 修完会自动更新；看完没问题，点 <b>Approve</b>。</p>
+  <p>MR 页切到 <b>更改（Changes）</b> 逐行看：批准记录在顶部，流水线状态在中部，合入信息在下方。有问题就在对应行内评论，Developer 修完会自动更新；看完没问题，点 <b>批准（Approve）</b>。</p>
   <figure class="shot">
     <img src="assets/14-mr2-merged.png" alt="GitLab 的 MR 详情页，顶部有批准记录，中部有流水线状态和合入信息">
     <figcaption>MR 详情页 ｜ 顶部批准记录、中部流水线状态、合入信息</figcaption>
@@ -132,7 +132,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">2</span><h3>合入</h3>
-  <p>点 <b>Merge</b> 按钮合入，main 流水线随即自动触发。</p>
+  <p>点 <b>合并（Merge）</b> 按钮合入，main 流水线随即自动触发。</p>
   <div class="box why">
     <b>🔍 为什么 Developer 不能自己合？</b>
     评审与合入分离是代码质量的最低保障（§4.3）——改代码的人不给自己的改动放行，守门人必须在场。
@@ -158,7 +158,7 @@ $ git push origin v0.2.0-field</pre>
 
 <div class="step">
   <span class="no">5</span><h3>手动批准晋升</h3>
-  <p>确认 build 绿了，点 promote-release 的 <b>▶ Play</b>，制品才从构建区晋升进发布区。</p>
+  <p>确认 build 绿了，点 promote-release 的 <b>▶ 播放</b>，制品才从构建区晋升进发布区。</p>
   <div class="box why">
     <b>🔍 为什么晋升要手动？</b>
     发布永远是人的决定，不是自动的（§6.3）——build 可以自动，但"这个版本要不要发出去"必须有人签字。
@@ -167,7 +167,7 @@ $ git push origin v0.2.0-field</pre>
 
 <div class="step">
   <span class="no">6</span><h3>建 Release</h3>
-  <p>左侧 <b>Deploy → Releases → New release</b>，选中刚打的 tag，把晋升出来的 <b>.bin 与 manifest.json</b> 附上——现场驻场同事就是从这个页面下载制品的。</p>
+  <p>左侧 <b>部署 → 发布 → 新建发布</b>，选中刚打的 tag，把晋升出来的 <b>.bin 与 manifest.json</b> 附上——现场驻场同事就是从这个页面下载制品的。</p>
   <figure class="shot">
     <img src="assets/16-release.png" alt="GitLab 的 Release 页，Assets 里挂着 .bin 与 manifest.json 附件">
     <figcaption>Release 页 ｜ 附件即驻场下载通道，Evidence 记录溯源</figcaption>
@@ -194,7 +194,7 @@ $ git push origin v0.2.0-field</pre>
 
 <h2>常见报错自救</h2>
 <div class="box tip">
-  <b>💡 Merge 按钮灰着，提示 conflicts</b>
+  <b>💡 合并按钮灰着，提示有冲突（conflicts）</b>
   说明特性分支落后于 main，让分支先合入最新 main 再推：
   <pre class="cmd">$ git fetch &amp;&amp; git checkout feat/xxx &amp;&amp; git merge origin/main
 $ git push</pre>
@@ -241,7 +241,7 @@ $ git push</pre>
   <li>§5.1 MR 关联与 checklist / §7.1 三无制度</li>
 </ul>
 
-<footer>智能挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>

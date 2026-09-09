@@ -108,10 +108,10 @@ $ git push -u origin fix/artifact-empty-check</pre>
 
 <div class="step">
   <span class="no">4</span><h3>验证传播</h3>
-  <p>随便挑一个下游仓库触发<b>新</b>流水线 → 打开 build job 看 Trace：出现模板新增的"产物为空，禁止发布"校验，即证明传播成功。</p>
+  <p>随便挑一个下游仓库触发<b>新</b>流水线 → 打开 build job 看跟踪（Trace）日志：出现模板新增的"产物为空，禁止发布"校验，即证明传播成功。</p>
   <figure class="shot">
-    <img src="assets/18-job18-trace.png" alt="GitLab 下游 build job 的 Trace 日志，展示模板新增的产物校验输出">
-    <figcaption>下游 build job 的 Trace ｜ 出现模板新增的"产物为空，禁止发布"校验即证明传播成功</figcaption>
+    <img src="assets/18-job18-trace.png" alt="GitLab 下游 build job 的跟踪日志，展示模板新增的产物校验输出">
+    <figcaption>下游 build job 的跟踪 ｜ 出现模板新增的"产物为空，禁止发布"校验即证明传播成功</figcaption>
   </figure>
 </div>
 
@@ -171,8 +171,8 @@ $ git push -u origin fix/artifact-empty-check</pre>
   <span class="no">3</span><h3>CI 凭据受保护 + 打码</h3>
   <p>Harbor robot account 与 MinIO access key 不进仓库，配成 GitLab <b>受保护变量</b>（protected + masked）：只在受保护分支/标签的流水线里可见，job 日志里凭据一律显示 <code>[MASKED]</code>。</p>
   <figure class="shot">
-    <img src="assets/23-fetch-dataset-job.png" alt="GitLab fetch-dataset job trace，凭据显示为 [MASKED]，sha256 校验通过">
-    <figcaption>fetch-dataset job trace ｜ 凭据 [MASKED] 打码、sha256 校验通过——日志可查但不见明文</figcaption>
+    <img src="assets/23-fetch-dataset-job.png" alt="GitLab fetch-dataset job 跟踪日志，凭据显示为 [MASKED]，sha256 校验通过">
+    <figcaption>fetch-dataset job 跟踪 ｜ 凭据 [MASKED] 打码、sha256 校验通过——日志可查但不见明文</figcaption>
   </figure>
   <div class="box why">
     <b>🔍 为什么凭据要打码？</b>
@@ -263,7 +263,7 @@ $ git push -u origin fix/artifact-empty-check</pre>
   <li>§6 进度可视化（看板与里程碑）</li>
 </ul>
 
-<footer>智能挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>

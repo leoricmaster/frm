@@ -78,12 +78,12 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">1</span><h3>找到并 clone 仓库</h3>
-  <p>从 Groups → excavator 进入你所在的产品域子组（如 firmware），找到自己的仓库，用页面上给的 clone 地址拉到本地。</p>
+  <p>从 群组 → intel_excavator 进入你所在的产品域子组（如 firmware），找到自己的仓库，用页面上给的 clone 地址拉到本地。</p>
   <figure class="shot">
-    <img src="assets/03-groups.png" alt="GitLab 组列表页，excavator 组下有 firmware 等子组">
-    <figcaption>excavator 组页 ｜ 六个产品域子组，点进 firmware 找到你的仓库</figcaption>
+    <img src="assets/03-groups.png" alt="GitLab firmware 子组页，组内列出 hydraulic-controller 仓库">
+    <figcaption>firmware 子组页 ｜ 组内即仓库列表——hydraulic-controller 是固件示例仓</figcaption>
   </figure>
-  <pre class="cmd">$ git clone http://gitlab.internal/excavator/firmware/hydraulic-controller.git
+  <pre class="cmd">$ git clone http://gitlab.internal/intel_excavator/firmware/hydraulic-controller.git
 $ cd hydraulic-controller</pre>
 </div>
 
@@ -109,7 +109,7 @@ $ cd hydraulic-controller</pre>
     <img src="assets/10-protect.png" alt="GitLab 仓库设置页的 Protected branches 保护分支入口">
     <figcaption>保护分支设置 ｜ main 的 push/merge 限 Maintainer——系统强制，不靠自觉（验证结论 §1 阶段一矩阵）</figcaption>
   </figure>
-  <p>这个设置只有 Owner 能改（Manage → Settings → Repository → Protected branches）。所以别试直推，老实走 MR。</p>
+  <p>这个设置只有 Owner 能改（管理 → 设置 → 仓库 → 受保护分支）。所以别试直推，老实走 MR。</p>
 </div>
 
 <div class="step">
@@ -121,10 +121,10 @@ $ git push -u origin feat/pid-tune</pre>
 
 <div class="step">
   <span class="no">4</span><h3>建 MR</h3>
-  <p>左侧 Merge requests → New 建一个新 MR。标题按仓库规范写清这次改了什么；描述里必须写三件事：<b>改了什么、为什么、怎么验证</b>——评审者第一眼看的就是这三行。</p>
+  <p>左侧 合并请求 → 新建合并请求 建一个新 MR。标题按仓库规范写清这次改了什么；描述里必须写三件事：<b>改了什么、为什么、怎么验证</b>——评审者第一眼看的就是这三行。</p>
   <figure class="shot">
-    <img src="assets/08-mr-list.png" alt="GitLab 的 MR 列表页，左上角有 New merge request 按钮">
-    <figcaption>MR 列表 ｜ 左侧 Merge requests → New</figcaption>
+    <img src="assets/08-mr-list.png" alt="GitLab 的 MR 列表页，左上角有新建合并请求按钮">
+    <figcaption>MR 列表 ｜ 左侧 合并请求 → 新建合并请求</figcaption>
   </figure>
   <p>从三阶段起，描述里再加两件：<b>关联单号</b>（默认写 <code>Closes #单号</code>——合入即自动关单；需外部验收的单只写 <code>#单号</code> 引用，不写 Closes）与<b>选定里程碑</b>。仓库的 MR 模板已带四项自查 checklist：☑ 关联单号 ☑ 里程碑 ☑ CI 全绿 ☑ 自测通过。</p>
   <figure class="shot">
@@ -133,7 +133,7 @@ $ git push -u origin feat/pid-tune</pre>
   </figure>
   <div class="box why">
     <b>🔍 无单不开发（三无制度第一条）</b>
-    任何改动（需求、缺陷、现场修复）先有单，commit 必须能追到一张 issue（需求流设计 §7.1）。你自己发现的 bug / 技术改进？先去受理台（excavator/intake）提缺陷 / 任务单，再开工——MR 描述里的 Closes 就是把"做了什么"和"为什么做"焊在一起的焊点（需求流设计 §5.1）。
+    任何改动（需求、缺陷、现场修复）先有单，commit 必须能追到一张 issue（需求流设计 §7.1）。你自己发现的 bug / 技术改进？先去受理台（intel_excavator/intake）提缺陷 / 任务单，再开工——MR 描述里的 Closes 就是把"做了什么"和"为什么做"焊在一起的焊点（需求流设计 §5.1）。
   </div>
 </div>
 
@@ -167,11 +167,11 @@ $ git push -u origin feat/pid-tune</pre>
 </div>
 <div class="box tip">
   <b>💡 流水线直接 failed 且 0 个 job</b>
-  日志含 <code>Project 'excavator/platform/ci-templates' not found or access denied</code> → 你对 platform 组无读权限，找平台组给你加 Reporter（验证结论 §3-1 已知问题）。
+  日志含 <code>Project 'intel_excavator/platform/ci-templates' not found or access denied</code> → 你对 platform 组无读权限，找平台组给你加 Reporter（验证结论 §3-1 已知问题）。
 </div>
 <div class="box tip">
   <b>💡 流水线红了怎么排查</b>
-  job → Trace 看最后 30 行 → 本地复跑同命令 → <code>git commit --allow-empty -m "ci: retry"</code> 触发新流水线。注意：retry 不重新解析模板，改模板后必须触发新流水线。
+  job → 跟踪（Trace）看最后 30 行 → 本地复跑同命令 → <code>git commit --allow-empty -m "ci: retry"</code> 触发新流水线。注意：retry 不重新解析模板，改模板后必须触发新流水线。
 </div>
 
 <h2>红线清单</h2>
@@ -206,7 +206,7 @@ $ git push -u origin feat/pid-tune</pre>
   <li>§4.3 关单双路径 / §5.1 MR 关联与 checklist</li>
 </ul>
 
-<footer>智能挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>

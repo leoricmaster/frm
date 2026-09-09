@@ -119,15 +119,15 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">2</span><h3>找到自己的项目组</h3>
-  <p>登录后从主面板左侧的 Groups 入口进入，找到顶层组 excavator。</p>
+  <p>登录后从主面板左侧的「群组」入口进入，找到顶层组 intel_excavator。</p>
   <figure class="shot">
-    <img src="assets/02-dashboard.png" alt="登录后的主面板，左侧有 Groups 入口">
-    <figcaption>登录后的主面板 ｜ 左侧 Groups 快捷入口</figcaption>
+    <img src="assets/02-dashboard.png" alt="登录后的主面板，左侧有「群组」入口">
+    <figcaption>登录后的主面板 ｜ 左侧「群组」快捷入口</figcaption>
   </figure>
-  <p>excavator 下按产品域分为 firmware / autonomy / vehicle / cloud / app / platform 六个子组，日常的仓库都在各产品域子组里。</p>
+  <p>intel_excavator 下按产品域分为 firmware / autonomy / vehicle / cloud / app / platform 六个子组，日常的仓库都在各产品域子组里。</p>
   <figure class="shot">
-    <img src="assets/04-group-tree.png" alt="excavator 组结构树，六个产品域子组">
-    <figcaption>组结构树 ｜ excavator 下按产品域分 6 个子组</figcaption>
+    <img src="assets/04-group-tree.png" alt="intel_excavator 组结构树，六个产品域子组">
+    <figcaption>组结构树 ｜ intel_excavator 下按产品域分 6 个子组</figcaption>
   </figure>
 </div>
 <div class="box why">
@@ -137,7 +137,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">3</span><h3>看懂一条流水线</h3>
-  <p>进入项目后，左侧 Build → Pipelines 是流水线列表：每次 push 代码都会自动新增一条。</p>
+  <p>进入项目后，左侧 构建 → 流水线 即流水线列表：每次 push 代码都会自动新增一条。</p>
   <figure class="shot">
     <img src="assets/06-pipelines.png" alt="项目的流水线列表页">
     <figcaption>流水线列表 ｜ 每次 push 一条</figcaption>
@@ -155,7 +155,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">4</span><h3>看成员与权限</h3>
-  <p>项目左侧 Manage → Members（成员页）列出谁在这个仓库里、是什么角色：Developer 是干活的开发，Maintainer 就是这个仓库的 Owner（守门人）。</p>
+  <p>项目左侧 管理 → 成员 列出谁在这个仓库里、是什么角色：Developer 是干活的开发，Maintainer 就是这个仓库的 Owner（守门人）。</p>
   <figure class="shot">
     <img src="assets/12-members.png" alt="项目成员与权限页">
     <figcaption>项目成员页 ｜ 谁是 Owner 一目了然</figcaption>
@@ -177,7 +177,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="box why">
   <b>🔍 有需求 / 缺陷要提？（三阶段新增）</b>
-  全部来源只进一个口——受理台（excavator/intake）按模板建单，3 个工作日内分诊；进度看组看板与里程碑。见<b><a href="submitter.html">需求提出人与管理者</a></b>教程。
+  全部来源只进一个口——受理台（intel_excavator/intake）按模板建单，3 个工作日内分诊；进度看组看板与里程碑。见<b><a href="submitter.html">需求提出人与管理者</a></b>教程。
 </div>
 
 <h2>术语速查</h2>
@@ -200,7 +200,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <tr><td>Closes #单号</td><td>写在 MR 描述里的关单指令：代码合入那一刻，单自动关闭</td></tr>
 </table>
 
-<footer>智能挖机项目代码管理体系 · 教程基于 2026-08-31 / 09-01 / 09-03 三阶段本地原型实例截图 · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md / 2026-09-03-requirement-flow-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md / 2026-09-03-requirement-flow-design.md</footer>
 
 </div>
 </body>
