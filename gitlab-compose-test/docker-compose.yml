@@ -32,8 +32,9 @@ services:
         gitlab_rails['gitlab_shell_ssh_port'] = 8082
         prometheus_monitoring['enable'] = false
         gitlab_rails['prometheus_address'] = ''
-        # 原型阶段先禁用注册与双因子等摩擦项，验证核心流程
-        gitlab_rails['gitlab_default_can_create_group'] = true
+        # 关注册：账号一律管理员开通（设计 §4.3 统一开通口径），为阶段1接 LDAP 留干净底子
+        gitlab_rails['gitlab_signup_enabled'] = false
+        gitlab_rails['gitlab_default_can_create_group'] = false
         sidekiq['max_concurrency'] = 10
         # 降低资源占用
         puma['worker_processes'] = 2
