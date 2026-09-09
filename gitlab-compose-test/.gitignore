@@ -19,3 +19,6 @@ harbor-data/
 harbor-installer/common/
 harbor-installer/input/
 harbor-installer/docker-compose.yml
+
+# Python 运行时缓存
+__pycache__/

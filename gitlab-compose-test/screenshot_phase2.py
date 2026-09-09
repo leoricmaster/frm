@@ -53,10 +53,10 @@ def gl_shot(page):
     time.sleep(2)
 
     # 动态查最新绿 pipeline 与 job id
-    pl = gl_api("/projects/excavator%2Fautonomy%2Fperception/pipelines?per_page=1")[0]
-    jobs = gl_api(f"/projects/excavator%2Fautonomy%2Fperception/pipelines/{pl['id']}/jobs")
-    fw = gl_api("/projects/excavator%2Ffirmware%2Fhydraulic-controller/pipelines?per_page=1")[0]
-    fjobs = gl_api(f"/projects/excavator%2Ffirmware%2Fhydraulic-controller/pipelines/{fw['id']}/jobs")
+    pl = gl_api("/projects/intel_excavator%2Fautonomy%2Fperception/pipelines?per_page=1")[0]
+    jobs = gl_api(f"/projects/intel_excavator%2Fautonomy%2Fperception/pipelines/{pl['id']}/jobs")
+    fw = gl_api("/projects/intel_excavator%2Ffirmware%2Fhydraulic-controller/pipelines?per_page=1")[0]
+    fjobs = gl_api(f"/projects/intel_excavator%2Ffirmware%2Fhydraulic-controller/pipelines/{fw['id']}/jobs")
     job_by_name = {j["name"]: j for j in jobs}
     fjob_by_name = {j["name"]: j for j in fjobs}
     print(f"[info] perception pipeline #{pl['id']} ({pl['status']}); "
@@ -65,8 +65,8 @@ def gl_shot(page):
     print(f"[info] firmware pipeline #{fw['id']} ({fw['status']}); "
           f"image-build={fjob_by_name['image-build']['id']}")
 
-    base = f"{GL}/excavator/autonomy/perception/-"
-    fwbase = f"{GL}/excavator/firmware/hydraulic-controller/-"
+    base = f"{GL}/intel_excavator/autonomy/perception/-"
+    fwbase = f"{GL}/intel_excavator/firmware/hydraulic-controller/-"
 
     shot(page, "21-perception-pipelines", f"{base}/pipelines", "perception 流水线列表")
     shot(page, "22-perception-green",     f"{base}/pipelines/{pl['id']}",

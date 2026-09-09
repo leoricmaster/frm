@@ -1,7 +1,7 @@
 # 智能挖机统一代码管理体系 — 本地原型验证环境
 # 对应设计文档：docs/design/2026-08-31-excavator-code-management-design.md
 # 模拟场景：机房构建区（无 DLP agent、无 VPN），仅本机网络可达
-# 镜像：gitlab-ce（设计 §4 允许 CE 先行；ee 命名空间被镜像源限流）
+# 镜像：极狐 GitLab（官方中国发行版，免费版档；版本对齐上游——CE 19.3.1 → 19.3.1-jh.0，见 ADR-0021）
 #
 # 端口规划（避开本机已占用的 8080/9000/9001）：
 #   8081 -> GitLab Web (HTTP)
@@ -15,9 +15,9 @@ name: frm-gitlab
 
 services:
   gitlab:
-    # CE 先行（设计文档 §4 备选方案）；gitlab-ee 命名空间被国内镜像源限流，
-    # CE 同等覆盖原型所需功能（托管/MR/保护分支/CI/package registry）
-    image: gitlab/gitlab-ce:latest
+    # 极狐 GitLab 免费版档运行（ADR-0021）：国产化合规 + 本地支持 + 原生中文界面；
+    # 免费档功能与 CE 等价（托管/MR/保护分支/CI/package registry），升级=注入 license
+    image: registry.gitlab.cn/omnibus/gitlab-jh:19.3.1-jh.0
     container_name: frm-gitlab
     restart: unless-stopped
     hostname: gitlab.local

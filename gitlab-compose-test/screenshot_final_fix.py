@@ -6,7 +6,7 @@ from playwright.sync_api import sync_playwright
 
 URL = "http://127.0.0.1:8081"
 OUT = "/home/lancer/projects/frm/gitlab-compose-test/screenshots"
-P = "excavator/firmware/hydraulic-controller"
+P = "intel_excavator/firmware/hydraulic-controller"
 
 def login(page, user, pw):
     page.goto(f"{URL}/users/sign_in", wait_until="networkidle")
@@ -47,7 +47,7 @@ def main():
         # --- C2: guest1 截项目主页 ---
         ctx2 = browser.new_context(viewport={"width": 1440, "height": 900}, ignore_https_errors=True)
         page2 = ctx2.new_page()
-        login(page2, "guest1", "XcAv8r#Frm2026$ecure")
+        login(page2, "guest1", "Xc7$wB3n!Tq8")
         print("[C2] guest1 登录后:", page2.url)
         page2.goto(f"{URL}/{P}", wait_until="domcontentloaded", timeout=15000)
         time.sleep(2)

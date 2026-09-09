@@ -1,6 +1,6 @@
 # 仓库层：include 通用层 + extends 继承模板 job（§6.2 三层模型）
 include:
-  - project: excavator/platform/ci-templates
+  - project: intel_excavator/platform/ci-templates
     ref: main
     file: firmware.yml
 
@@ -13,7 +13,7 @@ stages:
 gitleaks-check:
   stage: scan
   script:
-    - echo "gitleaks密钥扫描：CE无push rules的替代(§6.5)"
+    - echo "gitleaks密钥扫描：免费版无push rules的替代(§6.5)"
     - echo "扫描通过，无明文密钥"
   only:
     - merge_requests

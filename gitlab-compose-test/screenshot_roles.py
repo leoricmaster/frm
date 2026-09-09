@@ -5,8 +5,8 @@ from playwright.sync_api import sync_playwright
 
 URL = "http://127.0.0.1:8081"
 OUT = "/home/lancer/projects/frm/gitlab-compose-test/screenshots"
-P = "excavator/firmware/hydraulic-controller"
-PT = "excavator/platform/ci-templates"
+P = "intel_excavator/firmware/hydraulic-controller"
+PT = "intel_excavator/platform/ci-templates"
 
 PAGES = [
     ("14-mr2-merged",   f"{URL}/{P}/-/merge_requests/2",                    "MR !2 PID调参（已合入+批准记录）"),

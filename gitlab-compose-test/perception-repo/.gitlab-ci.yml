@@ -1,6 +1,6 @@
 # 算法仓库层：include 通用层（§6.2）+ MinIO 数据/产物通道（§6.4 二阶段验证）
 include:
-  - project: excavator/platform/ci-templates
+  - project: intel_excavator/platform/ci-templates
     ref: main
     file: autonomy.yml
 

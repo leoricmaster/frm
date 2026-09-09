@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""补拍 04-group-tree.png：excavator 组的子组树（Group overview → Subgroups）。"""
+"""补拍 04-group-tree.png：intel_excavator 组的子组树（Group overview → Subgroups）。"""
 import time
 from playwright.sync_api import sync_playwright
 
@@ -16,9 +16,9 @@ with sync_playwright() as p:
     page.click("button[type='submit']")
     page.wait_for_load_state("networkidle")
     time.sleep(2)
-    # excavator 组主页（子组以卡片形式列在页面里）
-    page.goto(f"{URL}/excavator", wait_until="networkidle", timeout=20000)
+    # intel_excavator 组主页（子组以卡片形式列在页面里）
+    page.goto(f"{URL}/intel_excavator", wait_until="networkidle", timeout=20000)
     time.sleep(2)
     page.screenshot(path=OUT, full_page=False)
-    print(f"[OK] {OUT} — excavator 组主页（含 6 子组卡片）")
+    print(f"[OK] {OUT} — intel_excavator 组主页（含 6 子组卡片）")
     browser.close()

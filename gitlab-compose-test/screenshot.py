@@ -10,17 +10,17 @@ LOGIN, PASS = "root", "Excavator#2026Proto"
 
 PAGES = [
     ("02-dashboard",   f"{URL}/",                                                    "主面板"),
-    ("03-groups",      f"{URL}/groups/excavator",                                    "excavator 组结构"),
-    ("04-group-tree",  f"{URL}/groups/excavator/-/subgroups",                       "子组列表"),
-    ("05-project",     f"{URL}/excavator/firmware/hydraulic-controller",            "示例项目"),
-    ("06-pipelines",   f"{URL}/excavator/firmware/hydraulic-controller/-/pipelines", "流水线列表"),
-    ("07-ci-success",  f"{URL}/excavator/firmware/hydraulic-controller/-/pipelines/3","流水线#3(全绿)"),
-    ("08-mr-list",     f"{URL}/excavator/firmware/hydraulic-controller/-/merge_requests","MR列表"),
-    ("09-mr-closed",   f"{URL}/excavator/firmware/hydraulic-controller/-/merge_requests/1","MR!1(已合入)"),
-    ("10-protect",     f"{URL}/excavator/firmware/hydraulic-controller/-/settings/repository","保护分支设置"),
-    ("11-ci-templates",f"{URL}/excavator/platform/ci-templates",                    "CI模板仓库(平台宪法)"),
-    ("12-members",     f"{URL}/excavator/firmware/hydraulic-controller/-/project_members","成员权限(三级)"),
-    ("13-packages",    f"{URL}/excavator/firmware/hydraulic-controller/-/packages", "制品/package registry"),
+    ("03-groups",      f"{URL}/groups/intel_excavator",                                    "intel_excavator 组结构"),
+    ("04-group-tree",  f"{URL}/groups/intel_excavator/-/subgroups",                       "子组列表"),
+    ("05-project",     f"{URL}/intel_excavator/firmware/hydraulic-controller",            "示例项目"),
+    ("06-pipelines",   f"{URL}/intel_excavator/firmware/hydraulic-controller/-/pipelines", "流水线列表"),
+    ("07-ci-success",  f"{URL}/intel_excavator/firmware/hydraulic-controller/-/pipelines/3","流水线#3(全绿)"),
+    ("08-mr-list",     f"{URL}/intel_excavator/firmware/hydraulic-controller/-/merge_requests","MR列表"),
+    ("09-mr-closed",   f"{URL}/intel_excavator/firmware/hydraulic-controller/-/merge_requests/1","MR!1(已合入)"),
+    ("10-protect",     f"{URL}/intel_excavator/firmware/hydraulic-controller/-/settings/repository","保护分支设置"),
+    ("11-ci-templates",f"{URL}/intel_excavator/platform/ci-templates",                    "CI模板仓库(平台宪法)"),
+    ("12-members",     f"{URL}/intel_excavator/firmware/hydraulic-controller/-/project_members","成员权限(三级)"),
+    ("13-packages",    f"{URL}/intel_excavator/firmware/hydraulic-controller/-/packages", "制品/package registry"),
 ]
 
 def main():

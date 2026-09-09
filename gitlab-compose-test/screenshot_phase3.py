@@ -6,9 +6,9 @@
 
 2026-09-03 现场探测适配（GitLab 19.3.1）：
   1. URL 形态：Web UI 不认 /projects/<path%2Fname>/… 与 /projects/<id>/… 形态（404），
-     全部改用 canonical web 路径（/excavator/intake/-/…、/excavator/firmware/hydraulic-controller/-/…）。
+     全部改用 canonical web 路径（/intel_excavator/intake/-/…、/intel_excavator/firmware/hydraulic-controller/-/…）。
      /issues/new 与 /issues 列表会 302 到 work_items 路由（19.x 正常行为），目标页面正常渲染。
-  2. 组看板懒创建 + 超宽全景：GET /groups/2/boards 首查为空，浏览器访问 /groups/excavator/-/boards
+  2. 组看板懒创建 + 超宽全景：GET /groups/2/boards 首查为空，浏览器访问 /groups/intel_excavator/-/boards
      后才生成默认板（id=1，"Development"）；Step 1 已在该板加 6 个状态列。列宽固定 400px，
      Open+6 状态列+Closed 全景约 3500px——41 号按实测宽度临时放大视口后截图，其余保持 1440×900。
   3. 32 号模板表单：?issuable_template=需求 正常预填；编辑器是 tiptap 富文本（DOM 无 textarea，
@@ -29,9 +29,9 @@ OUT = "/home/lancer/projects/frm/gitlab-compose-test/screenshots"
 GL = "http://127.0.0.1:8081"
 T = "glpat-dsd8nyjb7efZJJ-g4_uRrW86MQp1OjEH.01.0w1o12cfg"
 
-INTAKE_WEB = f"{GL}/excavator/intake/-"
-FW_WEB = f"{GL}/excavator/firmware/hydraulic-controller/-"
-GRP_WEB = f"{GL}/groups/excavator/-"
+INTAKE_WEB = f"{GL}/intel_excavator/intake/-"
+FW_WEB = f"{GL}/intel_excavator/firmware/hydraulic-controller/-"
+GRP_WEB = f"{GL}/groups/intel_excavator/-"
 
 
 def api(path):
