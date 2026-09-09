@@ -102,19 +102,19 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 </div>
 
 <h2>通用入门</h2>
-<p>无论哪种角色，日常都从这 4 个基本动作开始：登录、找到自己的项目组、看懂一条流水线、看成员与权限。</p>
+<p>上手先认识这 4 件事：登录、找到自己的项目组、看懂一条流水线、看成员与权限。前两件是每日起手，后两件是按需查看——各角色该深挖哪件，见下方角色教程。</p>
 
 <div class="step">
   <span class="no">1</span><h3>登录</h3>
-  <p>浏览器打开 GitLab 地址，进入登录页。账号由平台组统一开通，集团域账号就是登录账号，不需要也不能自己注册。</p>
+  <p>浏览器打开 GitLab 地址，进入登录页。账号由平台组（管理员）统一开通，登录用该账号；平台已关闭自助注册。</p>
   <figure class="shot">
-    <img src="assets/01-login.png" alt="GitLab 登录页，输入域账号与密码">
-    <figcaption>登录页 ｜ 账号找平台组开，域账号即登录账号</figcaption>
+    <img src="assets/01-login.png" alt="GitLab 登录页，输入账号与密码">
+    <figcaption>登录页 ｜ 账号找平台组开，初始密码线下交付</figcaption>
   </figure>
 </div>
-<div class="box why">
-  <b>🔍 为什么不能自己注册账号？</b>
-  系统对接集团 LDAP 域账号，禁止本地建账号——入职自动有权限，离职自动收回，不靠人手记得删号（设计 §4.3）。
+<div class="box tip">
+  <b>📝 规划：域账号对接（阶段 1 实施项）</b>
+  现阶段为本地账号、管理员开通。后续对接集团 LDAP 域账号后，域账号即登录账号——入职首次登录自动建号、离职自动收回，不靠人手记得删号（ADR-0005）。
 </div>
 
 <div class="step">
