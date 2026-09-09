@@ -8,7 +8,7 @@
 |---|---|
 | 评审者 / 干系人 | `docs/design/` 三份设计（决策事实来源）→ `docs/adr/` 21 条决策记录 → `docs/design/2026-09-07-prototype-verification.md` 验证结论 |
 | 团队成员（任一角色） | `docs/tutorials/index.html`——按角色 5–10 分钟上手 |
-| 平台运维 / 复现环境 | `gitlab-compose-test/`（compose 栈 + 截图脚本 + 证据 01–43） |
+| 平台运维 / 复现环境 | `docs/ops/gitlab-repro.md`（从零搭起、复刻终态、日常运维）→ `gitlab-compose-test/`（compose 栈 + 截图脚本 + 证据 01–43） |
 
 ## 目录
 
@@ -16,6 +16,7 @@
 docs/
 ├── design/       三份设计文档 + 原型验证结论（本体系的事实来源）
 ├── adr/          21 条架构决策记录 + 索引（含否决备选与重开条件）
+├── ops/          运维与复现手册（GitLab 从零搭起、日常运维）
 └── tutorials/    六角色上手教程（HTML，含截图）
 gitlab-compose-test/  本地原型环境：compose 栈、示例仓库、截图证据
 ```
