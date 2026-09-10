@@ -69,7 +69,7 @@ details .dbody{padding:4px 16px 12px}
 <div class="wrap">
 
 <h2>你是谁</h2>
-<p>你是这套体系的平台运维：把已经设计好的方案<b>从零建起来</b>，然后<b>长期看住它</b>。实施期按「实施主线」五步走一遍；建成后日常动作在「查阅」区随手翻。不要求复刻原型测试环境——本文凡「示例值」（IP、端口、口令、组名、用户名）均来自原型验证环境，正式实施按实际替换。若你是拿着顶层组的<b>运营</b>（项目负责人），直接从 <a href="#gov">组织与治理</a> 进入。</p>
+<p>你是这套体系的平台运维：把已经设计好的方案<b>从零建起来</b>，然后<b>长期看住它</b>。实施期按「实施主线」五步走一遍；建成后日常动作在「查阅」区随手翻。不要求复刻原型测试环境——本文凡「示例值」（IP、端口、口令、组名、用户名）均来自原型验证环境，正式实施按实际替换。组树搭建与持续治理由顶层 Owner 完成，见 <a href="governance.html">governance.html</a>。</p>
 
 <h2>你能做什么 / 不能做什么</h2>
 <table>
@@ -133,44 +133,9 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
 </div>
 
 <div class="step">
-  <span class="no">4</span><h3 id="gov">组织与治理</h3>
-  <p>这一章两类人读：<b>实施的人</b>（运维）按 4a 从上到下建一遍；<b>治理的人</b>（顶层 Owner / 运营）建完之后从 4b 起长期在此活动。</p>
-  <h3 class="blk">4a 一次性建立</h3>
-  <p>本章教<b>通用做法</b>——组树、仓库、角色是设计产出，各项目按自己的产品域落地；原型环境的具体取值（组名、用户、MR 编号）只是示例，见附录 A。</p>
-  <h4>5.1 组树（ADR-0003）</h4>
-  <p>顶层组=项目，子组=产品域（团队会重组、产品域相对稳定）：<code>firmware / autonomy / vehicle / cloud / app / platform</code>，子组内按组件建仓库。<code>platform/</code> 是宪法组：CI 模板与规范文档全部版本化，规则修改必须走 MR，不允许口头变更。</p>
-  <ul>
-    <li>UI：新建组 → 填路径与可见性（内部）；或 API <code>POST /api/v4/groups</code>（管理员 token），批量建组树好用。</li>
-  </ul>
-  <h4>5.2 用户与权限（ADR-0004 / 0005）</h4>
-  <p>关注册后账号只有一个入口：管理员开通（做法见 §6.1）。建号后按三级授权：</p>
-  <table>
-    <tr><th>角色</th><th>权限</th><th>授予对象</th></tr>
-    <tr><td>Guest / Reporter</td><td>只读</td><td>跨组查阅者、外部协作者</td></tr>
-    <tr><td>Developer</td><td>push 分支、建 MR</td><td>本组开发成员</td></tr>
-    <tr><td>Maintainer</td><td>合 MR、管保护分支</td><td>每仓库 1–2 名 Owner</td></tr>
-  </table>
-  <p>顶层组 Owner 由项目负责人持有（兼平台维护人）。免费版无审计能力，成员变更一律经 API 并留存脚本日志（唯一留痕）。</p>
-  <h4>5.3 仓库与保护分支（ADR-0006）</h4>
-  <p>子组内建仓（<code>firmware/hydraulic-controller</code> 一类），每仓指定一名明确 Owner。分支 trunk-based 简化版：<code>main</code> 常绿 + 短命特性分支 + MR 合入；保护分支禁直接 push；发布周期长的仓库可留 <code>release/x.y</code> 维护分支。存量代码入库门槛：能编译、README 写明用途 / Owner / 依赖——<b>用途说不清的代码不入库</b>。</p>
-  <h4>5.4 CI 三层模板（ADR-0009）</h4>
-  <ol>
-    <li>建 <code>platform/ci-templates</code> 宪法仓库，写通用层模板（固件 / 算法 / 车载 / 云端各一套，内容按项目自写）。模板建立与修订走 MR——规则变更即宪法变更。</li>
-    <li>各仓库 <code>.gitlab-ci.yml</code> 以 <code>include: project:</code> 引用通用层，仓库层只覆盖细节。<b>未 include 通用层的流水线 MR 不予合入</b>：检查 job 校验 + Maintainer 人工拒合，双重实现。</li>
-    <li>下游层（固件签名、模型评测）为正式实施项，密钥走受保护变量、流水线不接触明文（ADR-0012）。</li>
-  </ol>
-  <h4>5.5 需求流与看板（ADR-0015–0017）</h4>
-  <ul>
-    <li>建收口仓库（示例名 <code>intake</code>）承接需求与现场问题进池，标签体系分诊、里程碑归组，跨仓单据转移走 GitLab 原生 transfer。</li>
-    <li>组看板配状态列（设计为六状态）。<b>坑位</b>：组看板懒创建，配置前须先浏览器访问过看板页（验证结论 §3）。</li>
-  </ul>
-  <h3 class="blk">4b 持续治理</h3>
-  <ul>
-    <li>授权变更一律走 API 并留存脚本日志——免费版无审计，脚本是唯一留痕</li>
-    <li>新产品域 = 新子组：按产品域建组，团队重组不动组树（ADR-0003）</li>
-    <li>里程碑命名如「固件 v2.3·2026Q4」，版本节点跨仓库生效</li>
-    <li>顶层 Owner 由项目负责人持有、兼平台维护人——本页运维动作与治理动作在此人身上合一</li>
-  </ul>
+  <span class="no">4</span><h3 id="gov">建顶层组与授权交接</h3>
+  <p>实例就绪后，用 admin token 建<b>顶层组</b> <code>intel_excavator</code>（UI 新建组，或 API <code>POST /api/v4/groups</code>），把项目负责人设为该组的 Owner。这一步是运维与运营的交接点——<b>创建顶层组本身需要 root，其下的子组、仓库、保护分支、看板与需求流配置，顶层 Owner 用自己的 token 即可建</b>，无需再借 root。</p>
+  <p>组树搭建与持续治理（建子组 / 建仓 / 配权限 / CI 宪法落地 / 需求流看板 / 授权变更 / 里程碑）是顶层 Owner 的活，见 <a href="governance.html">governance.html</a>。原型环境复现顶层组与组树见附录 A（A 段）。</p>
 </div>
 
 <div class="step">
@@ -320,7 +285,7 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
 <details>
 <summary>展开附录 A：原型复现段表</summary>
 <div class="dbody">
-  <p>定位：<code>rebuild_jh_state.py</code> 是<b>原型验证的测试夹具</b>，用于复刻原型终态（演示、回归、重拍证据用），<b>不是正式实施路径</b>——它建出的组树 / 用户 / 仓库 / MR 全部是原型测试数据（<code>intel_excavator</code> 组树、<code>dev1</code> 等账号、模拟 MR）。正式实施按第 4 步（4a）逐项自建。</p>
+  <p>定位：<code>rebuild_jh_state.py</code> 是<b>原型验证的测试夹具</b>，用于复刻原型终态（演示、回归、重拍证据用），<b>不是正式实施路径</b>——它建出的组树 / 用户 / 仓库 / MR 全部是原型测试数据（<code>intel_excavator</code> 组树、<code>dev1</code> 等账号、模拟 MR）。正式实施按 governance.html 逐项自建。</p>
   <p>前置条件：栈已就绪；root 建 PAT（脚本内 <code>ROOT_TOK</code> 处替换）；<code>/tmp/harbor-robot-secret.txt</code> 存在（E 段 HARBOR 变量依赖，缺失即崩）。</p>
   <pre class="cmd">cd gitlab-compose-test
 python3 rebuild_jh_state.py A|B|...|Z</pre>
@@ -344,7 +309,7 @@ python3 rebuild_jh_state.py A|B|...|Z</pre>
 </details>
 
 <h2>查阅：已知坑位</h2>
-<p>极狐与 CE 的七处 API / 路由差异、组看板懒创建、<code>/repository/files</code> 恒 404 等规避方式，见 <code>docs/design/2026-09-07-prototype-verification.md</code> §3 差异表。凡脚本化操作（含 4a 的 API 批量建组树）先过一遍该表。</p>
+<p>极狐与 CE 的七处 API / 路由差异、组看板懒创建、<code>/repository/files</code> 恒 404 等规避方式，见 <code>docs/design/2026-09-07-prototype-verification.md</code> §3 差异表。凡脚本化操作（含 governance.html 的 API 批量建组树）先过一遍该表。</p>
 
 <h2>红线清单</h2>
 <div class="box danger"><b>🚫 未演练过的备份等于没有备份</b>恢复演练每半年一次（ADR-0020）。</div>
@@ -360,7 +325,7 @@ python3 rebuild_jh_state.py A|B|...|Z</pre>
   <li>原型验证结论 §5（证据与留档）—— docs/design/2026-09-07-prototype-verification.md</li>
 </ul>
 
-<footer>智能挖机项目代码管理体系 · 前身 docs/ops/gitlab-ops.md（2026-09-10 教程化，设计见 docs/superpowers/specs/2026-09-10-tutorials-ia-rework-design.md） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 前身 docs/ops/gitlab-ops.md（2026-09-10 教程化，设计见 docs/superpowers/specs/2026-09-10-tutorials-ia-rework-design.md） · 治理篇见 governance.html · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>

@@ -8,7 +8,8 @@
 |---|---|
 | 评审者 / 干系人 | `docs/design/` 三份设计（决策事实来源）→ `docs/adr/` 21 条决策记录 → `docs/design/2026-09-07-prototype-verification.md` 验证结论 |
 | 团队成员（任一角色） | `docs/tutorials/index.html`——按角色 5–10 分钟上手 |
-| 平台运维 / 运营（顶层 Owner） | `docs/tutorials/ops.html`（实施五步 + 日常运维查阅）→ `gitlab-compose-test/`（compose 栈 + 截图脚本 + 证据 01–43） |
+| 平台运维 | `docs/tutorials/ops.html`（建实例 + 日常运维查阅）→ `gitlab-compose-test/`（compose 栈 + 截图脚本 + 证据 01–43） |
+| 运营（顶层 Owner） | `docs/tutorials/governance.html`（搭并治组树——子组 · 授权 · 里程碑） |
 
 ## 目录
 

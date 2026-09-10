@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>运营 · 智能挖机代码管理上手指南</title>
+<style>
+:root{--ink:#1f2328;--mut:#656d76;--line:#d8dee4;--bg:#f6f8fa;
+--blue:#0969da;--blue-bg:#ddf4ff;--red:#cf222e;--red-bg:#ffebe9;
+--yel:#9a6700;--yel-bg:#fff8c5;--accent:#1f6feb}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:15px/1.7 system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background:#fff}
+.wrap{max-width:880px;margin:0 auto;padding:0 20px 60px}
+header.hero{background:linear-gradient(135deg,#0d2b45,#1f6feb);color:#fff;padding:34px 0 26px;margin-bottom:28px}
+header.hero .wrap{padding-bottom:0}
+.crumb{font-size:13px;opacity:.8;margin-bottom:10px}
+.crumb a{color:#fff}
+h1{font-size:26px;margin:0 0 6px}
+.tagline{font-size:15px;opacity:.9;margin:0}
+.badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);
+border-radius:99px;padding:2px 12px;font-size:13px;margin-top:10px}
+h2{font-size:20px;border-left:4px solid var(--accent);padding-left:10px;margin:38px 0 14px}
+h3{font-size:16px;margin:22px 0 8px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--bg)}
+.step{border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:16px 0;background:#fff}
+.step .no{display:inline-block;background:var(--accent);color:#fff;border-radius:50%;
+width:26px;height:26px;line-height:26px;text-align:center;font-weight:700;margin-right:8px}
+.step h3{display:inline;margin:0}
+.cmd{background:#0d1117;color:#e6edf3;border-radius:8px;padding:12px 14px;overflow-x:auto;
+font:13px/1.6 ui-monospace,Consolas,monospace;margin:10px 0}
+.cmd .c{color:#8b949e}
+figure.shot{margin:14px 0}
+figure.shot img{max-width:100%;border:1px solid var(--line);border-radius:8px;display:block}
+figcaption{color:var(--mut);font-size:13px;margin-top:6px}
+.box{border-radius:8px;padding:12px 16px;margin:14px 0;font-size:14px}
+.box b{display:block;margin-bottom:4px}
+.why{background:var(--blue-bg);border:1px solid #a5d8ff}
+.why b{color:var(--blue)}
+.danger{background:var(--red-bg);border:1px solid #ffc1c0}
+.danger b{color:var(--red)}
+.tip{background:var(--yel-bg);border:1px solid #ecdf95}
+.tip b{color:var(--yel)}
+footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-top:48px;padding-top:14px}
+@media print{header.hero{background:#0d2b45}.step,.box{break-inside:avoid}body{font-size:12px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="crumb"><a href="index.html">← 返回角色导航</a></p>
+    <h1>运营上手指南</h1>
+    <p class="tagline">搭并治组树——子组 · 授权 · 里程碑</p>
+    <span class="badge">顶层组 Owner</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>你是谁</h2>
+<p>你是拿着顶层组 <code>intel_excavator</code> 的项目负责人，在 GitLab 里是<b>顶层组 Owner</b>。运维把实例和顶层组建好、把你设为 Owner 之后，组树之下都归你：建子组与仓库、配保护分支与看板、授权变更、里程碑。与运维（root / 实例管理员）的边界——你治组树，不碰实例（起栈、改 compose、DB 直改、开号封禁都是运维的事，见 <a href="ops.html">ops.html</a>）。若你兼平台维护人（现阶段常态），实例侧另读 ops.html；CI 宪法由 platform 组维护，见 <a href="platform.html">platform.html</a>。</p>
+
+<h2>你能做什么 / 不能做什么</h2>
+<table>
+  <tr><th>能 ✅</th><th>不能 ❌</th></tr>
+  <tr><td>建子组与仓库、配保护分支、配组看板</td><td>起栈、改 compose、DB 直改（运维）</td></tr>
+  <tr><td>授权变更（Owner token）、里程碑命名归组</td><td>root 改密、开号封禁（运维）</td></tr>
+  <tr><td>需求流收口配置（intake / 标签 / 看板）</td><td>改 CI 宪法模板（走 platform 组 MR）、直接 push main</td></tr>
+</table>
+
+<h2>治理主线：搭起组树</h2>
+<p>运维建好顶层组、把你设为 Owner 后，按下述五步把组树搭起来。本章教<b>通用做法</b>——组树、仓库、角色是设计产出，各项目按自己的产品域落地；原型环境的具体取值（组名、用户、MR 编号）只是示例。</p>
+
+<div class="step">
+  <span class="no">1</span><h3>建组树（ADR-0003）</h3>
+  <p>顶层组 = 项目，子组 = 产品域（团队会重组、产品域相对稳定）：<code>firmware / autonomy / vehicle / cloud / app / platform</code>，子组内按组件建仓库。<code>platform/</code> 是宪法组——CI 模板与规范文档全部版本化，规则修改必须走 MR，不允许口头变更。</p>
+  <ul>
+    <li>UI：新建组 → 填路径与可见性（内部）；或 API <code>POST /api/v4/groups</code>（你的 Owner token 即可建子组），批量建组树好用。</li>
+  </ul>
+  <figure class="shot">
+    <img src="assets/03-groups.png" alt="GitLab firmware 子组页，组内列出 hydraulic-controller 仓库">
+    <figcaption>firmware 子组页 ｜ 子组即产品域，组内按组件建仓</figcaption>
+  </figure>
+</div>
+
+<div class="step">
+  <span class="no">2</span><h3>配权限（ADR-0004 / 0005）</h3>
+  <p>账号由运维开通（关注册后的唯一入口，见 ops.html §6.1），建号后由你按三级授权：</p>
+  <table>
+    <tr><th>角色</th><th>权限</th><th>授予对象</th></tr>
+    <tr><td>Guest / Reporter</td><td>只读</td><td>跨组查阅者、外部协作者</td></tr>
+    <tr><td>Developer</td><td>push 分支、建 MR</td><td>本组开发成员</td></tr>
+    <tr><td>Maintainer</td><td>合 MR、管保护分支</td><td>每仓库 1–2 名 Owner</td></tr>
+  </table>
+  <p>顶层组 Owner 由项目负责人持有。免费版无审计能力，授权变更一律经 API 并留存脚本日志（唯一留痕）。<b>账号 ≠ 权限</b>——运维开号只给一个能登录的身份，能干什么由你授权。</p>
+  <div class="box why">
+    <b>🔍 为什么只设三级权限？</b>
+    全项目只用 Guest / Developer / Maintainer 三级，每个仓库 1–2 名 Maintainer 即 Owner——权限层级越少，责任越清楚（设计 §4.3）。
+  </div>
+</div>
+
+<div class="step">
+  <span class="no">3</span><h3>建仓与保护分支（ADR-0006）</h3>
+  <p>子组内建仓（<code>firmware/hydraulic-controller</code> 一类），每仓指定一名明确 Owner。分支 trunk-based 简化版：<code>main</code> 常绿 + 短命特性分支 + MR 合入；保护分支禁直接 push；发布周期长的仓库可留 <code>release/x.y</code> 维护分支。</p>
+  <p>存量代码入库门槛：能编译、README 写明用途 / Owner / 依赖——<b>用途说不清的代码不入库</b>。</p>
+  <figure class="shot">
+    <img src="assets/10-protect.png" alt="GitLab 仓库保护分支设置页">
+    <figcaption>保护分支 ｜ main 禁直接 push，只走 MR 合入</figcaption>
+  </figure>
+</div>
+
+<div class="step">
+  <span class="no">4</span><h3>需求流与看板（ADR-0015–0017）</h3>
+  <ul>
+    <li>建收口仓库（示例名 <code>intake</code>）承接需求与现场问题进池，标签体系分诊、里程碑归组，跨仓单据转移走 GitLab 原生 transfer。</li>
+    <li>组看板配状态列（设计为六状态）。<b>坑位</b>：组看板懒创建，配置前须先浏览器访问过看板页（验证结论 §3）。</li>
+  </ul>
+  <figure class="shot">
+    <img src="assets/41-group-board.png" alt="intel_excavator 组看板，列为待受理/已排期/开发中/待验证/已关闭/已拒绝">
+    <figcaption>组看板 ｜ 列即状态，卡片在哪一列活在哪一步</figcaption>
+  </figure>
+  <p>提单与追进度见 <a href="submitter.html">submitter.html</a>；域级分诊（移交 / 打回 / 婉拒）由各域 Owner 担任，见 <a href="owner.html">owner.html</a>。</p>
+</div>
+
+<div class="step">
+  <span class="no">5</span><h3>CI 宪法（指针）</h3>
+  <p><code>platform/ci-templates</code> 是全项目的宪法仓库，由 platform 组 Maintainer 维护（建模板与修订走 MR，见 <a href="platform.html">platform.html</a>）。你的责任是确保下游各仓库的 <code>.gitlab-ci.yml</code> 以 <code>include: project:</code> 引用通用层——<b>未 include 通用层的流水线 MR 不予合入</b>：检查 job 校验 + Maintainer 人工拒合，双重实现。</p>
+</div>
+
+<h2>持续治理</h2>
+<p>组树搭起来之后是长期治理，以下动作没有终点：</p>
+<ul>
+  <li><b>授权变更走 API 并留存脚本日志</b>——免费版无审计能力，脚本是唯一留痕。</li>
+  <li><b>新产品域 = 新子组</b>：按产品域建组，团队重组不动组树（ADR-0003）。</li>
+  <li><b>里程碑命名</b>如「固件 v2.3·2026Q4」，版本节点跨仓库生效、进度按单数百分比看。</li>
+</ul>
+<figure class="shot">
+  <img src="assets/42-milestone-progress.png" alt="GitLab 里程碑进度页">
+  <figcaption>里程碑进度 ｜ 跨仓版本节点，按单数百分比看</figcaption>
+</figure>
+
+<h2>红线清单</h2>
+<div class="box danger"><b>🚫 授权变更不留痕＝没发生</b>免费版无审计，API 脚本是唯一留痕。</div>
+<div class="box danger"><b>🚫 组树按产品域、不按团队</b>团队会重组，产品域相对稳定——重组不动组树（ADR-0003）。</div>
+<div class="box danger"><b>🚫 未 include 通用层的流水线 MR 不予合入</b>制度卡准入 + 流水线自检报错，双保险。</div>
+
+<h2>延伸阅读</h2>
+<ul>
+  <li>设计 §4.1（组树）/ §4.3（权限）/ §6.2（CI）—— docs/design/2026-08-31-excavator-code-management-design.md</li>
+  <li>需求流设计 —— docs/design/2026-09-03-requirement-flow-design.md</li>
+  <li>ADR-0003 / 0004 / 0005 / 0006 / 0015 / 0016 / 0017 —— docs/adr/</li>
+  <li>运维侧（建实例 + 建顶层组 + 授权 Owner）—— <a href="ops.html">ops.html</a></li>
+  <li>CI 宪法与模板维护 —— <a href="platform.html">platform.html</a></li>
+  <li>域级分诊与发布 —— <a href="owner.html">owner.html</a>；提单与看板追进度 —— <a href="submitter.html">submitter.html</a></li>
+</ul>
+
+<footer>智能挖机项目代码管理体系 · 本页由 ops.html「组织与治理」章拆出（spec 2026-09-10-tutorials-ia-rework-design.md line 27「长大再拆」本次执行） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md / 2026-09-03-requirement-flow-design.md</footer>
+
+</div>
+</body>
+</html>
