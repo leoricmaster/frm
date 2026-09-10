@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<title>角色导航 · 智能挖机代码管理上手指南</title>
+<title>智能挖机代码管理上手指南</title>
 <style>
 :root{--ink:#1f2328;--mut:#656d76;--line:#d8dee4;--bg:#f6f8fa;
 --blue:#0969da;--blue-bg:#ddf4ff;--red:#cf222e;--red-bg:#ffebe9;
@@ -61,43 +61,49 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="wrap">
 
-<h2>角色导航</h2>
+<h2>日常运维</h2>
 <div class="cards">
-  <a class="card" href="developer.html">
-    <b>开发工程师</b>
-    <p>写代码的人</p>
-    <span class="badge">Developer 30</span>
-    <p>分支 · MR · 等CI绿</p>
+  <a class="card" href="ops.html">
+    <b>运维人员</b><p>把平台从零搭起来并看住的人</p>
+    <span class="badge">实例管理员</span><p>起栈 · 开号 · 备份</p>
   </a>
-  <a class="card" href="owner.html">
-    <b>仓库 Owner</b>
-    <p>守门与发布的人</p>
-    <span class="badge">Maintainer 40</span>
-    <p>评审 · tag · Release</p>
-  </a>
-  <a class="card" href="viewer.html">
-    <b>只读协作者</b>
-    <p>只看不动代码的人</p>
-    <span class="badge">Guest 10</span>
-    <p>项目页 · 制品下载</p>
+  <a class="card" href="ops.html#gov">
+    <b>运营人员</b><p>拿着顶层组的项目负责人</p>
+    <span class="badge">顶层组 Owner</span><p>组树 · 授权 · 里程碑</p>
   </a>
   <a class="card" href="platform.html">
-    <b>平台工程</b>
-    <p>管 CI 模板的人</p>
-    <span class="badge">platform 组 Maintainer</span>
-    <p>宪法 · 模板 · 传播</p>
+    <b>平台工程 ⇄</b><p>同一页的另一半：runner · 镜像库 · 对象存储</p>
+    <span class="badge">platform 组 Maintainer</span><p>基础设施视角 · 正卡在代码交付</p>
   </a>
-  <a class="card" href="field-engineer.html">
-    <b>驻场工程师</b>
-    <p>出差在现场的人</p>
-    <span class="badge">出场前 Developer / 现场 Guest</span>
-    <p>离线 · 刷固件 · 补MR</p>
+</div>
+<h2>代码交付</h2>
+<div class="cards">
+  <a class="card" href="developer.html">
+    <b>开发工程师</b><p>写代码的人（出差驻场？看场景篇）</p>
+    <span class="badge">Developer 30</span><p>分支 · MR · 等CI绿</p>
   </a>
-  <a class="card" href="submitter.html">
-    <b>需求提出人与管理者</b>
-    <p>提需求看进度的人</p>
-    <span class="badge">提单人 Guest / 管理者 Reporter</span>
-    <p>提单 · 看板 · 里程碑</p>
+  <a class="card" href="owner.html">
+    <b>仓库 Owner</b><p>守门与发布的人</p>
+    <span class="badge">Maintainer 40</span><p>评审 · tag · Release · 分诊</p>
+  </a>
+  <a class="card" href="viewer.html">
+    <b>只读协作者</b><p>只看不动代码的人</p>
+    <span class="badge">Guest 10</span><p>项目页 · 制品下载</p>
+  </a>
+  <a class="card" href="platform.html">
+    <b>平台工程</b><p>管 CI 宪法与制品基础设施的人</p>
+    <span class="badge">platform 组 Maintainer</span><p>宪法 · 模板 · 传播</p>
+  </a>
+</div>
+<h2>需求管理</h2>
+<div class="cards">
+  <a class="card" href="submitter.html#flow-a">
+    <b>需求提出人</b><p>提需求、报缺陷的人</p>
+    <span class="badge">提单人 Guest</span><p>模板建单 · 追进度</p>
+  </a>
+  <a class="card" href="submitter.html#flow-b">
+    <b>需求管理者</b><p>盯进度、主持例会的人</p>
+    <span class="badge">管理者 Reporter</span><p>看板三屏 · 里程碑</p>
   </a>
 </div>
 
