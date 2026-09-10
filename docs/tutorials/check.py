@@ -11,6 +11,7 @@ SKELETON = {  # 每类页必须包含的 <h2> 文案片段
     "platform":      ["你是谁", "能做", "任务流", "自救", "红线", "延伸"],
     "field":         ["你是谁", "能做", "任务流", "自救", "红线", "延伸"],
     "submitter":     ["你是谁", "能做", "任务流", "自救", "红线", "延伸"],
+    "ops":           ["你是谁", "能做", "实施主线", "查阅", "红线", "延伸"],
 }
 def pagetype(name):
     if name == "index.html": return "index"
@@ -32,7 +33,7 @@ for arg in sys.argv[1:]:
         if frag not in html:
             errs.append(f"缺少骨架小节: {frag}")
     n_img = len(re.findall(r'<img ', html))
-    if pt != "index" and n_img < 2:
+    if pt not in ("index", "ops") and n_img < 2:
         errs.append(f"图片过少({n_img}), 图文并茂要求 >=2")
     if errs:
         fails += 1
