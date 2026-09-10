@@ -300,9 +300,13 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
 <h3>6.1 开账号（关注册后的唯一入口）</h3>
 <p>正式环境配 SMTP 后可发重置链接；未配 SMTP（原型如此）则账号由管理员显式建：</p>
 <ul>
-  <li><b>界面</b>：管理区 → 用户 → 新建用户，填姓名 / 用户名（对齐 AD）/ 邮箱，设初始密码。</li>
+  <li><b>界面</b>：管理区 → 用户 → 新建用户，填姓名 / 用户名（对齐 AD）/ 邮箱，设初始密码。示范：用户名 <code>gw_zhangyunfeng</code>、邮箱 <code>gw_zhangyunfeng@irootech.com</code>。</li>
   <li><b>API</b>：<code>POST /api/v4/users</code>（管理员 token），可脚本批量建号，对上线波峰好用。</li>
 </ul>
+<figure class="shot">
+  <img src="assets/02-admin-new-user.png" alt="GitLab 管理区新建用户页，填写姓名 / 用户名 / 邮箱与初始密码">
+  <figcaption>新建用户 ｜ 用户名对齐 AD，初始密码线下交付，账号信息也通过该邮箱送达</figcaption>
+</figure>
 <p>初始密码线下交付（口述 / 凭证通道），要求首登改密。权限另算——建号后由仓库 Owner 加组加角色（CE 无分组同步，见 ADR-0005 边界表），账号 ≠ 权限。</p>
 
 <h3>6.2 封禁与离职回收</h3>

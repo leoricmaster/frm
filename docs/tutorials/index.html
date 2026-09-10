@@ -61,6 +61,23 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="wrap">
 
+<h2>通用入门</h2>
+<p>先拿账号、再登录，然后按角色点下方对应卡片上手日常操作。</p>
+
+<div class="step">
+  <span class="no">1</span><h3>取得账号</h3>
+  <p>账号由平台组（管理员）统一开通，平台已关闭自助注册。开好的账号信息通过<b>邮箱</b>送达——查收工作邮箱即可拿到登录用户名与初始密码。</p>
+</div>
+
+<div class="step">
+  <span class="no">2</span><h3>登录</h3>
+  <p>浏览器打开 GitLab 地址，用收到的账号登录，首登后立即改密。</p>
+  <figure class="shot">
+    <img src="assets/01-login.png" alt="GitLab 登录页，输入账号与密码">
+    <figcaption>登录页 ｜ 账号信息查收邮箱，首登后立即改密</figcaption>
+  </figure>
+</div>
+
 <h2>日常运维</h2>
 <div class="cards">
   <a class="card" href="ops.html">
@@ -72,8 +89,8 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
     <span class="badge">顶层组 Owner</span><p>组树 · 授权 · 里程碑</p>
   </a>
   <a class="card" href="platform.html">
-    <b>平台工程 ⇄</b><p>同一页的另一半：runner · 镜像库 · 对象存储</p>
-    <span class="badge">platform 组 Maintainer</span><p>基础设施视角 · 正卡在代码交付</p>
+    <b>平台工程</b><p>管 CI 宪法与制品基础设施的人</p>
+    <span class="badge">platform 组 Maintainer</span><p>宪法 · 模板 · runner · 镜像库 · 对象存储</p>
   </a>
 </div>
 <h2>代码交付</h2>
@@ -90,10 +107,6 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
     <b>只读协作者</b><p>只看不动代码的人</p>
     <span class="badge">Guest 10</span><p>项目页 · 制品下载</p>
   </a>
-  <a class="card" href="platform.html">
-    <b>平台工程</b><p>管 CI 宪法与制品基础设施的人</p>
-    <span class="badge">platform 组 Maintainer</span><p>宪法 · 模板 · 传播</p>
-  </a>
 </div>
 <h2>需求管理</h2>
 <div class="cards">
@@ -107,103 +120,24 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   </a>
 </div>
 
-<h2>通用入门</h2>
-<p>上手先认识这 4 件事：登录、找到自己的项目组、看懂一条流水线、看成员与权限。前两件是每日起手，后两件是按需查看——各角色该深挖哪件，见下方角色教程。</p>
-
-<div class="step">
-  <span class="no">1</span><h3>登录</h3>
-  <p>浏览器打开 GitLab 地址，进入登录页。账号由平台组（管理员）统一开通，登录用该账号；平台已关闭自助注册。</p>
-  <figure class="shot">
-    <img src="assets/01-login.png" alt="GitLab 登录页，输入账号与密码">
-    <figcaption>登录页 ｜ 账号找平台组开，初始密码线下交付</figcaption>
-  </figure>
-</div>
-<div class="box tip">
-  <b>📝 规划：域账号对接（阶段 1 实施项）</b>
-  现阶段为本地账号、管理员开通。后续对接集团 LDAP 域账号后，域账号即登录账号——入职首次登录自动建号、离职自动收回，不靠人手记得删号（ADR-0005）。
-</div>
-
-<div class="step">
-  <span class="no">2</span><h3>找到自己的项目组</h3>
-  <p>登录后从主面板左侧的「群组」入口进入，找到顶层组 intel_excavator。</p>
-  <figure class="shot">
-    <img src="assets/02-dashboard.png" alt="登录后的主面板，左侧有「群组」入口">
-    <figcaption>登录后的主面板 ｜ 左侧「群组」快捷入口</figcaption>
-  </figure>
-  <p>intel_excavator 下按产品域分为 firmware / autonomy / vehicle / cloud / app / platform 六个子组，日常的仓库都在各产品域子组里。</p>
-  <figure class="shot">
-    <img src="assets/04-group-tree.png" alt="intel_excavator 组结构树，六个产品域子组">
-    <figcaption>组结构树 ｜ intel_excavator 下按产品域分 6 个子组</figcaption>
-  </figure>
-</div>
-<div class="box why">
-  <b>🔍 为什么按产品域分组，不按团队分组？</b>
-  团队会重组，产品域相对稳定（设计 §4.1）。
-</div>
-
-<div class="step">
-  <span class="no">3</span><h3>看懂一条流水线</h3>
-  <p>进入项目后，左侧 构建 → 流水线 即流水线列表：每次 push 代码都会自动新增一条。</p>
-  <figure class="shot">
-    <img src="assets/06-pipelines.png" alt="项目的流水线列表页">
-    <figcaption>流水线列表 ｜ 每次 push 一条</figcaption>
-  </figure>
-  <p>点开任意一条看详情：绿色 = 通过，红色 = 失败。失败时点进对应的 job（任务）看日志，日志最后几十行通常就是报错原因。</p>
-  <figure class="shot">
-    <img src="assets/07-ci-success.png" alt="一条全部通过的流水线详情页">
-    <figcaption>流水线详情 ｜ 绿=通过，红=失败，点开看日志</figcaption>
-  </figure>
-</div>
-<div class="box why">
-  <b>🔍 为什么每次 push 都要自动跑一遍？</b>
-  编译和测试由服务器统一执行，质量不靠自觉；红了必须修，才能保证 main 分支随时可用（设计 §6.2）。
-</div>
-
-<div class="step">
-  <span class="no">4</span><h3>看成员与权限</h3>
-  <p>项目左侧 管理 → 成员 列出谁在这个仓库里、是什么角色：Developer 是干活的开发，Maintainer 就是这个仓库的 Owner（守门人）。</p>
-  <figure class="shot">
-    <img src="assets/12-members.png" alt="项目成员与权限页">
-    <figcaption>项目成员页 ｜ 谁是 Owner 一目了然</figcaption>
-  </figure>
-</div>
-<div class="box why">
-  <b>🔍 为什么只设三级权限？</b>
-  全项目只用 Guest / Developer / Maintainer 三级，每个仓库 1–2 名 Maintainer 即 Owner——权限层级越少，责任越清楚（设计 §4.3）。
-</div>
-
-<div class="box why">
-  <b>🔍 产物去哪了？（二阶段新增，§6.4）</b>
-  三类产物三个家：固件 <b>.bin</b> → GitLab Release 附件；容器<b>镜像</b> → Harbor；大文件/模型权重 → MinIO（git 里只存清单与指针）。各角色教程会带你走到自己该碰的那个家。
-</div>
-<figure class="shot">
-  <img src="assets/29-minio-buckets.png" alt="MinIO 控制台桶列表，三个桶">
-  <figcaption>MinIO 三桶 ｜ 大文件归宿——dataset-model / field-dropzone / training-output</figcaption>
-</figure>
-
-<div class="box why">
-  <b>🔍 有需求 / 缺陷要提？（三阶段新增）</b>
-  全部来源只进一个口——受理台（intel_excavator/intake）按模板建单，3 个工作日内分诊；进度看组看板与里程碑。见<b><a href="submitter.html">需求提出人与管理者</a></b>教程。
-</div>
-
 <h2>术语速查</h2>
 <table>
-  <tr><th>术语</th><th>白话</th></tr>
-  <tr><td>MR（Merge Request）</td><td>"请把我分支上的改动合进 main" 的申请，别人评审通过才算数</td></tr>
-  <tr><td>CI / 流水线</td><td>服务器替你自动编译+测试；push 后自动跑，红了必须修</td></tr>
-  <tr><td>保护分支 main</td><td>只能通过 MR 合入，谁都不能直接 push 的主干</td></tr>
-  <tr><td>tag / Release</td><td>给某个 commit 贴版本号（tag）；Release 是带附件的正式发布页</td></tr>
-  <tr><td>manifest.json</td><td>藏在制品里的"身份证"：哪个 commit、何时、哪台机器构建</td></tr>
-  <tr><td>ci-templates</td><td>全项目共用的 CI 模板仓库，规则改一处、全部仓库生效</td></tr>
-  <tr><td>Harbor</td><td>容器镜像仓库：CI 构建的镜像归宿在这里，构建区拉 base 镜像也走它的代理</td></tr>
-  <tr><td>MinIO</td><td>对象存储：数据集、模型权重等大文件归宿，git 里只存清单与指针</td></tr>
-  <tr><td>投放区</td><td>现场数据 write-only 投放桶：只能往里投，不能删/列别人的</td></tr>
-  <tr><td>DLP</td><td>集团防泄漏系统：终端透明加解密——文件在硬盘上自动加密，拷出去打不开</td></tr>
-  <tr><td>受理台（intake）</td><td>所有需求 / 缺陷的唯一进料口仓库：按模板建单，3 日内分诊</td></tr>
-  <tr><td>分诊</td><td>域 Owner 把单移交 / 打回 / 婉拒，并代打来源与状态标签</td></tr>
-  <tr><td>状态:: / 来源:: 标签</td><td>形如"状态::待受理"的全组统一标签——看板列就来自它</td></tr>
-  <tr><td>里程碑</td><td>版本节点（如"固件 v2.3·2026Q4"），进度按单数百分比看</td></tr>
-  <tr><td>Closes #单号</td><td>写在 MR 描述里的关单指令：代码合入那一刻，单自动关闭</td></tr>
+  <tr><th>英文</th><th>中文</th><th>白话</th></tr>
+  <tr><td>Merge Request (MR)</td><td>合并请求</td><td>"请把我分支上的改动合进 main" 的申请，别人评审通过才算数</td></tr>
+  <tr><td>CI / Pipeline</td><td>持续集成 / 流水线</td><td>服务器替你自动编译+测试；push 后自动跑，红了必须修</td></tr>
+  <tr><td>Protected branch (main)</td><td>保护分支</td><td>只能通过 MR 合入，谁都不能直接 push 的主干</td></tr>
+  <tr><td>tag / Release</td><td>标签 / 发布</td><td>给某个 commit 贴版本号（tag）；Release 是带附件的正式发布页</td></tr>
+  <tr><td>manifest.json</td><td>清单文件</td><td>藏在制品里的"身份证"：哪个 commit、何时、哪台机器构建</td></tr>
+  <tr><td>ci-templates</td><td>CI 模板仓库</td><td>全项目共用的 CI 模板仓库，规则改一处、全部仓库生效</td></tr>
+  <tr><td>Harbor</td><td>—</td><td>容器镜像仓库：CI 构建的镜像归宿在这里，构建区拉 base 镜像也走它的代理</td></tr>
+  <tr><td>MinIO</td><td>—</td><td>对象存储：数据集、模型权重等大文件归宿，git 里只存清单与指针</td></tr>
+  <tr><td>field-dropzone</td><td>投放区</td><td>现场数据 write-only 投放桶：只能往里投，不能删/列别人的</td></tr>
+  <tr><td>DLP (Data Loss Prevention)</td><td>数据防泄漏</td><td>集团防泄漏系统：终端透明加解密——文件在硬盘上自动加密，拷出去打不开</td></tr>
+  <tr><td>intake</td><td>受理台</td><td>所有需求 / 缺陷的唯一进料口仓库：按模板建单，3 日内分诊</td></tr>
+  <tr><td>triage</td><td>分诊</td><td>域 Owner 把单移交 / 打回 / 婉拒，并代打来源与状态标签</td></tr>
+  <tr><td>scoped labels (Status:: / Source::)</td><td>作用域标签</td><td>形如"状态::待受理"的全组统一标签——看板列就来自它</td></tr>
+  <tr><td>Milestone</td><td>里程碑</td><td>版本节点（如"固件 v2.3·2026Q4"），进度按单数百分比看</td></tr>
+  <tr><td>Closes #issue</td><td>关单指令</td><td>写在 MR 描述里的关单指令：代码合入那一刻，单自动关闭</td></tr>
 </table>
 
 <footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md / 2026-09-03-requirement-flow-design.md</footer>
