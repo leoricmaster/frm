@@ -21,7 +21,8 @@ services:
     container_name: frm-gitlab
     restart: unless-stopped
     hostname: gitlab.local
-    # 资源上限按本机 62G/32C 富余设定；生产机房虚机可下调
+    # 资源上限见 deploy 块，口径=设计 §7 生产主机 8C/16G（四容器合计 8C/12.5G，留 OS 余量）；
+    # 组件表准绳见 docs/ops/gitlab-ops.md §1，原型机 62G/32C 富余不受影响
     shm_size: "256m"
     environment:
       # external_url 决定 GitLab 生成的 clone 地址与页面链接，用宿主机 IP + 8081
@@ -46,21 +47,34 @@ services:
       - ./config:/etc/gitlab
       - ./logs:/var/log/gitlab
       - ./data:/var/opt/gitlab
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 8g
     networks:
       - frm-net
 
   gitlab-runner:
-    image: gitlab/gitlab-runner:latest
+    # 版本与 GitLab 主版本对齐（19.3.1），钉版纪律同 GitLab（ADR-0021）
+    image: gitlab/gitlab-runner:v19.3.1
     container_name: frm-runner
     restart: unless-stopped
     volumes:
       - ./runner-config:/etc/gitlab-runner
-      - /var/run/docker.sock:/var/run/docker.sock   # docker executor 需要
+      # shell executor 的 CI job 内跑 docker CLI：build/push/pull 即宿主 docker 操作，
+      # Harbor 信任只需配宿主 daemon 一处（二阶段设计 §3 实测口径）
+      - /var/run/docker.sock:/var/run/docker.sock
     group_add:
-      - "125"   # 宿主 docker GID，让 gitlab-runner 用户可访问 docker.sock（二阶段 §5.3 image-build job 需要）
+      - "125"   # 宿主 docker.sock 属组 GID（以宿主实际为准，本原型机为 125）
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2g
     networks:
       - frm-net
-    # 注册在 GitLab 就绪后进行（见 README），此处先起容器
+    # 注册在 GitLab 就绪后进行（见 docs/ops/gitlab-ops.md §3），此处先起容器
 
   # ── 二阶段：MinIO 对象存储（§6.4 大文件归宿 / §7.2 现场数据通道）──
   # 端口避开 pih 项目已占用的 9000/9001：9002 API、9003 Console
@@ -68,7 +82,7 @@ services:
   #     healthcheck 相应用 curl 探测 9002（mc 的内置 local 别名固定指向 localhost:9000，
   #     --address 变更后 "mc ready local" 会无限重试，实测如此）
   minio:
-    image: minio/minio:latest          # 本地已有镜像，无需拉取
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z   # 钉实测版本，离线机房可复现
     container_name: frm-minio
     restart: unless-stopped
     command: server /data --address ":9002" --console-address ":9003"
@@ -85,12 +99,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 2g
     networks:
       - frm-net
 
   # 一次性初始化：建三桶（幂等，重跑无害）
   minio-init:
-    image: minio/mc:latest
+    image: minio/mc:RELEASE.2025-08-13T08-35-41Z
     container_name: frm-minio-init
     depends_on:
       minio:
@@ -100,6 +119,11 @@ services:
       mc alias set local http://frm-minio:9002 minioadmin 'Excavator#2026Proto' &&
       mc mb -p local/dataset-model local/field-dropzone local/training-output &&
       echo 'buckets ready'"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512m
     networks:
       - frm-net
     restart: "no"
