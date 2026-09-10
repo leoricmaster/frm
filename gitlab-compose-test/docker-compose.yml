@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
     hostname: gitlab.local
     # 资源上限见 deploy 块，口径=设计 §7 生产主机 8C/16G（四容器合计 8C/12.5G，留 OS 余量）；
-    # 组件表准绳见 docs/ops/gitlab-ops.md §1，原型机 62G/32C 富余不受影响
+    # 组件表准绳见 docs/tutorials/ops.html#arch，原型机 62G/32C 富余不受影响
     shm_size: "256m"
     environment:
       # external_url 决定 GitLab 生成的 clone 地址与页面链接，用宿主机 IP + 8081
@@ -74,7 +74,7 @@ services:
           memory: 2g
     networks:
       - frm-net
-    # 注册在 GitLab 就绪后进行（见 docs/ops/gitlab-ops.md §3），此处先起容器
+    # 注册在 GitLab 就绪后进行（见 docs/tutorials/ops.html#run），此处先起容器
 
   # ── 二阶段：MinIO 对象存储（§6.4 大文件归宿 / §7.2 现场数据通道）──
   # 端口避开 pih 项目已占用的 9000/9001：9002 API、9003 Console
