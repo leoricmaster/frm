@@ -52,6 +52,7 @@ details{border:1px solid var(--line);border-radius:8px;margin:14px 0}
 details summary{cursor:pointer;padding:10px 16px;font-weight:700;color:var(--accent)}
 details[open] summary{border-bottom:1px solid var(--line)}
 details .dbody{padding:4px 16px 12px}
+.step h3.blk{display:block;margin:22px 0 8px}
 </style>
 </head>
 <body>
@@ -86,9 +87,9 @@ details .dbody{padding:4px 16px 12px}
     <tr><th>项</th><th>要求</th><th>说明</th></tr>
     <tr><td>主机</td><td>8C / 16G / 200G SSD</td><td>设计 §7；原型机 62G / 32C 富余放宽</td></tr>
     <tr><td>Docker + compose</td><td>已装</td><td>compose v2（<code>deploy.resources.limits</code> 依赖 v2）</td></tr>
-    <tr><td>镜像预拉</td><td>4 个，共约 7.1G</td><td>gitlab-jh 6.21G / runner 489M / minio 241M / mc 117M，tag 见 §1 组件表；离线机房先在有网环境拉好再导入</td></tr>
+    <tr><td>镜像预拉</td><td>4 个，共约 7.1G</td><td>gitlab-jh 6.21G / runner 489M / minio 241M / mc 117M，tag 见「查阅：架构与组件表」；离线机房先在有网环境拉好再导入</td></tr>
     <tr><td>端口占用</td><td>8081 / 8082 / 8083 / 9002 / 9003</td><td><b>示例值</b>：原型因测试机 8080 / 9000 / 9001 已被占而改此段；端口空闲的机器可改回默认，改了须同步改 compose 端口映射与 <code>external_url</code></td></tr>
-    <tr><td>凭据</td><td>原型口令内嵌 compose，正式实施另行管理</td><td><code>Excavator#2026Proto</code> 仅限原型栈；正式实施 root 口令走凭证通道注入，且首登立即改密（见 §4）</td></tr>
+    <tr><td>凭据</td><td>原型口令内嵌 compose，正式实施另行管理</td><td><code>Excavator#2026Proto</code> 仅限原型栈；正式实施 root 口令走凭证通道注入，且首登立即改密（见第 3 步）</td></tr>
   </table>
 </div>
 
@@ -134,7 +135,7 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
 <div class="step">
   <span class="no">4</span><h3 id="gov">组织与治理</h3>
   <p>这一章两类人读：<b>实施的人</b>（运维）按 4a 从上到下建一遍；<b>治理的人</b>（顶层 Owner / 运营）建完之后从 4b 起长期在此活动。</p>
-  <h3 style="display:block;margin:22px 0 8px">4a 一次性建立</h3>
+  <h3 class="blk">4a 一次性建立</h3>
   <p>本章教<b>通用做法</b>——组树、仓库、角色是设计产出，各项目按自己的产品域落地；原型环境的具体取值（组名、用户、MR 编号）只是示例，见附录 A。</p>
   <h4>5.1 组树（ADR-0003）</h4>
   <p>顶层组=项目，子组=产品域（团队会重组、产品域相对稳定）：<code>firmware / autonomy / vehicle / cloud / app / platform</code>，子组内按组件建仓库。<code>platform/</code> 是宪法组：CI 模板与规范文档全部版本化，规则修改必须走 MR，不允许口头变更。</p>
@@ -163,7 +164,7 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
     <li>建收口仓库（示例名 <code>intake</code>）承接需求与现场问题进池，标签体系分诊、里程碑归组，跨仓单据转移走 GitLab 原生 transfer。</li>
     <li>组看板配状态列（设计为六状态）。<b>坑位</b>：组看板懒创建，配置前须先浏览器访问过看板页（验证结论 §3）。</li>
   </ul>
-  <h3 style="display:block;margin:22px 0 8px">4b 持续治理</h3>
+  <h3 class="blk">4b 持续治理</h3>
   <ul>
     <li>授权变更一律走 API 并留存脚本日志——免费版无审计，脚本是唯一留痕</li>
     <li>新产品域 = 新子组：按产品域建组，团队重组不动组树（ADR-0003）</li>
@@ -315,7 +316,7 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
 <details>
 <summary>展开附录 A：原型复现段表</summary>
 <div class="dbody">
-  <p>定位：<code>rebuild_jh_state.py</code> 是<b>原型验证的测试夹具</b>，用于复刻原型终态（演示、回归、重拍证据用），<b>不是正式实施路径</b>——它建出的组树 / 用户 / 仓库 / MR 全部是原型测试数据（<code>intel_excavator</code> 组树、<code>dev1</code> 等账号、模拟 MR）。正式实施按 §5 逐项自建。</p>
+  <p>定位：<code>rebuild_jh_state.py</code> 是<b>原型验证的测试夹具</b>，用于复刻原型终态（演示、回归、重拍证据用），<b>不是正式实施路径</b>——它建出的组树 / 用户 / 仓库 / MR 全部是原型测试数据（<code>intel_excavator</code> 组树、<code>dev1</code> 等账号、模拟 MR）。正式实施按第 4 步（4a）逐项自建。</p>
   <p>前置条件：栈已就绪；root 建 PAT（脚本内 <code>ROOT_TOK</code> 处替换）；<code>/tmp/harbor-robot-secret.txt</code> 存在（E 段 HARBOR 变量依赖，缺失即崩）。</p>
   <pre class="cmd">cd gitlab-compose-test
 python3 rebuild_jh_state.py A|B|...|Z</pre>
@@ -339,7 +340,7 @@ python3 rebuild_jh_state.py A|B|...|Z</pre>
 </details>
 
 <h2>查阅：已知坑位</h2>
-<p>极狐与 CE 的七处 API / 路由差异、组看板懒创建、<code>/repository/files</code> 恒 404 等规避方式，见 <code>docs/design/2026-09-07-prototype-verification.md</code> §3 差异表。凡脚本化操作（含 §5 的 API 批量建组树）先过一遍该表。</p>
+<p>极狐与 CE 的七处 API / 路由差异、组看板懒创建、<code>/repository/files</code> 恒 404 等规避方式，见 <code>docs/design/2026-09-07-prototype-verification.md</code> §3 差异表。凡脚本化操作（含 4a 的 API 批量建组树）先过一遍该表。</p>
 
 <h2>红线清单</h2>
 <div class="box danger"><b>🚫 未演练过的备份等于没有备份</b>恢复演练每半年一次（ADR-0020）。</div>
