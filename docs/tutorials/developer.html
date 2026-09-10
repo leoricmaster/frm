@@ -57,14 +57,14 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
     <p class="crumb"><a href="index.html">← 返回角色导航</a></p>
     <h1>开发工程师上手指南</h1>
     <p class="tagline">拉代码 → 建分支 → 改码 → push → 建 MR → 等 CI 绿</p>
-    <span class="badge">Developer 30</span>
+    <span class="badge">Developer</span>
   </div>
 </header>
 
 <div class="wrap">
 
 <h2>你是谁</h2>
-<p>你是本组的开发成员，在 GitLab 里的角色是 <b>Developer（30）</b>：日常就是写代码、提 MR。典型一天：早上拉一把最新代码，从 main 建一条特性分支，改码提交 push，建一个 MR，然后等 CI 跑绿——绿了叫 Owner 来评审合入，红了自己修。</p>
+<p>你是本组的开发成员，在 GitLab 里的角色是 <b>Developer</b>：日常就是写代码、提 MR。典型一天：早上拉一把最新代码，从 main 建一条特性分支，改码提交 push，建一个 MR，然后等 CI 跑绿——绿了叫 Owner 来评审合入，红了自己修。</p>
 
 <h2>你能做什么 / 不能做什么</h2>
 <table>
@@ -104,7 +104,7 @@ $ cd hydraulic-controller</pre>
 
 <div class="step">
   <span class="no">2b</span><h3>红线预告：main 不能直推</h3>
-  <p>"不能直接 push main"不是口头规矩，而是系统强制：main 是保护分支，push/merge 权限只给了 Maintainer（40），你以 Developer（30）身份推上去会被直接拒绝。</p>
+  <p>"不能直接 push main"不是口头规矩，而是系统强制：main 是保护分支，push/merge 权限只给了 Maintainer，你以 Developer 身份推上去会被直接拒绝。</p>
   <figure class="shot">
     <img src="assets/10-protect.png" alt="GitLab 仓库设置页的 Protected branches 保护分支入口">
     <figcaption>保护分支设置 ｜ main 的 push/merge 限 Maintainer——系统强制，不靠自觉（验证结论 §1 阶段一矩阵）</figcaption>
