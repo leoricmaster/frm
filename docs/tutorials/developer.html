@@ -78,13 +78,13 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">1</span><h3>找到并 clone 仓库</h3>
-  <p>从 群组 → intel_excavator 进入你所在的产品域子组（如 firmware），找到自己的仓库，用页面上给的 clone 地址拉到本地。</p>
+  <p>从 群组 → intel_excavator 进入你所在的产品域子组（如 autonomy），找到自己的仓库，用页面上给的 clone 地址拉到本地。</p>
   <figure class="shot">
-    <img src="assets/03-groups.png" alt="GitLab firmware 子组页，组内列出 hydraulic-controller 仓库">
-    <figcaption>firmware 子组页 ｜ 组内即仓库列表——hydraulic-controller 是固件示例仓</figcaption>
+    <img src="assets/44-autonomy-groups.png" alt="GitLab autonomy 子组页，组内列出 perception 仓库">
+    <figcaption>autonomy 子组页 ｜ 组内即仓库列表——perception 是算法示例仓（自动装车）</figcaption>
   </figure>
-  <pre class="cmd">$ git clone http://gitlab.internal/intel_excavator/firmware/hydraulic-controller.git
-$ cd hydraulic-controller</pre>
+  <pre class="cmd">$ git clone http://gitlab.internal/intel_excavator/autonomy/perception.git
+$ cd perception</pre>
 </div>
 
 <div class="box why">
@@ -95,7 +95,7 @@ $ cd hydraulic-controller</pre>
 <div class="step">
   <span class="no">2</span><h3>从最新 main 建特性分支</h3>
   <p>分支名规则：<b>feat/xxx</b>（新功能）或 <b>fix/xxx</b>（修 bug）。永远不要在 main 上直接改。</p>
-  <pre class="cmd">$ git checkout main &amp;&amp; git pull &amp;&amp; git checkout -b feat/pid-tune</pre>
+  <pre class="cmd">$ git checkout main &amp;&amp; git pull &amp;&amp; git checkout -b feat/load-align</pre>
   <div class="box why">
     <b>🔍 为什么要用短生命周期的分支？</b>
     main 常绿、小步快合。分支活得越久，和 main 的差异越大，几个月后合不回去的代价远大于勤合入（设计 §4.2）。
@@ -106,7 +106,7 @@ $ cd hydraulic-controller</pre>
   <span class="no">2b</span><h3>红线预告：main 不能直推</h3>
   <p>"不能直接 push main"不是口头规矩，而是系统强制：main 是保护分支，push/merge 权限只给了 Maintainer，你以 Developer 身份推上去会被直接拒绝。</p>
   <figure class="shot">
-    <img src="assets/10-protect.png" alt="GitLab 仓库设置页的 Protected branches 保护分支入口">
+    <img src="assets/45-perception-protect.png" alt="GitLab perception 仓库设置页的受保护分支规则">
     <figcaption>保护分支设置 ｜ main 的 push/merge 限 Maintainer——系统强制，不靠自觉（验证结论 §1 阶段一矩阵）</figcaption>
   </figure>
   <p>这个设置只有 Owner 能改（管理 → 设置 → 仓库 → 受保护分支）。所以别试直推，老实走 MR。</p>
@@ -114,8 +114,8 @@ $ cd hydraulic-controller</pre>
 
 <div class="step">
   <span class="no">3</span><h3>改码 → commit → push</h3>
-  <pre class="cmd">$ git add -A &amp;&amp; git commit -m "feat: PID 参数整定"
-$ git push -u origin feat/pid-tune</pre>
+  <pre class="cmd">$ git add -A &amp;&amp; git commit -m "feat: 装车对位置信度阈值 0.85→0.80"
+$ git push -u origin feat/load-align</pre>
   <p>push 完看回显：GitLab 会自动返回一条<b>创建 MR 的链接</b>，直接点它就能建 MR，不用去页面里翻。</p>
 </div>
 
@@ -123,34 +123,34 @@ $ git push -u origin feat/pid-tune</pre>
   <span class="no">4</span><h3>建 MR</h3>
   <p>左侧 合并请求 → 新建合并请求 建一个新 MR。标题按仓库规范写清这次改了什么；描述里必须写三件事：<b>改了什么、为什么、怎么验证</b>——评审者第一眼看的就是这三行。</p>
   <figure class="shot">
-    <img src="assets/08-mr-list.png" alt="GitLab 的 MR 列表页，左上角有新建合并请求按钮">
+    <img src="assets/46-perception-mr-list.png" alt="GitLab perception 仓库的 MR 列表页">
     <figcaption>MR 列表 ｜ 左侧 合并请求 → 新建合并请求</figcaption>
   </figure>
   <p>从三阶段起，描述里再加两件：<b>关联单号</b>（默认写 <code>Closes #单号</code>——合入即自动关单；需外部验收的单只写 <code>#单号</code> 引用，不写 Closes）与<b>选定里程碑</b>。仓库的 MR 模板已带四项自查 checklist：☑ 关联单号 ☑ 里程碑 ☑ CI 全绿 ☑ 自测通过。</p>
   <figure class="shot">
-    <img src="assets/36-mr-closes-issue.png" alt="MR 描述写 Closes 关联需求单并选定里程碑">
-    <figcaption>MR 关联单号 ｜ 描述写 Closes #1 + 选定里程碑——合入即自动关单</figcaption>
+    <img src="assets/47-perception-mr-closes.png" alt="perception 的 MR 描述写 Closes 关联需求单并选定里程碑">
+    <figcaption>MR 关联单号 ｜ 描述写 Closes #1 + 选定里程碑——合入即自动关单（单由受理台分诊转入本仓）</figcaption>
   </figure>
   <div class="box why">
     <b>🔍 无单不开发（三无制度第一条）</b>
-    任何改动（需求、缺陷、现场修复）先有单，commit 必须能追到一张 issue（需求流设计 §7.1）。你自己发现的 bug / 技术改进？先去受理台（intel_excavator/intake）提缺陷 / 任务单，再开工——MR 描述里的 Closes 就是把"做了什么"和"为什么做"焊在一起的焊点（需求流设计 §5.1）。
+    任何改动（需求、缺陷、现场修复）先有单，commit 必须能追到一张 issue（需求流设计 §7.1）。上面这张"自动装车对位误拒率偏高"就是先在受理台（intel_excavator/intake）提单、分诊转入本仓的。你自己发现的 bug / 技术改进？同样先去受理台提单，再开工——MR 描述里的 Closes 就是把"做了什么"和"为什么做"焊在一起的焊点（需求流设计 §5.1）。
   </div>
 </div>
 
 <div class="step">
   <span class="no">5</span><h3>等 CI，读结果</h3>
-  <p>MR 页内嵌流水线：每次 push 到这条分支都会自动跑一遍编译、测试、扫描。绿了等评审；红了点开对应 job 看日志，最后几十行通常就是原因。</p>
+  <p>MR 页内嵌流水线：每次 push 到这条分支都会自动跑一遍密钥扫描、取数、训练。绿了等评审；红了点开对应 job 看日志，最后几十行通常就是原因。</p>
   <figure class="shot">
-    <img src="assets/15-mr2-changes.png" alt="MR 的 Changes 页，逐行展示这次改动的 diff">
-    <figcaption>MR 的 Changes 页 ｜ 评审者在这里逐行看你每一行改动</figcaption>
+    <img src="assets/48-perception-mr-changes.png" alt="perception 的 MR Changes 页，逐行展示 train.py 阈值改动的 diff">
+    <figcaption>MR 的 Changes 页 ｜ 评审者在这里逐行看你每一行改动——这次是 train.py 的对位阈值</figcaption>
   </figure>
   <div class="box why">
-    <b>🔍 CI 现在还做什么（二阶段新增）</b>
-    固件流水线会构建容器镜像并推 Harbor；算法（autonomy）流水线会从 MinIO 取数据集、训练完把模型权重推回 MinIO——<b>但你的操作不变</b>：push 完等绿，红了点 job 看日志（§5.3/§6.4）。
+    <b>🔍 你的算法流水线替你做什么（二阶段新增）</b>
+    scan→data→build→publish：从 MinIO 取数据集（manifest 指针 + sha256 校验）、训练、把模型权重推回 MinIO；固件域的流水线则构建容器镜像推 Harbor——<b>但你的操作不变</b>：push 完等绿，红了点 job 看日志（§5.3/§6.4）。
   </div>
   <figure class="shot">
-    <img src="assets/21-perception-pipelines.png" alt="autonomy perception 仓库的多阶段流水线列表，含 scan/data/build/publish 阶段">
-    <figcaption>autonomy 多阶段流水线 ｜ scan→data→build→publish——CI 现在替你做的远不止编译</figcaption>
+    <img src="assets/21-perception-pipelines.png" alt="perception 仓库的多阶段流水线列表，含 scan/data/build/publish 阶段">
+    <figcaption>perception 多阶段流水线 ｜ scan→data→build→publish——CI 替你做的远不止编译</figcaption>
   </figure>
 </div>
 
@@ -194,8 +194,8 @@ $ git push -u origin feat/pid-tune</pre>
   强推会覆盖别人的提交历史，共享分支上永远禁止。
 </div>
 <div class="box danger">
-  <b>🚫 不在本机编"发布用"固件</b>
-  发布产物只能来自 CI（设计 §5.4）。
+  <b>🚫 不把数据集 / 模型权重塞进 git</b>
+  git 只存 manifest 指针，大文件走 MinIO（设计 §6.4）；发布产物只能来自 CI（设计 §5.4）。
 </div>
 
 <h2>延伸阅读</h2>
@@ -212,7 +212,7 @@ $ git push -u origin feat/pid-tune</pre>
   <li>§4.3 关单双路径 / §5.1 MR 关联与 checklist</li>
 </ul>
 
-<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（autonomy 示例图 2026-09-11 重拍，Harbor/MinIO 图沿用 09-01） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
 
 </div>
 </body>
