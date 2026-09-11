@@ -48,6 +48,11 @@ figcaption{color:var(--mut);font-size:13px;margin-top:6px}
 .ok{color:#1a7f37;font-weight:700}.no2{color:var(--red);font-weight:700}
 footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-top:48px;padding-top:14px}
 @media print{header.hero{background:#0d2b45}.step,.box{break-inside:avoid}body{font-size:12px}}
+figure.shot img,figure.shot>svg{cursor:zoom-in}
+#lb{position:fixed;inset:0;background:rgba(4,12,22,.87);display:none;align-items:center;justify-content:center;z-index:999;cursor:zoom-out;padding:28px}
+#lb.on{display:flex}
+#lb img{max-width:96vw;max-height:92vh;border:0;border-radius:6px;box-shadow:0 10px 44px rgba(0,0,0,.55)}
+#lb svg{max-width:96vw!important;max-height:92vh!important}
 </style>
 </head>
 <body>
@@ -126,7 +131,7 @@ $ git push -u origin fix/artifact-empty-check</pre>
 </div>
 
 <h2>典型任务流：纳管镜像仓库与对象存储</h2>
-<p>二阶段（2026-09-01）把 Harbor（镜像仓库）和 MinIO（对象存储）接进了原型——这两件的基础设施也在你手上：建项目、配桶策略、把凭据安全地交给 CI。下面是配置到位后的全貌。</p>
+<p>Harbor（镜像仓库）和 MinIO（对象存储）这两件的基础设施也在你手上：建项目、配桶策略、把凭据安全地交给 CI。下面是配置到位后的全貌。</p>
 
 <div class="step">
   <span class="no">1</span><h3>Harbor 两项目</h3>
@@ -180,8 +185,8 @@ $ git push -u origin fix/artifact-empty-check</pre>
   </div>
 </div>
 
-<h2>典型任务流：纳管需求流配置（三阶段新增）</h2>
-<p>三阶段引入了需求流——受理台、scoped 标签字典、组看板、issue 模板——这些配置的版本化管护也在你手上。所有需求流配置都在 <code>platform/</code> 仓库里走 MR，与 ci-templates 同级管理：新增一个标签也走 MR，防止标签蔓延失控。</p>
+<h2>典型任务流：纳管需求流配置</h2>
+<p>需求流——受理台、scoped 标签字典、组看板、issue 模板——这些配置的版本化管护也在你手上。所有需求流配置都在 <code>platform/</code> 仓库里走 MR，与 ci-templates 同级管理：新增一个标签也走 MR，防止标签蔓延失控。</p>
 
 <div class="step">
   <span class="no">1</span><h3>scoped 标签字典</h3>
@@ -199,7 +204,7 @@ $ git push -u origin fix/artifact-empty-check</pre>
 
 <div class="step">
   <span class="no">2</span><h3>组看板与里程碑配置</h3>
-  <p>组级看板的列配置（7 状态列）和组级里程碑（版本节点）都在 <code>platform/</code> 里管。看板是懒创建的——首次浏览器访问后 API 才能加列，这个坑三阶段实测踩过。里程碑命名规范如 <code>固件 v0.9·三阶段原型</code>，跨仓库生效。</p>
+  <p>组级看板的列配置（7 状态列）和组级里程碑（版本节点）都在 <code>platform/</code> 里管。看板是懒创建的——首次浏览器访问后 API 才能加列，这个坑实测中踩过。里程碑命名规范如 <code>固件 v2.3·2026Q4</code>，跨仓库生效。</p>
   <div class="box why">
     <b>🔍 为什么看板列 = 状态标签？</b>
     看板列不是自由配置的——它直接映射 7 个 scoped 状态标签。改列 = 改标签字典 = 走 MR。
@@ -246,5 +251,20 @@ $ git push -u origin fix/artifact-empty-check</pre>
 <footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01）</footer>
 
 </div>
+<script>
+(function(){
+  var lb=document.createElement('div');lb.id='lb';document.body.appendChild(lb);
+  lb.addEventListener('click',function(){lb.classList.remove('on');lb.innerHTML='';document.body.style.overflow='';});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&lb.classList.contains('on'))lb.click();});
+  document.addEventListener('click',function(e){
+    if(!e.target.closest)return;
+    var el=e.target.closest('figure.shot img, figure.shot>svg');
+    if(!el)return;
+    lb.innerHTML='';
+    lb.appendChild(el.cloneNode(true));
+    lb.classList.add('on');document.body.style.overflow='hidden';
+  });
+})();
+</script>
 </body>
 </html>

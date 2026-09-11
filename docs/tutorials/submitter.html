@@ -48,6 +48,11 @@ figcaption{color:var(--mut);font-size:13px;margin-top:6px}
 .ok{color:#1a7f37;font-weight:700}.no2{color:var(--red);font-weight:700}
 footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-top:48px;padding-top:14px}
 @media print{header.hero{background:#0d2b45}.step,.box{break-ins:avoid}body{font-size:12px}}
+figure.shot img,figure.shot>svg{cursor:zoom-in}
+#lb{position:fixed;inset:0;background:rgba(4,12,22,.87);display:none;align-items:center;justify-content:center;z-index:999;cursor:zoom-out;padding:28px}
+#lb.on{display:flex}
+#lb img{max-width:96vw;max-height:92vh;border:0;border-radius:6px;box-shadow:0 10px 44px rgba(0,0,0,.55)}
+#lb svg{max-width:96vw!important;max-height:92vh!important}
 </style>
 </head>
 <body>
@@ -57,7 +62,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
     <p class="crumb"><a href="index.html">← 返回角色导航</a></p>
     <h1>需求提出人与管理者上手指南</h1>
     <p class="tagline">有需求提单、有缺陷贴 manifest；例会看板投屏——全程不碰代码</p>
-    <span class="badge">提单人 Guest · 管理者 Reporter</span>
+    <span class="badge">提单人 Guest 即可 · 管理者 Reporter</span>
   </div>
 </header>
 
@@ -65,7 +70,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <h2>你是谁</h2>
 <p>这篇教程服务两类人，共用一个入口：</p>
-<p><b>需求提出人</b>——市场、客服、集团接口人、现场反馈汇集者。你在 GitLab 里是 <b>Guest</b>：唯一日常操作就是在<b>受理台</b>（intel_excavator/intake 仓库）提单，提完等分诊。不需要知道代码住在哪个仓库，也不需要任何代码权限。</p>
+<p><b>需求提出人</b>——市场、客服、集团接口人、现场反馈汇集者。你要的是<b>一个开通进 intel_excavator 组的账号</b>：最低 <b>Guest</b> 角色即可提单——无任何代码权限，也不需要知道代码住在哪个仓库。提单不设角色门槛：组内开发成员照样自己提单、互相提单，都从受理台走。</p>
 <p><b>管理者</b>——带团队看进度的人。你是 <b>Reporter</b>：不写代码，周例会打开组看板和里程碑页投屏，回答"需求到哪了、卡在哪"。</p>
 
 <h2>你能做什么 / 不能做什么</h2>
@@ -80,10 +85,18 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">1</span><h3>进受理台，选模板</h3>
-  <p>左侧 群组 → intel_excavator → <b>intake</b>（受理台）仓库 → 议题 → 新建议题。三个模板三选一：<b>需求</b>（背景 / 目标 / 验收标准）、<b>缺陷</b>（现象 / 复现 / 影响范围 / 机器 manifest 粘贴区）、<b>任务</b>（技术改进类）。</p>
+  <p>左侧 群组 → intel_excavator → <b>intake</b>（受理台）仓库 → 议题 → 新建议题。三个模板三选一：<b>需求</b>（背景 / 目标 / 验收标准）、<b>缺陷</b>（现象 / 复现 / 影响范围 / 机器 manifest 粘贴区）、<b>任务</b>（技术改进类）。填好即如下三张的样子：</p>
   <figure class="shot">
-    <img src="assets/32-intake-template-form.png" alt="受理台建单页，需求模板表单">
-    <figcaption>受理台建单 ｜ 模板下拉选「需求」——背景与目标 / 验收标准（必填）/ 来源信息</figcaption>
+    <img src="assets/32-intake-template-form.png" alt="受理台建单页，需求模板填好待提交">
+    <figcaption>需求模板 ｜ 背景 / 验收标准（必填）/ 来源信息——验收标准写"怎么算做完"</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="assets/32b-intake-template-form-defect.png" alt="受理台建单页，缺陷模板填好待提交">
+    <figcaption>缺陷模板 ｜ 现象 / 复现步骤 / 影响范围 / manifest 粘贴区——现场没有 manifest 就写"无"</figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="assets/32c-intake-template-form-task.png" alt="受理台建单页，任务模板填好待提交">
+    <figcaption>任务模板 ｜ 任务说明 / 完成标准——技术改进类走这张</figcaption>
   </figure>
   <div class="box why">
     <b>🔍 为什么所有需求只进一个口？</b>
@@ -106,15 +119,11 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">3</span><h3>等分诊：看单去哪了</h3>
-  <p>3 个工作日内，分诊人（域 Owner 兼任）会做三件事之一：<b>移交</b>（单搬到对应产品域仓库、进排期）、<b>打回</b>（信息不足，退回你补）、<b>婉拒</b>（重复或超范围，说明理由关闭）。<code>来源::</code>/<code>状态::</code> 标签由分诊人代打——Guest 无打标权限（三阶段实测）。</p>
+  <p>3 个工作日内，分诊人（域 Owner 兼任）会做三件事之一：<b>移交</b>（单搬到对应产品域仓库、进排期）、<b>打回</b>（信息不足，退回你补）、<b>婉拒</b>（重复或超范围，说明理由关闭）。「<code>来源::</code>」「<code>状态::</code>」两类标签由分诊人代打——Guest 无打标权限。</p>
   <figure class="shot">
     <img src="assets/34-issue-transferred.png" alt="分诊移交后的需求单，已进域仓库并排期">
     <figcaption>分诊移交后 ｜ 单已 move 到 firmware 域仓库、状态 已排期、进里程碑（此单随后随 MR 合入关闭，见第 4 步）</figcaption>
   </figure>
-  <div class="box why">
-    <b>🔍 为什么强调 3 日内分诊？</b>
-    入口响应速度决定大家愿不愿意提单——这是口头文化能否被替代的胜负手。分诊堵没堵，管理者一眼能看（见任务流 B 第 3 步）。
-  </div>
 </div>
 
 <div class="step">
@@ -143,10 +152,10 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <div class="step">
   <span class="no">2</span><h3>里程碑过滤与完成度</h3>
-  <p>看板按里程碑过滤（里程碑 = 版本节点，如"固件 v0.9"），或直接打开里程碑页：完成度<b>按单数给百分比</b> + 已关/未关清单——例会投这一屏。</p>
+  <p>看板按里程碑过滤（里程碑 = 版本节点，如"<b>930</b>"），或直接打开里程碑页：完成度<b>按单数给百分比</b> + 已关/未关清单——例会投这一屏。</p>
   <figure class="shot">
-    <img src="assets/42-milestone-progress.png" alt="里程碑详情页，按单数显示完成度百分比与清单">
-    <figcaption>里程碑完成度 ｜ 按单数给百分比 + 已关/未关清单——图示 100%（1/1 单已关）</figcaption>
+    <img src="assets/42-milestone-progress.png" alt="里程碑 930 详情页，按单数显示完成度百分比与清单">
+    <figcaption>里程碑 930 完成度 ｜ 按单数给百分比 + 已关/未关清单——图示 42%（3/7 已收）</figcaption>
   </figure>
   <div class="box why">
     <b>🔍 例会只看板、不念稿</b>
@@ -158,8 +167,8 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <span class="no">3</span><h3>受理台积压：分诊堵没堵</h3>
   <p>进 intake 仓库，议题按 <b>待受理</b> 过滤——待受理堆着多少单，分诊有没有堵，一眼可见。积压超一周，例会点名。</p>
   <figure class="shot">
-    <img src="assets/43-intake-backlog.png" alt="受理台按待受理标签过滤的积压视图">
-    <figcaption>受理台积压 ｜ 按 待受理 过滤——当前 1 单在队，分诊堵没堵一眼可见</figcaption>
+    <img src="assets/43-intake-backlog.png" alt="受理台按待受理标签过滤的积压视图，多单在队">
+    <figcaption>受理台积压 ｜ 按 待受理 过滤——图示 4 单在队，分诊堵没堵一眼可见</figcaption>
   </figure>
   <div class="box why">
     <b>🔍 为什么管理者要盯受理台？</b>
@@ -199,8 +208,23 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   排期是域 Owner 把单拖进里程碑，不是领导打招呼——绕过受理台的活没有追溯链。
 </div>
 
-<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01）</footer>
+<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-11 极狐重拍，Harbor/MinIO 图沿用 09-01）</footer>
 
 </div>
+<script>
+(function(){
+  var lb=document.createElement('div');lb.id='lb';document.body.appendChild(lb);
+  lb.addEventListener('click',function(){lb.classList.remove('on');lb.innerHTML='';document.body.style.overflow='';});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&lb.classList.contains('on'))lb.click();});
+  document.addEventListener('click',function(e){
+    if(!e.target.closest)return;
+    var el=e.target.closest('figure.shot img, figure.shot>svg');
+    if(!el)return;
+    lb.innerHTML='';
+    lb.appendChild(el.cloneNode(true));
+    lb.classList.add('on');document.body.style.overflow='hidden';
+  });
+})();
+</script>
 </body>
 </html>

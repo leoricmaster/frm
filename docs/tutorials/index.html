@@ -48,6 +48,11 @@ figcaption{color:var(--mut);font-size:13px;margin-top:6px}
 .ok{color:#1a7f37;font-weight:700}.no2{color:var(--red);font-weight:700}
 footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-top:48px;padding-top:14px}
 @media print{header.hero{background:#0d2b45}.step,.box{break-inside:avoid}body{font-size:12px}}
+figure.shot img,figure.shot>svg{cursor:zoom-in}
+#lb{position:fixed;inset:0;background:rgba(4,12,22,.87);display:none;align-items:center;justify-content:center;z-index:999;cursor:zoom-out;padding:28px}
+#lb.on{display:flex}
+#lb img{max-width:96vw;max-height:92vh;border:0;border-radius:6px;box-shadow:0 10px 44px rgba(0,0,0,.55)}
+#lb svg{max-width:96vw!important;max-height:92vh!important}
 </style>
 </head>
 <body>
@@ -112,7 +117,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 <div class="cards">
   <a class="card" href="submitter.html#flow-a">
     <b>需求提出人</b><p>提需求、报缺陷的人</p>
-    <span class="badge">提单人 Guest</span><p>模板建单 · 追进度</p>
+    <span class="badge">提单人 Guest 即可</span><p>模板建单 · 追进度</p>
   </a>
   <a class="card" href="submitter.html#flow-b">
     <b>需求管理者</b><p>盯进度、主持例会的人</p>
@@ -143,5 +148,20 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 <footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01）</footer>
 
 </div>
+<script>
+(function(){
+  var lb=document.createElement('div');lb.id='lb';document.body.appendChild(lb);
+  lb.addEventListener('click',function(){lb.classList.remove('on');lb.innerHTML='';document.body.style.overflow='';});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&lb.classList.contains('on'))lb.click();});
+  document.addEventListener('click',function(e){
+    if(!e.target.closest)return;
+    var el=e.target.closest('figure.shot img, figure.shot>svg');
+    if(!el)return;
+    lb.innerHTML='';
+    lb.appendChild(el.cloneNode(true));
+    lb.classList.add('on');document.body.style.overflow='hidden';
+  });
+})();
+</script>
 </body>
 </html>

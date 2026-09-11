@@ -9,14 +9,12 @@ SKELETON = {  # 每类页必须包含的 <h2> 文案片段
     "owner":         ["你是谁", "能做", "任务流", "自救", "红线"],
     "viewer":        ["你是谁", "能做", "任务流", "自救", "红线"],
     "platform":      ["你是谁", "能做", "任务流", "自救", "红线"],
-    "field":         ["你是谁", "能做", "任务流", "自救", "红线"],
     "submitter":     ["你是谁", "能做", "任务流", "自救", "红线"],
     "ops":           ["你是谁", "能做", "实施主线", "查阅", "红线"],
     "governance":    ["你是谁", "能做", "治理", "红线"],
 }
 def pagetype(name):
     if name == "index.html": return "index"
-    if name.startswith("field"): return "field"
     return name.replace(".html", "")
 
 fails = 0

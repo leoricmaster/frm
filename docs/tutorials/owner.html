@@ -48,6 +48,11 @@ figcaption{color:var(--mut);font-size:13px;margin-top:6px}
 .ok{color:#1a7f37;font-weight:700}.no2{color:var(--red);font-weight:700}
 footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-top:48px;padding-top:14px}
 @media print{header.hero{background:#0d2b45}.step,.box{break-inside:avoid}body{font-size:12px}}
+figure.shot img,figure.shot>svg{cursor:zoom-in}
+#lb{position:fixed;inset:0;background:rgba(4,12,22,.87);display:none;align-items:center;justify-content:center;z-index:999;cursor:zoom-out;padding:28px}
+#lb.on{display:flex}
+#lb img{max-width:96vw;max-height:92vh;border:0;border-radius:6px;box-shadow:0 10px 44px rgba(0,0,0,.55)}
+#lb svg{max-width:96vw!important;max-height:92vh!important}
 </style>
 </head>
 <body>
@@ -75,33 +80,29 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 </table>
 
 <h2>典型任务流：分诊与排期（需求流）</h2>
-<p>三阶段起，你不只是代码守门人——你还是这个域的<b>分诊人</b>。提单人在受理台（intel_excavator/intake）提的单，先到你手里过一道：3 个工作日内决定它的去向。</p>
+<p>你不只是代码守门人——你还是这个域的<b>分诊人</b>。提单人在受理台（intel_excavator/intake）提的单，先到你手里过一道：3 个工作日内决定它的去向。</p>
 
 <div class="step">
   <span class="no">1</span><h3>分诊：三选一</h3>
-  <p>打开受理台（intel_excavator/intake）的议题列表，按 <b>待受理</b> 过滤——这些单等着你处理。对每张单做三件事之一：</p>
+  <p>打开受理台（intel_excavator/intake）的议题列表，按 <b>待受理</b> 过滤——这些单等着你处理。对每张单做三件事之一（提单人是 Guest、无打标权限，<code>来源::</code> / <code>状态::</code> 标签一律由你代打）：</p>
   <ul>
-    <li><b>移交</b>——单属于你管的域？把它 move 到你的域仓库，评论与链接全保留。同时代打 <code>来源::</code> 和 <code>状态::已排期</code> 标签（提单人是 Guest，没有打标权限，标签由你代打）。</li>
-    <li><b>打回</b>——验收标准空泛、信息不够？退回提单人补充，在评论里写明缺什么。</li>
-    <li><b>婉拒</b>——重复提了、或超出本域范围？说明理由、关闭，代打 <code>状态::已拒绝</code> 标签。</li>
+    <li><b>移交</b>——单属于你管的域？move 到域仓库（评论与链接全保留），代打 <code>来源::</code> 与 <code>状态::已排期</code>。</li>
+    <li><b>打回</b>——验收标准空泛、信息不够？退回提单人补充，评论里写明缺什么。</li>
+    <li><b>婉拒</b>——重复或超域？说明理由、关闭，代打 <code>状态::已拒绝</code>。</li>
   </ul>
   <div class="box why">
     <b>🔍 为什么 3 日内必须分诊？</b>
-    入口响应速度决定大家愿不愿意提单——这是口头文化能否被替代的胜负手。堵没堵，看受理台积压（见管理者教程的积压视图）。
+    入口响应速度决定大家愿不愿意提单——这是口头文化能否被替代的胜负手。
   </div>
 </div>
 
 <div class="step">
   <span class="no">2</span><h3>排期：拖里程碑</h3>
-  <p>移交到域仓库的单默认进 <b>已排期</b>。排期 = 把单拖进版本里程碑（如"固件 v0.9"），进里程碑即排上日程。里程碑 = 版本节点，跨仓库生效。</p>
+  <p>移交到域仓库的单默认进 <b>已排期</b>。排期 = 把单拖进版本里程碑（如"930"），进里程碑即排上日程。里程碑 = 版本节点，跨仓库生效。</p>
   <figure class="shot">
     <img src="assets/42-milestone-progress.png" alt="里程碑详情页，按单数显示完成度百分比与已关/未关清单">
     <figcaption>里程碑页 ｜ 进了里程碑的单在这里——按单数给完成度，不做工时与燃尽</figcaption>
   </figure>
-  <div class="box why">
-    <b>🔍 为什么不做工时统计？</b>
-    版本制交付、节点驱动，不做固定迭代、不搞工时——看单数百分比就够了，里程碑清单就是发布清单。
-  </div>
 </div>
 
 <div class="step">
@@ -173,7 +174,7 @@ $ git push origin v0.2.0-field</pre>
     <figcaption>Release 页 ｜ 附件即驻场下载通道，Evidence 记录溯源</figcaption>
   </figure>
   <div class="box why">
-    <b>🔍 产物三去向（二阶段新增）</b>
+    <b>🔍 产物三去向</b>
     .bin 与 manifest 进 GitLab Release（不变）；但容器镜像另有归宿——CI 构建的镜像推 Harbor 的 frm-ci 项目，模型权重推 MinIO 的 training-output 桶。后两者各有自己的 tag/指针，不挤在 Release 里。
   </div>
   <figure class="shot">
@@ -185,7 +186,7 @@ $ git push origin v0.2.0-field</pre>
 <div class="step">
   <span class="no">7</span><h3>核对追溯链</h3>
   <p>发完最后一眼：<b>manifest.commit = main HEAD = tag commit = MR 合入 commit</b>，四方一致才可放行。核对方法——Release 页 manifest 的 commit 字段 vs 仓库 main 页顶部 SHA。</p>
-  <p>二阶段多了两类产物，追溯链各自延伸：<b>镜像</b>核对 Harbor frm-ci 里的 tag→commit；<b>模型权重</b>核对 MinIO training-output 里 manifest 的 s3 指针→commit。三方各自能追到同一 commit，才算齐。</p>
+  <p>另有两类产物，追溯链各自延伸：<b>镜像</b>核对 Harbor frm-ci 里的 tag→commit；<b>模型权重</b>核对 MinIO training-output 里 manifest 的 s3 指针→commit。三方各自能追到同一 commit，才算齐。</p>
   <div class="box why">
     <b>🔍 为什么必须四方一致？</b>
     追溯链上任何一个环节对不上，就意味着现场拿到的制品和仓库里的代码不是同一份——出了问题查不到根，这是发布责任的红线。
@@ -230,5 +231,20 @@ $ git push</pre>
 <footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01）</footer>
 
 </div>
+<script>
+(function(){
+  var lb=document.createElement('div');lb.id='lb';document.body.appendChild(lb);
+  lb.addEventListener('click',function(){lb.classList.remove('on');lb.innerHTML='';document.body.style.overflow='';});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&lb.classList.contains('on'))lb.click();});
+  document.addEventListener('click',function(e){
+    if(!e.target.closest)return;
+    var el=e.target.closest('figure.shot img, figure.shot>svg');
+    if(!el)return;
+    lb.innerHTML='';
+    lb.appendChild(el.cloneNode(true));
+    lb.classList.add('on');document.body.style.overflow='hidden';
+  });
+})();
+</script>
 </body>
 </html>

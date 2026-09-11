@@ -48,6 +48,11 @@ figcaption{color:var(--mut);font-size:13px;margin-top:6px}
 .ok{color:#1a7f37;font-weight:700}.no2{color:var(--red);font-weight:700}
 footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-top:48px;padding-top:14px}
 @media print{header.hero{background:#0d2b45}.step,.box{break-inside:avoid}body{font-size:12px}}
+figure.shot img,figure.shot>svg{cursor:zoom-in}
+#lb{position:fixed;inset:0;background:rgba(4,12,22,.87);display:none;align-items:center;justify-content:center;z-index:999;cursor:zoom-out;padding:28px}
+#lb.on{display:flex}
+#lb img{max-width:96vw;max-height:92vh;border:0;border-radius:6px;box-shadow:0 10px 44px rgba(0,0,0,.55)}
+#lb svg{max-width:96vw!important;max-height:92vh!important}
 </style>
 </head>
 <body>
@@ -126,7 +131,7 @@ $ git push -u origin feat/load-align</pre>
     <img src="assets/46-perception-mr-list.png" alt="GitLab perception 仓库的 MR 列表页">
     <figcaption>MR 列表 ｜ 左侧 合并请求 → 新建合并请求</figcaption>
   </figure>
-  <p>从三阶段起，描述里再加两件：<b>关联单号</b>（默认写 <code>Closes #单号</code>——合入即自动关单；需外部验收的单只写 <code>#单号</code> 引用，不写 Closes）与<b>选定里程碑</b>。仓库的 MR 模板已带四项自查 checklist：☑ 关联单号 ☑ 里程碑 ☑ CI 全绿 ☑ 自测通过。</p>
+  <p>描述里再加两件：<b>关联单号</b>（默认写 <code>Closes #单号</code>——合入即自动关单；需外部验收的单只写 <code>#单号</code> 引用，不写 Closes）与<b>选定里程碑</b>。仓库的 MR 模板已带四项自查 checklist：☑ 关联单号 ☑ 里程碑 ☑ CI 全绿 ☑ 自测通过。</p>
   <figure class="shot">
     <img src="assets/47-perception-mr-closes.png" alt="perception 的 MR 描述写 Closes 关联需求单并选定里程碑">
     <figcaption>MR 关联单号 ｜ 描述写 Closes #1 + 选定里程碑——合入即自动关单（单由受理台分诊转入本仓）</figcaption>
@@ -145,8 +150,8 @@ $ git push -u origin feat/load-align</pre>
     <figcaption>MR 的 Changes 页 ｜ 评审者在这里逐行看你每一行改动——这次是 train.py 的对位阈值</figcaption>
   </figure>
   <div class="box why">
-    <b>🔍 你的算法流水线替你做什么（二阶段新增）</b>
-    scan→data→build→publish：从 MinIO 取数据集（manifest 指针 + sha256 校验）、训练、把模型权重推回 MinIO；固件域的流水线则构建容器镜像推 Harbor——<b>但你的操作不变</b>：push 完等绿，红了点 job 看日志。
+    <b>🔍 你的算法流水线替你做什么</b>
+    算法仓的流水线是 scan→data→build→publish：从 MinIO 取数据集（manifest 指针 + sha256 校验）→ 训练 → 把模型权重推回 MinIO。固件仓的流水线则是构建容器镜像推 Harbor。<b>但你的操作不变</b>：push 完等绿，红了点 job 看日志。
   </div>
   <figure class="shot">
     <img src="assets/21-perception-pipelines.png" alt="perception 仓库的多阶段流水线列表，含 scan/data/build/publish 阶段">
@@ -157,12 +162,6 @@ $ git push -u origin feat/load-align</pre>
 <div class="step">
   <span class="no">6</span><h3>修到绿，等 Owner 合入</h3>
   <p>CI 红了或评审有意见：改完直接 push 新 commit 到<b>同一分支</b>，MR 会自动更新，不需要关掉重建。全绿 + 评审通过后，等 Owner 合入。</p>
-</div>
-
-<h2>出差驻场？</h2>
-<div class="box tip">
-  <b>💡 驻场场景篇</b>
-  出差到现场（离线为基线、有网为加速）：刷固件核对 manifest、本地改码回补 MR、投放区取数、应急 24h 补单——见 <b><a href="field-engineer.html">驻场场景篇</a></b>。
 </div>
 
 <h2>常见报错自救</h2>
@@ -201,5 +200,20 @@ $ git push -u origin feat/load-align</pre>
 <footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（autonomy 示例图 2026-09-11 重拍，Harbor/MinIO 图沿用 09-01）</footer>
 
 </div>
+<script>
+(function(){
+  var lb=document.createElement('div');lb.id='lb';document.body.appendChild(lb);
+  lb.addEventListener('click',function(){lb.classList.remove('on');lb.innerHTML='';document.body.style.overflow='';});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&lb.classList.contains('on'))lb.click();});
+  document.addEventListener('click',function(e){
+    if(!e.target.closest)return;
+    var el=e.target.closest('figure.shot img, figure.shot>svg');
+    if(!el)return;
+    lb.innerHTML='';
+    lb.appendChild(el.cloneNode(true));
+    lb.classList.add('on');document.body.style.overflow='hidden';
+  });
+})();
+</script>
 </body>
 </html>

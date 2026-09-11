@@ -53,6 +53,11 @@ details summary{cursor:pointer;padding:10px 16px;font-weight:700;color:var(--acc
 details[open] summary{border-bottom:1px solid var(--line)}
 details .dbody{padding:4px 16px 12px}
 .step h3.blk{display:block;margin:22px 0 8px}
+figure.shot img,figure.shot>svg{cursor:zoom-in}
+#lb{position:fixed;inset:0;background:rgba(4,12,22,.87);display:none;align-items:center;justify-content:center;z-index:999;cursor:zoom-out;padding:28px}
+#lb.on{display:flex}
+#lb img{max-width:96vw;max-height:92vh;border:0;border-radius:6px;box-shadow:0 10px 44px rgba(0,0,0,.55)}
+#lb svg{max-width:96vw!important;max-height:92vh!important}
 </style>
 </head>
 <body>
@@ -127,8 +132,8 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
   </ol>
   <div class="box why">
     <b>🔍 为什么关注册？</b>
-    账号一律管理员开通（见 §6.1），契合「平台组统一开通」口径，也为阶段 1 接 LDAP 时账号名对齐留干净底子。<code>can_create_group</code> 同关，防止用户乱建顶层组。
-    <p>LDAP 域账号对接是阶段 1 正式实施项，现阶段用本地账号。上线前管理员按 AD 用户名建号，LDAP 接通后同名域账号首登即复用，切换干净。</p>
+    账号一律管理员开通（见 §6.1），契合「平台组统一开通」口径，也为后续接 LDAP 时账号名对齐留干净底子。<code>can_create_group</code> 同关，防止用户乱建顶层组。
+    <p>LDAP 域账号对接留待正式实施，现阶段用本地账号。上线前管理员按 AD 用户名建号，LDAP 接通后同名域账号首登即复用，切换干净。</p>
   </div>
 </div>
 
@@ -161,7 +166,7 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
   <rect x="210" y="55" width="495" height="315" rx="10" fill="#f6f8fa" stroke="#d8dee4" stroke-width="1.5"/>
   <text x="693" y="76" text-anchor="end" font-size="12" font-weight="600" fill="#656d76">宿主机 · docker compose（frm-net）</text>
 
-  <!-- AD / LDAP 账号源（虚线侧，阶段 1 接入） -->
+  <!-- AD / LDAP 账号源（虚线侧，后续接入） -->
   <rect x="242" y="4" width="176" height="40" rx="6" fill="#fff8c5" stroke="#9a6700" stroke-width="1.4"/>
   <text x="330" y="29" text-anchor="middle" font-size="13" fill="#1f2328">AD / LDAP 账号源</text>
 
@@ -209,8 +214,7 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
   <!-- Harbor 镜像库（虚线侧） -->
   <rect x="715" y="290" width="180" height="80" rx="6" fill="#fff8c5" stroke="#9a6700" stroke-width="1.4"/>
   <text x="805" y="312" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2328">Harbor 镜像库（8084）</text>
-  <text x="805" y="332" text-anchor="middle" font-size="13" fill="#1f2328">二阶段已实测，</text>
-  <text x="805" y="352" text-anchor="middle" font-size="13" fill="#1f2328">独立 compose 部署</text>
+  <text x="805" y="332" text-anchor="middle" font-size="13" fill="#1f2328">独立 compose 部署</text>
 
   <!-- 实线边（本次落地） -->
   <line x1="160" y1="122" x2="225" y2="122" stroke="#1f6feb" stroke-width="1.6" marker-end="url(#ah)"/>
@@ -230,7 +234,7 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
 
   <!-- 虚线边（按阶段推进的扩展位） -->
   <path d="M330,46 V92" fill="none" stroke="#9a6700" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#ahy)"/>
-  <text x="338" y="68" text-anchor="start" font-size="10.5" fill="#9a6700">阶段 1 接入</text>
+  <text x="338" y="68" text-anchor="start" font-size="10.5" fill="#9a6700">后续接入</text>
 
   <path d="M183,244 H198 V150 H225" fill="none" stroke="#9a6700" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#ahy)"/>
   <text x="192" y="186" text-anchor="end" font-size="10.5" fill="#9a6700">构建负载增长后拆出</text>
@@ -274,7 +278,7 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
 <p>初始密码线下交付（口述 / 凭证通道），要求首登改密。权限另算——建号后由仓库 Owner 加组加角色（CE 无分组同步），账号 ≠ 权限。</p>
 
 <h3>6.2 封禁与离职回收</h3>
-<p>GitLab 不自动清离职者存量访问（SSH key / 令牌 / 会话）。阶段 1 实施定时脚本比对 AD 禁用名单 → 调 API 封禁账号。原型验证即以此模式操作。</p>
+<p>GitLab 不自动清离职者存量访问（SSH key / 令牌 / 会话）。定时脚本比对 AD 禁用名单 → 调 API 封禁账号。原型验证即以此模式操作。</p>
 
 <h3>6.3 备份与恢复</h3>
 <p>GitLab 原生全量备份每日，含配置 + 仓库 + 数据库，保留异地 / 离线副本；恢复演练每半年一次。MinIO 数据按资产备份（数据集 / 权重 / 现场采集不可再生）。<b>未演练过的备份等于没有备份。</b></p>
@@ -319,5 +323,20 @@ python3 rebuild_jh_state.py A|B|...|Z</pre>
 <footer>智能挖机项目代码管理体系 · 治理篇见 governance.html</footer>
 
 </div>
+<script>
+(function(){
+  var lb=document.createElement('div');lb.id='lb';document.body.appendChild(lb);
+  lb.addEventListener('click',function(){lb.classList.remove('on');lb.innerHTML='';document.body.style.overflow='';});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&lb.classList.contains('on'))lb.click();});
+  document.addEventListener('click',function(e){
+    if(!e.target.closest)return;
+    var el=e.target.closest('figure.shot img, figure.shot>svg');
+    if(!el)return;
+    lb.innerHTML='';
+    lb.appendChild(el.cloneNode(true));
+    lb.classList.add('on');document.body.style.overflow='hidden';
+  });
+})();
+</script>
 </body>
 </html>
