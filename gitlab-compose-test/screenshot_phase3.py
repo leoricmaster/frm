@@ -24,6 +24,7 @@ import urllib.parse
 import urllib.request
 
 from playwright.sync_api import sync_playwright
+from shot_utils import hide_duo_banner
 
 OUT = "/home/lancer/projects/frm/gitlab-compose-test/screenshots"
 GL = "http://127.0.0.1:8081"
@@ -121,6 +122,7 @@ def shot(page, fname, url, label, marker=None, sleep=2.0):
         time.sleep(sleep)
         if marker:
             scroll_to_text(page, marker)
+        hide_duo_banner(page)
         page.screenshot(path=f"{OUT}/{fname}.png")
         print(f"[OK] {fname} — {label}")
         return True
@@ -155,6 +157,7 @@ def main():
                 page.goto(url, wait_until="domcontentloaded", timeout=20000)
                 time.sleep(4)
                 try:
+                    hide_duo_banner(page)
                     page.screenshot(path=f"{OUT}/{fname}.png")
                     print(f"[OK] {fname} — {label}（视口 {w}×900）")
                 except Exception as e:

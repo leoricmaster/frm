@@ -2,6 +2,7 @@
 """补拍 04-group-tree.png：intel_excavator 组的子组树（Group overview → Subgroups）。"""
 import time
 from playwright.sync_api import sync_playwright
+from shot_utils import hide_duo_banner
 
 URL = "http://127.0.0.1:8081"
 OUT = "/home/lancer/projects/frm/gitlab-compose-test/screenshots/04-group-tree.png"
@@ -19,6 +20,7 @@ with sync_playwright() as p:
     # intel_excavator 组主页（子组以卡片形式列在页面里）
     page.goto(f"{URL}/intel_excavator", wait_until="networkidle", timeout=20000)
     time.sleep(2)
+    hide_duo_banner(page)
     page.screenshot(path=OUT, full_page=False)
     print(f"[OK] {OUT} — intel_excavator 组主页（含 6 子组卡片）")
     browser.close()

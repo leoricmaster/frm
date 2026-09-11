@@ -10,6 +10,7 @@ rebuild_jh_state.py I 段），最后用宽视口截全景。
 """
 import json, pathlib, sys, time, urllib.parse, urllib.request
 from playwright.sync_api import sync_playwright
+from shot_utils import hide_duo_banner
 
 GL = "http://127.0.0.1:8081"
 API = GL + "/api/v4"
@@ -45,6 +46,7 @@ def shot(page, name, url, label, wait=1.8):
     try:
         page.goto(url, wait_until="domcontentloaded", timeout=20000)
         time.sleep(wait)
+        hide_duo_banner(page)
         page.screenshot(path=str(OUT / f"{name}.png"))
         print(f"[OK] {name} — {label}  <{page.title()}>")
     except Exception as e:
@@ -72,7 +74,9 @@ def resolve():
     d["job_ib"] = next(j["id"] for j in jobs if j["name"] == "image-build")
     pl = api(f"/projects/{pc}/pipelines?per_page=5")[0]["id"]
     pj = {j["name"]: j["id"] for j in api(f"/projects/{pc}/pipelines/{pl}/jobs")}
-    d["pcp"], d["job_fetch"], d["job_train"] = pl, pj["fetch-dataset"], pj["train-model"]
+    d["pcp"] = pl
+    d["job_fetch"] = pj.get("fetch-dataset")
+    d["job_train"] = pj.get("train-model")
     iss = api(f"/projects/{fw}/issues?per_page=20")
     d["ia"] = next(i["iid"] for i in iss if "液压抖动" in i["title"])
     d["ib"] = next(i["iid"] for i in iss if "余抖" in i["title"])
@@ -151,6 +155,8 @@ def main():
             ("42-milestone-progress",   f"{GL}/groups/{GRP}/-/milestones/{d['ms']}",             "里程碑完成度"),
             ("43-intake-backlog",       f"{GL}/{IAP}/-/issues?label_name=" + q("状态::待受理"),   "受理台积压视图"),
         ]
+        # 跳过 job ID 为 None 的截图（perception 流水线可能不含 fetch/train 阶段）
+        P = [row for row in P if "/jobs/None" not in str(row[1])]
         for row in P:
             shot(page, *row)
         board_lists(page)  # 看板懒创建 + 六状态列（补齐 I 段）

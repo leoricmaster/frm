@@ -3,6 +3,7 @@
 对应设计文档：验证 MR/保护分支/组结构/流水线/制品的界面是否可接受。"""
 import sys, time
 from playwright.sync_api import sync_playwright
+from shot_utils import hide_duo_banner
 
 URL = "http://127.0.0.1:8081"
 OUT = "/home/lancer/projects/frm/gitlab-compose-test/screenshots"
@@ -40,6 +41,7 @@ def main():
             try:
                 page.goto(url, wait_until="domcontentloaded", timeout=15000)
                 time.sleep(1.5)
+                hide_duo_banner(page)
                 page.screenshot(path=f"{OUT}/{fname}.png", full_page=False)
                 print(f"[OK] {fname} — {label}")
             except Exception as e:

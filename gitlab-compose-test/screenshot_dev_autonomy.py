@@ -12,6 +12,7 @@
 """
 import time
 from playwright.sync_api import sync_playwright
+from shot_utils import hide_duo_banner
 
 GL = "http://127.0.0.1:8081"
 OUT = "/home/lancer/projects/frm/gitlab-compose-test/screenshots"
@@ -45,6 +46,7 @@ def shot(page, url, name, checks, prep=None):
             print(f"    [prep 跳过] {str(e)[:100]}")
         time.sleep(1)
     evidence(page, name, checks)
+    hide_duo_banner(page)
     page.screenshot(path=f"{OUT}/{name}.png")
     print(f"    已存 {OUT}/{name}.png")
 

@@ -2,6 +2,7 @@
 """角色流程验证截图 — dev1 MR 视角、Release 页、模板传播证据页。"""
 import time
 from playwright.sync_api import sync_playwright
+from shot_utils import hide_duo_banner
 
 URL = "http://127.0.0.1:8081"
 OUT = "/home/lancer/projects/frm/gitlab-compose-test/screenshots"
@@ -33,6 +34,7 @@ def main():
             try:
                 page.goto(url, wait_until="domcontentloaded", timeout=15000)
                 time.sleep(1.5)
+                hide_duo_banner(page)
                 page.screenshot(path=f"{OUT}/{fname}.png", full_page=False)
                 print(f"[OK] {fname} — {label}")
             except Exception as e:

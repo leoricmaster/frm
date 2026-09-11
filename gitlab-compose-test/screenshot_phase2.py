@@ -14,6 +14,7 @@
 """
 import base64, json, os, time, urllib.request
 from playwright.sync_api import sync_playwright
+from shot_utils import hide_duo_banner
 
 OUT = "/home/lancer/projects/frm/gitlab-compose-test/screenshots"
 GL = "http://127.0.0.1:8081"
@@ -35,6 +36,7 @@ def shot(page, fname, url, label, wait="domcontentloaded", sleep=1.8):
     try:
         page.goto(url, wait_until=wait, timeout=20000)
         time.sleep(sleep)
+        hide_duo_banner(page)
         page.screenshot(path=f"{OUT}/{fname}.png", full_page=False)
         print(f"[OK]   {fname} — {label}")
         return True
@@ -129,17 +131,10 @@ def mn_shot(page):
         page.eval_on_selector(sel, "el => el.click()")
         time.sleep(3)
 
-    # 30: dataset-model
-    try:
-        click_bucket("dataset-model")
-        page.screenshot(path=f"{OUT}/30-minio-dataset.png")
-        print(f"[OK]   30-minio-dataset — dataset-model（数据集+现场归档）")
-    except Exception as e:
-        print(f"[FAIL] 30-minio-dataset: {str(e)[:120]}")
-
     # 31: training-output
     try:
         click_bucket("training-output")
+        hide_duo_banner(page)
         page.screenshot(path=f"{OUT}/31-minio-training.png")
         print(f"[OK]   31-minio-training — training-output（模型权重+manifest）")
     except Exception as e:

@@ -3,6 +3,7 @@
 对应 ops.html §6.1 开账号说明；示范账号 gw_zhangyunfeng@irootech.com。"""
 import time
 from playwright.sync_api import sync_playwright
+from shot_utils import hide_duo_banner
 
 URL = "http://127.0.0.1:8081"
 LOGIN, PASS = "root", "Excavator#2026Proto"
@@ -37,6 +38,7 @@ def main():
                 print(f"[fill] {sel} = {val}")
             except Exception as e:
                 print(f"[skip] {sel}: {str(e)[:80]}")
+        hide_duo_banner(page)
         page.screenshot(path=OUT, full_page=False)
         print(f"[OK] saved {OUT}")
         browser.close()

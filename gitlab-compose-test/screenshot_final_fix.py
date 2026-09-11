@@ -3,6 +3,7 @@
 输出截图 + DOM 证据（stdout）。"""
 import time
 from playwright.sync_api import sync_playwright
+from shot_utils import hide_duo_banner
 
 URL = "http://127.0.0.1:8081"
 OUT = "/home/lancer/projects/frm/gitlab-compose-test/screenshots"
@@ -40,6 +41,7 @@ def main():
             ("tag 名 v0.2.0-field", "v0.2.0-field"),
             ("手动 job promote-release", "promote-release"),
         ])
+        hide_duo_banner(page)
         page.screenshot(path=f"{OUT}/17-pipeline14.png", full_page=False)
         print(f"[OK] 17-pipeline14.png saved")
         ctx.close()
@@ -57,6 +59,7 @@ def main():
             ("readme 文件树链接", "README.md"),
             ("Code 按钮", "Code"),
         ])
+        hide_duo_banner(page2)
         page2.screenshot(path=f"{OUT}/05-project-guest.png", full_page=False)
         print("[OK] 05-project-guest.png saved")
         ctx2.close()
