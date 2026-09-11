@@ -89,7 +89,7 @@ $ cd perception</pre>
 
 <div class="box why">
   <b>🔍 哪天要建新仓库？先过"建仓三问"</b>
-  仓库的位置和归属不是随手定的（设计 §4.1/§4.4）：<b>① 哪个域？</b>只能建在六个产品域子组里；跨域的体系设施有专门去处——CI 模板/规范进 platform，需求/缺陷进顶层 intake，两个都不属任何产品域。<b>② Owner 是谁？</b>一仓库 1–2 名 Maintainer，建仓时就要点名认领。<b>③ 说得清用途吗？</b>README 写齐用途/Owner/依赖、能编译——说不清用途的代码不入库。
+  仓库的位置和归属不是随手定的：<b>① 哪个域？</b>只能建在六个产品域子组里；跨域的体系设施有专门去处——CI 模板/规范进 platform，需求/缺陷进顶层 intake，两个都不属任何产品域。<b>② Owner 是谁？</b>一仓库 1–2 名 Maintainer，建仓时就要点名认领。<b>③ 说得清用途吗？</b>README 写齐用途/Owner/依赖、能编译——说不清用途的代码不入库。
 </div>
 
 <div class="step">
@@ -98,7 +98,7 @@ $ cd perception</pre>
   <pre class="cmd">$ git checkout main &amp;&amp; git pull &amp;&amp; git checkout -b feat/load-align</pre>
   <div class="box why">
     <b>🔍 为什么要用短生命周期的分支？</b>
-    main 常绿、小步快合。分支活得越久，和 main 的差异越大，几个月后合不回去的代价远大于勤合入（设计 §4.2）。
+    main 常绿、小步快合。分支活得越久，和 main 的差异越大，几个月后合不回去的代价远大于勤合入。
   </div>
 </div>
 
@@ -107,7 +107,7 @@ $ cd perception</pre>
   <p>"不能直接 push main"不是口头规矩，而是系统强制：main 是保护分支，push/merge 权限只给了 Maintainer，你以 Developer 身份推上去会被直接拒绝。</p>
   <figure class="shot">
     <img src="assets/45-perception-protect.png" alt="GitLab perception 仓库设置页的受保护分支规则">
-    <figcaption>保护分支设置 ｜ main 的 push/merge 限 Maintainer——系统强制，不靠自觉（验证结论 §1 阶段一矩阵）</figcaption>
+    <figcaption>保护分支设置 ｜ main 的 push/merge 限 Maintainer——系统强制，不靠自觉</figcaption>
   </figure>
   <p>这个设置只有 Owner 能改（管理 → 设置 → 仓库 → 受保护分支）。所以别试直推，老实走 MR。</p>
 </div>
@@ -133,7 +133,7 @@ $ git push -u origin feat/load-align</pre>
   </figure>
   <div class="box why">
     <b>🔍 无单不开发（三无制度第一条）</b>
-    任何改动（需求、缺陷、现场修复）先有单，commit 必须能追到一张 issue（需求流设计 §7.1）。上面这张"自动装车对位误拒率偏高"就是先在受理台（intel_excavator/intake）提单、分诊转入本仓的。你自己发现的 bug / 技术改进？同样先去受理台提单，再开工——MR 描述里的 Closes 就是把"做了什么"和"为什么做"焊在一起的焊点（需求流设计 §5.1）。
+    任何改动（需求、缺陷、现场修复）先有单，commit 必须能追到一张 issue。上面这张"自动装车对位误拒率偏高"就是先在受理台（intel_excavator/intake）提单、分诊转入本仓的。你自己发现的 bug / 技术改进？同样先去受理台提单，再开工——MR 描述里的 Closes 就是把"做了什么"和"为什么做"焊在一起的焊点。
   </div>
 </div>
 
@@ -146,7 +146,7 @@ $ git push -u origin feat/load-align</pre>
   </figure>
   <div class="box why">
     <b>🔍 你的算法流水线替你做什么（二阶段新增）</b>
-    scan→data→build→publish：从 MinIO 取数据集（manifest 指针 + sha256 校验）、训练、把模型权重推回 MinIO；固件域的流水线则构建容器镜像推 Harbor——<b>但你的操作不变</b>：push 完等绿，红了点 job 看日志（§5.3/§6.4）。
+    scan→data→build→publish：从 MinIO 取数据集（manifest 指针 + sha256 校验）、训练、把模型权重推回 MinIO；固件域的流水线则构建容器镜像推 Harbor——<b>但你的操作不变</b>：push 完等绿，红了点 job 看日志。
   </div>
   <figure class="shot">
     <img src="assets/21-perception-pipelines.png" alt="perception 仓库的多阶段流水线列表，含 scan/data/build/publish 阶段">
@@ -173,7 +173,7 @@ $ git push -u origin feat/load-align</pre>
 </div>
 <div class="box tip">
   <b>💡 流水线直接 failed 且 0 个 job</b>
-  日志含 <code>Project 'intel_excavator/platform/ci-templates' not found or access denied</code> → 你对 platform 组无读权限，找平台组给你加 Reporter（验证结论 §3-1 已知问题）。
+  日志含 <code>Project 'intel_excavator/platform/ci-templates' not found or access denied</code> → 你对 platform 组无读权限，找平台组给你加 Reporter。
 </div>
 <div class="box tip">
   <b>💡 流水线红了怎么排查</b>
@@ -183,11 +183,11 @@ $ git push -u origin feat/load-align</pre>
 <h2>红线清单</h2>
 <div class="box danger">
   <b>🚫 无单不开发</b>
-  任何改动先有单（需求 / 缺陷 / 任务），MR 必须关联单号——追不到单的改动不合入（需求流设计 §7.1 三无制度）。
+  任何改动先有单（需求 / 缺陷 / 任务），MR 必须关联单号——追不到单的改动不合入。
 </div>
 <div class="box danger">
   <b>🚫 不上传任何明文密钥 / 密码</b>
-  CI 第一条 job 会跑 gitleaks 扫描，扫到即失败（设计 §6.5）。
+  CI 第一条 job 会跑 gitleaks 扫描，扫到即失败。
 </div>
 <div class="box danger">
   <b>🚫 不对共享分支用 git push -f</b>
@@ -195,24 +195,10 @@ $ git push -u origin feat/load-align</pre>
 </div>
 <div class="box danger">
   <b>🚫 不把数据集 / 模型权重塞进 git</b>
-  git 只存 manifest 指针，大文件走 MinIO（设计 §6.4）；发布产物只能来自 CI（设计 §5.4）。
+  git 只存 manifest 指针，大文件走 MinIO；发布产物只能来自 CI。
 </div>
 
-<h2>延伸阅读</h2>
-<p>设计文档（docs/design/2026-08-31-excavator-code-management-design.md）：</p>
-<ul>
-  <li>§4.2 分支模型</li>
-  <li>§4.3 权限</li>
-  <li>§6.2 CI 三层</li>
-  <li>§6.4 制品与镜像存储分工（CI 产出去哪）</li>
-  <li>§5.3 交换条件（构建区出口收敛）</li>
-</ul>
-<p>需求流设计（docs/design/2026-09-03-requirement-flow-design.md）：</p>
-<ul>
-  <li>§4.3 关单双路径 / §5.1 MR 关联与 checklist</li>
-</ul>
-
-<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（autonomy 示例图 2026-09-11 重拍，Harbor/MinIO 图沿用 09-01） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（autonomy 示例图 2026-09-11 重拍，Harbor/MinIO 图沿用 09-01）</footer>
 
 </div>
 </body>

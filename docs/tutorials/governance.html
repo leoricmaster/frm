@@ -73,7 +73,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 <p>运维建好顶层组、把你设为 Owner 后，按下述五步把组树搭起来。本章教<b>通用做法</b>——组树、仓库、角色是设计产出，各项目按自己的产品域落地；原型环境的具体取值（组名、用户、MR 编号）只是示例。</p>
 
 <div class="step">
-  <span class="no">1</span><h3>建组树（ADR-0003）</h3>
+  <span class="no">1</span><h3>建组树</h3>
   <p>顶层组 = 项目，子组 = 产品域（团队会重组、产品域相对稳定）：<code>firmware / autonomy / vehicle / cloud / app / platform</code>，子组内按组件建仓库。<code>platform/</code> 是宪法组——CI 模板与规范文档全部版本化，规则修改必须走 MR，不允许口头变更。</p>
   <ul>
     <li>UI：新建组 → 填路径与可见性（内部）；或 API <code>POST /api/v4/groups</code>（你的 Owner token 即可建子组），批量建组树好用。</li>
@@ -85,7 +85,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 </div>
 
 <div class="step">
-  <span class="no">2</span><h3>配权限（ADR-0004 / 0005）</h3>
+  <span class="no">2</span><h3>配权限</h3>
   <p>账号由运维开通（关注册后的唯一入口，见 ops.html §6.1），建号后由你按三级授权：</p>
   <table>
     <tr><th>角色</th><th>权限</th><th>授予对象</th></tr>
@@ -96,12 +96,12 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <p>顶层组 Owner 由项目负责人持有。免费版无审计能力，授权变更一律经 API 并留存脚本日志（唯一留痕）。<b>账号 ≠ 权限</b>——运维开号只给一个能登录的身份，能干什么由你授权。</p>
   <div class="box why">
     <b>🔍 为什么只设三级权限？</b>
-    全项目只用 Guest / Developer / Maintainer 三级，每个仓库 1–2 名 Maintainer 即 Owner——权限层级越少，责任越清楚（设计 §4.3）。
+    全项目只用 Guest / Developer / Maintainer 三级，每个仓库 1–2 名 Maintainer 即 Owner——权限层级越少，责任越清楚。
   </div>
 </div>
 
 <div class="step">
-  <span class="no">3</span><h3>建仓与保护分支（ADR-0006）</h3>
+  <span class="no">3</span><h3>建仓与保护分支</h3>
   <p>子组内建仓（<code>firmware/hydraulic-controller</code> 一类），每仓指定一名明确 Owner。分支 trunk-based 简化版：<code>main</code> 常绿 + 短命特性分支 + MR 合入；保护分支禁直接 push；发布周期长的仓库可留 <code>release/x.y</code> 维护分支。</p>
   <p>存量代码入库门槛：能编译、README 写明用途 / Owner / 依赖——<b>用途说不清的代码不入库</b>。</p>
   <figure class="shot">
@@ -111,10 +111,10 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 </div>
 
 <div class="step">
-  <span class="no">4</span><h3>需求流与看板（ADR-0015–0017）</h3>
+  <span class="no">4</span><h3>需求流与看板</h3>
   <ul>
     <li>建收口仓库（示例名 <code>intake</code>）承接需求与现场问题进池，标签体系分诊、里程碑归组，跨仓单据转移走 GitLab 原生 transfer。</li>
-    <li>组看板配状态列（设计为六状态）。<b>坑位</b>：组看板懒创建，配置前须先浏览器访问过看板页（验证结论 §3）。</li>
+    <li>组看板配状态列（设计为六状态）。<b>坑位</b>：组看板懒创建，配置前须先浏览器访问过看板页。</li>
   </ul>
   <figure class="shot">
     <img src="assets/41-group-board.png" alt="intel_excavator 组看板，列为待受理/已排期/开发中/待验证/已关闭/已拒绝">
@@ -132,7 +132,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 <p>组树搭起来之后是长期治理，以下动作没有终点：</p>
 <ul>
   <li><b>授权变更走 API 并留存脚本日志</b>——免费版无审计能力，脚本是唯一留痕。</li>
-  <li><b>新产品域 = 新子组</b>：按产品域建组，团队重组不动组树（ADR-0003）。</li>
+  <li><b>新产品域 = 新子组</b>：按产品域建组，团队重组不动组树。</li>
   <li><b>里程碑命名</b>如「固件 v2.3·2026Q4」，版本节点跨仓库生效、进度按单数百分比看。</li>
 </ul>
 <figure class="shot">
@@ -142,20 +142,17 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 
 <h2>红线清单</h2>
 <div class="box danger"><b>🚫 授权变更不留痕＝没发生</b>免费版无审计，API 脚本是唯一留痕。</div>
-<div class="box danger"><b>🚫 组树按产品域、不按团队</b>团队会重组，产品域相对稳定——重组不动组树（ADR-0003）。</div>
+<div class="box danger"><b>🚫 组树按产品域、不按团队</b>团队会重组，产品域相对稳定——重组不动组树。</div>
 <div class="box danger"><b>🚫 未 include 通用层的流水线 MR 不予合入</b>制度卡准入 + 流水线自检报错，双保险。</div>
 
 <h2>延伸阅读</h2>
 <ul>
-  <li>设计 §4.1（组树）/ §4.3（权限）/ §6.2（CI）—— docs/design/2026-08-31-excavator-code-management-design.md</li>
-  <li>需求流设计 —— docs/design/2026-09-03-requirement-flow-design.md</li>
-  <li>ADR-0003 / 0004 / 0005 / 0006 / 0015 / 0016 / 0017 —— docs/adr/</li>
   <li>运维侧（建实例 + 建顶层组 + 授权 Owner）—— <a href="ops.html">ops.html</a></li>
   <li>CI 宪法与模板维护 —— <a href="platform.html">platform.html</a></li>
   <li>域级分诊与发布 —— <a href="owner.html">owner.html</a>；提单与看板追进度 —— <a href="submitter.html">submitter.html</a></li>
 </ul>
 
-<footer>智能挖机项目代码管理体系 · 本页由 ops.html「组织与治理」章拆出（spec 2026-09-10-tutorials-ia-rework-design.md line 27「长大再拆」本次执行） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md / 2026-09-03-requirement-flow-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 本页由 ops.html「组织与治理」章拆出</footer>
 
 </div>
 </body>

@@ -64,7 +64,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 <div class="wrap">
 
 <h2>你是谁</h2>
-<p><b>这不是一个独立角色</b>——你就是身处驻场情境的<a href="developer.html">开发工程师</a>。你是这个项目的驻场工程师：在公司里是 <b>Developer</b>，到了现场账号降为 <b>Guest</b>——能下载制品、提问题，但不能改中心仓（设计 §7；验证结论 §2 guest1 行）。你的一切工作围绕一条设计原则展开：<b>离线为基线、有网为加速——流程不赌现场有网</b>。出场前把该拿的都拿全，现场三类工作（刷固件 / 改码 / 取数）各按各的场景规则走，极端情况有应急兜底、但兜底也有账可查。</p>
+<p><b>这不是一个独立角色</b>——你就是身处驻场情境的<a href="developer.html">开发工程师</a>。你是这个项目的驻场工程师：在公司里是 <b>Developer</b>，到了现场账号降为 <b>Guest</b>——能下载制品、提问题，但不能改中心仓。你的一切工作围绕一条设计原则展开：<b>离线为基线、有网为加速——流程不赌现场有网</b>。出场前把该拿的都拿全，现场三类工作（刷固件 / 改码 / 取数）各按各的场景规则走，极端情况有应急兜底、但兜底也有账可查。</p>
 
 <h2>你能做什么 / 不能做什么</h2>
 <table>
@@ -81,7 +81,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <p>在公司把"弹药"备齐：<code>git pull</code> 同步代码，再从 Release 下载本次任务相关的<b>已签名制品</b>，按目标机器版本打包。</p>
   <pre class="cmd">$ git pull
 $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></pre>
-  <p>按 <code>platform/</code> 仓库里的出场 checklist 核对：<b>代码、制品、工具链版本、联系人</b>——四样缺一，现场就可能卡死（§7.1）。</p>
+  <p>按 <code>platform/</code> 仓库里的出场 checklist 核对：<b>代码、制品、工具链版本、联系人</b>——四样缺一，现场就可能卡死。</p>
   <figure class="shot">
     <img src="assets/16-release.png" alt="GitLab 的 Release 页，Assets 里挂着 .bin 与 manifest.json 附件">
     <figcaption>Release 页 ｜ 附件即驻场下载通道，Evidence 记录溯源</figcaption>
@@ -90,10 +90,10 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
 
 <div class="step">
   <span class="no">2</span><h3>现场场景一：调试 / 刷固件</h3>
-  <p>只刷<b>预构建制品</b>，刷之前核对 manifest 四字段：<b>name / commit / build_time / runner</b>——确认手上这个包是哪个版本、什么时候、在哪个 runner 构建的（§6.3）。</p>
+  <p>只刷<b>预构建制品</b>，刷之前核对 manifest 四字段：<b>name / commit / build_time / runner</b>——确认手上这个包是哪个版本、什么时候、在哪个 runner 构建的。</p>
   <div class="box why">
     <b>🔍 为什么现场永远不编译？</b>
-    现场产物不可追溯，且编译环境不可控（§7.2）——机器上跑的每一版都必须能回答"源码是什么、谁构建、谁签名"，本机凑合编一个就把这条追溯链打断了。
+    现场产物不可追溯，且编译环境不可控——机器上跑的每一版都必须能回答"源码是什么、谁构建、谁签名"，本机凑合编一个就把这条追溯链打断了。
   </div>
 </div>
 
@@ -106,16 +106,16 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
   </figure>
   <div class="box why">
     <b>🔍 为什么贴 manifest，而不是口头说版本？</b>
-    manifest 内嵌 commit：后方从你贴的这段出发，commit → 合入 MR → 需求单<b>三跳回溯</b>全自动——"这个行为是哪次需求引入的"一查便知（需求流设计 §5.2）。你现场补的 MR 也挂这张缺陷单，改动天然有单。
+    manifest 内嵌 commit：后方从你贴的这段出发，commit → 合入 MR → 需求单<b>三跳回溯</b>全自动——"这个行为是哪次需求引入的"一查便知。你现场补的 MR 也挂这张缺陷单，改动天然有单。
   </div>
 </div>
 
 <div class="step">
   <span class="no">3</span><h3>现场场景二：改码</h3>
-  <p>bug 修复、参数调整都在 DLP 笔记本上本地 <code>git commit</code>（<b>哪怕没网</b>，git 提交本就是本地操作）→ 需要验证时<b>本地编译临时包</b>先试（§7.3）→ 有网即 push → MR → CI 出正式包 → 下载刷入（§7.2）。</p>
+  <p>bug 修复、参数调整都在 DLP 笔记本上本地 <code>git commit</code>（<b>哪怕没网</b>，git 提交本就是本地操作）→ 需要验证时<b>本地编译临时包</b>先试 → 有网即 push → MR → CI 出正式包 → 下载刷入。</p>
   <div class="box why">
     <b>🔍 本地能编译吗？刷板子 DLP 拦不拦？</b>
-    能：出场 checklist 里带的就是<b>工具链版本</b>（§7.1）。DLP 透明加解密管的是<b>文件落盘</b>——硬盘上是密文、文件拷到别的机器读不出；本机进程读文件透明解密，所以本机编译、本机刷写都正常。刷给板子的固件本来就是要在现场机器上跑的<b>产品件</b>，它靠签名 + manifest 防篡改可追溯（§6.3），不靠 DLP 防拷贝（§7.4）。但本地编译的包<b>只算临时验证</b>，刷上机器的正式版本必须来自 CI 签名制品（§7.3）。
+    能：出场 checklist 里带的就是<b>工具链版本</b>。DLP 透明加解密管的是<b>文件落盘</b>——硬盘上是密文、文件拷到别的机器读不出；本机进程读文件透明解密，所以本机编译、本机刷写都正常。刷给板子的固件本来就是要在现场机器上跑的<b>产品件</b>，它靠签名 + manifest 防篡改可追溯，不靠 DLP 防拷贝。但本地编译的包<b>只算临时验证</b>，刷上机器的正式版本必须来自 CI 签名制品。
   </div>
   <p><b>DLP 笔记本</b>（装了集团透明加解密软件的电脑，硬盘上的代码自动加密）——代码拷出去打不开，所以改动回中心仓既是制度要求，也是你唯一安全的备份方式。</p>
   <p><b>改动必须以 commit 回中心仓</b>——这是防止代码重新散落回个人电脑的硬规则：体系好不容易把代码收进 GitLab，一次"改完不交"就又退回 U 盘时代。</p>
@@ -123,14 +123,14 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
 
 <div class="step">
   <span class="no">4</span><h3>现场场景三：取数</h3>
-  <p>日志、传感器数据进 <b>MinIO 投放区</b>（field-dropzone 桶）——现场能连则直传，否则回公司上传（§7.2）。</p>
+  <p>日志、传感器数据进 <b>MinIO 投放区</b>（field-dropzone 桶）——现场能连则直传，否则回公司上传。</p>
   <figure class="shot">
     <img src="assets/29-minio-buckets.png" alt="MinIO 桶列表，含 field-dropzone 现场投放区桶">
     <figcaption>MinIO 桶列表 ｜ field-dropzone 是现场投放区——write-only，只能投不能删/列</figcaption>
   </figure>
   <div class="box why">
     <b>🔍 为什么投放区是 write-only？</b>
-    现场只能往里投数据，不能删、不能列别人投的——防数据互覆盖与越权取阅（§7.2）。回公司后由平台组把投放区数据归档进 dataset-model 桶的 <code>field-archive/</code> 目录留档。
+    现场只能往里投数据，不能删、不能列别人投的——防数据互覆盖与越权取阅。回公司后由平台组把投放区数据归档进 dataset-model 桶的 <code>field-archive/</code> 目录留档。
   </div>
   <figure class="shot">
     <img src="assets/30-minio-dataset.png" alt="MinIO dataset-model 桶内 field-archive 归档目录">
@@ -141,7 +141,7 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
 
 <div class="step">
   <span class="no">5</span><h3>应急兜底</h3>
-  <p>断网 + 机器急等，等不了回公司出包？允许<b>本地临时包先刷</b>，但回公司 <b>24 小时内</b>补齐 MR 和正式构建（§7.3）。注意 24h 期限绑定的是"临时包<b>刷上了机器</b>"——机器上跑了一个非 CI 产物，就必须尽快让它回到追溯链上；纯本地验证后放弃的改动没有这个期限，按普通分支废弃即可。</p>
+  <p>断网 + 机器急等，等不了回公司出包？允许<b>本地临时包先刷</b>，但回公司 <b>24 小时内</b>补齐 MR 和正式构建。注意 24h 期限绑定的是"临时包<b>刷上了机器</b>"——机器上跑了一个非 CI 产物，就必须尽快让它回到追溯链上；纯本地验证后放弃的改动没有这个期限，按普通分支废弃即可。</p>
   <figure class="shot">
     <img src="assets/20-mr4-field.png" alt="GitLab 的应急补单 MR 页，commit message 注明现场应急">
     <figcaption>应急补单 MR ｜ commit message 注明"现场应急"，Owner 评审合入闭环</figcaption>
@@ -166,7 +166,7 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
 <h2>红线清单</h2>
 <div class="box danger">
   <b>🚫 改动不以 commit 回中心仓 = 按违规处理</b>
-  （§7.3）——代码只活在你的笔记本上，等于体系对你失效。
+  代码只活在你的笔记本上，等于体系对你失效。
 </div>
 <div class="box danger">
   <b>🚫 临时包刷上机器后超 24h 不补 MR = 违规</b>
@@ -174,28 +174,10 @@ $ <span class="c"># 从 GitLab Release 页下载 .bin 与 manifest.json</span></
 </div>
 <div class="box danger">
   <b>🚫 现场数据只进 MinIO 投放区，不走私人网盘 / U 盘乱拷</b>
-  按 §7.4 集团外发策略走审批加密盘——数据向内流是对体系的方向要求，也是对集团的安全要求。
+  按集团外发策略走审批加密盘——数据向内流是对体系的方向要求，也是对集团的安全要求。
 </div>
 
-<h2>延伸阅读</h2>
-<p>设计文档（docs/design/2026-08-31-excavator-code-management-design.md）：</p>
-<ul>
-  <li>§7 全节（驻场离线工作流）</li>
-  <li>§6.3 制品晋升与可追溯（manifest 机制）</li>
-  <li>§6.4 制品与镜像存储分工（投放区与大文件归宿）</li>
-  <li>§5.3 交换条件（驻场终端全量 DLP 的原因）</li>
-</ul>
-<p>需求流设计（docs/design/2026-09-03-requirement-flow-design.md）：</p>
-<ul>
-  <li>§5.2 反向追溯链（manifest → commit → MR → 需求单）</li>
-</ul>
-<p>原型验收（docs/design/2026-09-07-prototype-verification.md）：</p>
-<ul>
-  <li>§2 角色模拟验收·驻场（应急改动 24h 补 MR 闭环）</li>
-  <li>§1 阶段二矩阵（现场投放区 write-only 回传）</li>
-</ul>
-
-<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01）</footer>
 
 </div>
 </body>

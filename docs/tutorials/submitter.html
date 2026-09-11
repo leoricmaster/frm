@@ -87,7 +87,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   </figure>
   <div class="box why">
     <b>🔍 为什么所有需求只进一个口？</b>
-    来源再多（集团 / 市场 / 客户 / 现场 / 内部）都走同一张模板进来，分诊人才能在 3 个工作日内给你答复；散在群消息里的需求没人接、也没人记得住（设计 §4.1）。
+    来源再多（集团 / 市场 / 客户 / 现场 / 内部）都走同一张模板进来，分诊人才能在 3 个工作日内给你答复；散在群消息里的需求没人接、也没人记得住。
   </div>
 </div>
 
@@ -100,7 +100,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   </figure>
   <div class="box why">
     <b>🔍 为什么验收标准空泛会被打回？</b>
-    单据质量靠两道兜底：模板示例给"好单"的样子 + 分诊打回机制（设计 §7.3）。"优化一下体验"这种单没人知道做完没做完。
+    单据质量靠两道兜底：模板示例给"好单"的样子 + 分诊打回机制。"优化一下体验"这种单没人知道做完没做完。
   </div>
 </div>
 
@@ -113,7 +113,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   </figure>
   <div class="box why">
     <b>🔍 为什么强调 3 日内分诊？</b>
-    入口响应速度决定大家愿不愿意提单——这是口头文化能否被替代的胜负手（设计 §4.2）。分诊堵没堵，管理者一眼能看（见任务流 B 第 3 步）。
+    入口响应速度决定大家愿不愿意提单——这是口头文化能否被替代的胜负手。分诊堵没堵，管理者一眼能看（见任务流 B 第 3 步）。
   </div>
 </div>
 
@@ -126,7 +126,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   </figure>
   <div class="box why">
     <b>🔍 为什么不用发消息催进度？</b>
-    追溯链由系统自动生成，不靠人事后补录（设计 §5.1）：单的状态就是进度，催问的答案都在单上。需要外部验收的单（台架 / 现场确认）合入后进"待验证"，验收人通过后手关（§4.3）。
+    追溯链由系统自动生成，不靠人事后补录：单的状态就是进度，催问的答案都在单上。需要外部验收的单（台架 / 现场确认）合入后进"待验证"，验收人通过后手关。
   </div>
 </div>
 
@@ -150,7 +150,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   </figure>
   <div class="box why">
     <b>🔍 例会只看板、不念稿</b>
-    "待验证挂了一周的单"自动成为议程（设计 §6）。不做工时、不做燃尽——版本制交付，看单数就够了。
+    "待验证挂了一周的单"自动成为议程。不做工时、不做燃尽——版本制交付，看单数就够了。
   </div>
 </div>
 
@@ -163,7 +163,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   </figure>
   <div class="box why">
     <b>🔍 为什么管理者要盯受理台？</b>
-    提单人的意愿是这条流程的命脉，而意愿取决于响应速度（设计 §10）——积压视图就是分诊健康的仪表盘。
+    提单人的意愿是这条流程的命脉，而意愿取决于响应速度——积压视图就是分诊健康的仪表盘。
   </div>
 </div>
 
@@ -188,30 +188,18 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 <h2>红线清单</h2>
 <div class="box danger">
   <b>🚫 群里 / 口头提需求不算数</b>
-  体系只认板上的单——群消息一概回"请提单"（设计 §7.3）。口头文化是这条流程唯一的对手。
+  体系只认板上的单——群消息一概回"请提单"。口头文化是这条流程唯一的对手。
 </div>
 <div class="box danger">
   <b>🚫 单里不贴客户商务 / 合同细节</b>
-  需求说清楚就行，商务条款不进工单系统——DLP 意识延伸到需求侧（设计 §7.3）。
+  需求说清楚就行，商务条款不进工单系统——DLP 意识延伸到需求侧。
 </div>
 <div class="box danger">
   <b>🚫 管理者不绕过分诊直接派活</b>
-  排期是域 Owner 把单拖进里程碑（设计 §4.4），不是领导打招呼——绕过受理台的活没有追溯链。
+  排期是域 Owner 把单拖进里程碑，不是领导打招呼——绕过受理台的活没有追溯链。
 </div>
 
-<h2>延伸阅读</h2>
-<p>设计文档（docs/design/2026-09-03-requirement-flow-design.md）：</p>
-<ul>
-  <li>§4.1 统一受理台 / §4.2 分诊值班 / §4.3 状态机</li>
-  <li>§5 追溯闭环（正向 Closes 关单 / 反向 manifest 三跳）</li>
-  <li>§6 进度可视化 / §7.3 防滥用边界</li>
-</ul>
-<p>原型验收（docs/design/2026-09-07-prototype-verification.md）：</p>
-<ul>
-  <li>§1 阶段三矩阵（四场景证据链，截图 32–43）</li>
-</ul>
-
-<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01） · 设计文档：docs/design/2026-09-03-requirement-flow-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01）</footer>
 
 </div>
 </body>

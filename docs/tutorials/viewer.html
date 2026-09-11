@@ -74,10 +74,10 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
 </table>
 <div class="box why">
   <b>🔍 为什么到处都是 403？</b>
-  看到 403 不是系统坏了，是权限边界在正常工作（§4.3）——需要看代码时找仓库 Owner 加 Reporter，而不是想办法绕。
+  看到 403 不是系统坏了，是权限边界在正常工作——需要看代码时找仓库 Owner 加 Reporter，而不是想办法绕。
 </div>
 <div class="box why">
-  <b>🔍 镜像和模型在哪？（二阶段新增，§6.4）</b>
+  <b>🔍 镜像和模型在哪？</b>
   容器镜像存 Harbor、模型权重存 MinIO，不挂在 Release 里——这两类要单独授权，找平台组开。你（Guest）的 Release 下载通道不变，仍只下 .bin 与 manifest。
 </div>
 
@@ -106,7 +106,7 @@ footer{color:var(--mut);font-size:13px;border-top:1px solid var(--line);margin-t
   <p>打开 manifest.json 看 <b>name / commit / build_time / runner</b> 四个字段——"手上这个包是哪个版本、什么时候构建"一查即知。</p>
   <div class="box why">
     <b>🔍 为什么下完先看 manifest？</b>
-    现场刷错版本是最高频的事故来源（§6.3）——花 30 秒核对四个字段，你就知道自己手上拿的到底是哪个 commit、什么时候、在哪台机构建的。
+    现场刷错版本是最高频的事故来源——花 30 秒核对四个字段，你就知道自己手上拿的到底是哪个 commit、什么时候、在哪台机构建的。
   </div>
 </div>
 
@@ -130,29 +130,16 @@ fatal: The requested URL returned error: 403</span></pre>
 </div>
 <div class="box tip">
   <b>💡 Release 页没有附件</b>
-  找 Owner 确认该版本是否已发布——未晋升的 tag 没有 Release（§6.3），只有 build 绿了且有人手动批准晋升后，附件才会出现。
+  找 Owner 确认该版本是否已发布——未晋升的 tag 没有 Release，只有 build 绿了且有人手动批准晋升后，附件才会出现。
 </div>
 
 <h2>红线清单</h2>
 <div class="box danger">
   <b>🚫 制品与 manifest 只在自己权限范围内使用</b>
-  你被授权下载，不等于可以转发——把 .bin 与 manifest.json 转给未授权人员，等于替对方绕过了权限边界（§4.3）。
+  你被授权下载，不等于可以转发——把 .bin 与 manifest.json 转给未授权人员，等于替对方绕过了权限边界。
 </div>
 
-<h2>延伸阅读</h2>
-<p>设计文档（docs/design/2026-08-31-excavator-code-management-design.md）：</p>
-<ul>
-  <li>§4.3 权限</li>
-  <li>§6.3 制品晋升与追溯</li>
-  <li>§6.4 制品与镜像存储分工（镜像/模型归宿）</li>
-</ul>
-<p>原型验收（docs/design/2026-09-07-prototype-verification.md）：</p>
-<ul>
-  <li>§2 角色模拟验收·guest1——Release 下载 ✅、clone 403 就是你这条通道的验收记录</li>
-  <li>§1 阶段二矩阵（Harbor/MinIO 接入）</li>
-</ul>
-
-<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01） · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 教程基于本地原型实例截图（GitLab 侧 2026-09-09 极狐重拍，Harbor/MinIO 图沿用 09-01）</footer>
 
 </div>
 </body>

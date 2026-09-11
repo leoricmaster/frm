@@ -85,7 +85,7 @@ details .dbody{padding:4px 16px 12px}
   <span class="no">1</span><h3>部署准备</h3>
   <table>
     <tr><th>项</th><th>要求</th><th>说明</th></tr>
-    <tr><td>主机</td><td>8C / 16G / 200G SSD</td><td>设计 §7；原型机 62G / 32C 富余放宽</td></tr>
+    <tr><td>主机</td><td>8C / 16G / 200G SSD</td><td>原型机 62G / 32C 富余放宽</td></tr>
     <tr><td>Docker + compose</td><td>已装</td><td>compose v2（<code>deploy.resources.limits</code> 依赖 v2）</td></tr>
     <tr><td>镜像预拉</td><td>4 个，共约 7.1G</td><td>gitlab-jh 6.21G / runner 489M / minio 241M / mc 117M，tag 见「查阅：架构与组件表」；离线机房先在有网环境拉好再导入</td></tr>
     <tr><td>端口占用</td><td>8081 / 8082 / 8083 / 9002 / 9003</td><td><b>示例值</b>：原型因测试机 8080 / 9000 / 9001 已被占而改此段；端口空闲的机器可改回默认，改了须同步改 compose 端口映射与 <code>external_url</code></td></tr>
@@ -108,7 +108,7 @@ curl -sf http://127.0.0.1:8081/users/sign_in &gt;/dev/null &amp;&amp; echo ready
       <pre class="cmd">docker exec -it frm-runner gitlab-runner register \
   --url http://frm-gitlab:8081 --token &lt;token&gt; \
   --executor shell --name frm-shell-runner</pre></li>
-    <li><b>为什么是 shell 而非 docker executor</b>：shell + 挂宿主 <code>docker.sock</code>（二阶段设计 §3 实测口径），CI 里的 docker build / push / pull 即宿主 daemon 操作，Harbor 信任只需配宿主一处。compose 的 <code>group_add: "125"</code> 即为 runner 用户可访问 sock——<b>GID 以宿主实际为准</b>（<code>ls -l /var/run/docker.sock</code> 查属组，原型机为 125），换机不改会注册成功但 job 内 docker 报权限错。</li>
+    <li><b>为什么是 shell 而非 docker executor</b>：shell + 挂宿主 <code>docker.sock</code>，CI 里的 docker build / push / pull 即宿主 daemon 操作，Harbor 信任只需配宿主一处。compose 的 <code>group_add: "125"</code> 即为 runner 用户可访问 sock——<b>GID 以宿主实际为准</b>（<code>ls -l /var/run/docker.sock</code> 查属组，原型机为 125），换机不改会注册成功但 job 内 docker 报权限错。</li>
     <li>验证：管理区 runner 列表在线（绿点）；push 任一含 <code>.gitlab-ci.yml</code> 的提交，流水线跑通即闭环。</li>
   </ol>
 </div>
@@ -127,8 +127,8 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
   </ol>
   <div class="box why">
     <b>🔍 为什么关注册？</b>
-    账号一律管理员开通（见 §6.1），契合设计 §3「平台组统一开通」口径，也为阶段 1 接 LDAP 时账号名对齐留干净底子。<code>can_create_group</code> 同关，防止用户乱建顶层组。
-    <p>LDAP 域账号对接是阶段 1 正式实施项，现阶段用本地账号。上线前管理员按 AD 用户名建号，LDAP 接通后同名域账号首登即复用，切换干净（ADR-0005）。</p>
+    账号一律管理员开通（见 §6.1），契合「平台组统一开通」口径，也为阶段 1 接 LDAP 时账号名对齐留干净底子。<code>can_create_group</code> 同关，防止用户乱建顶层组。
+    <p>LDAP 域账号对接是阶段 1 正式实施项，现阶段用本地账号。上线前管理员按 AD 用户名建号，LDAP 接通后同名域账号首登即复用，切换干净。</p>
   </div>
 </div>
 
@@ -147,7 +147,7 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
 
 <figure class="shot">
 <svg viewBox="0 0 900 420" role="img" aria-label="系统架构图：宿主机 docker compose 内跑 gitlab、runner、minio、minio-init、宿主 Docker daemon；开发者从外部访问 gitlab；AD/LDAP、Runner 池、Harbor、备份存储为按阶段接入的扩展位" font-family="system-ui,'PingFang SC','Microsoft YaHei',sans-serif" style="width:100%;height:auto;display:block">
-  <title>系统架构（源 gitlab-ops.md §1 mermaid）</title>
+  <title>系统架构</title>
   <defs>
     <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="#1f6feb"/>
@@ -200,7 +200,7 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
   <rect x="8" y="204" width="175" height="88" rx="6" fill="#fff8c5" stroke="#9a6700" stroke-width="1.4"/>
   <text x="95" y="226" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2328">Runner 池 · 独立虚机</text>
   <text x="95" y="246" text-anchor="middle" font-size="13" fill="#1f2328">fw-build×2 / veh-build</text>
-  <text x="95" y="266" text-anchor="middle" font-size="13" fill="#1f2328">cloud-deploy（ADR-0010）</text>
+  <text x="95" y="266" text-anchor="middle" font-size="13" fill="#1f2328">cloud-deploy</text>
 
   <!-- 备份存储（虚线侧） -->
   <rect x="8" y="310" width="175" height="45" rx="6" fill="#fff8c5" stroke="#9a6700" stroke-width="1.4"/>
@@ -231,20 +231,19 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
   <!-- 虚线边（按阶段推进的扩展位） -->
   <path d="M330,46 V92" fill="none" stroke="#9a6700" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#ahy)"/>
   <text x="338" y="68" text-anchor="start" font-size="10.5" fill="#9a6700">阶段 1 接入</text>
-  <text x="338" y="82" text-anchor="start" font-size="10.5" fill="#9a6700">ADR-0005</text>
 
   <path d="M183,244 H198 V150 H225" fill="none" stroke="#9a6700" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#ahy)"/>
   <text x="192" y="186" text-anchor="end" font-size="10.5" fill="#9a6700">构建负载增长后拆出</text>
 
   <path d="M183,333 H206 V170 H260 V154" fill="none" stroke="#9a6700" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#ahy)"/>
-  <text x="95" y="380" text-anchor="middle" font-size="10.5" fill="#9a6700">每日全量 + 异地 · ADR-0020</text>
+  <text x="95" y="380" text-anchor="middle" font-size="10.5" fill="#9a6700">每日全量 + 异地</text>
 
   <path d="M715,330 H435" fill="none" stroke="#9a6700" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#ahy)"/>
-  <text x="577" y="320" text-anchor="middle" font-size="10.5" fill="#9a6700">ADR-0013 出口收敛</text>
+  <text x="577" y="320" text-anchor="middle" font-size="10.5" fill="#9a6700">出口收敛</text>
 </svg>
 </figure>
 
-<p>实线=本次落地（与 <code>gitlab-compose-test/docker-compose.yml</code> 一一对照）；虚线=设计已定、按阶段推进的扩展位，编号即决策锚点。</p>
+<p>实线=本次落地（与 <code>gitlab-compose-test/docker-compose.yml</code> 一一对照）；虚线=按阶段推进的扩展位。</p>
 
 <p><b>组件表（yml 评审的准绳）</b>：</p>
 <table>
@@ -255,9 +254,9 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
   <tr><td>minio-init</td><td>幂等建三桶，跑完即退，重跑无害</td><td><code>mc:RELEASE.2025-08-13T08-35-41Z</code></td><td>—</td><td>—</td><td>0.5C / 512M</td></tr>
 </table>
 <ul>
-  <li>版本依据：均为原型实测在跑版本；runner 与 GitLab 主版本对齐（19.3.1），钉版纪律同 ADR-0021，离线机房预拉清单随之确定。</li>
-  <li>上限口径：设计 §7 生产主机 8C / 16G，四容器合计 8C / 12.5G，给 OS 与页缓存留余量。单机起步栈 runner 限 2G，重负载构建（固件交叉编译等）按设计 §7 拆独立 Runner 虚机，不在本栈内扛。</li>
-  <li><b>本表是准绳：改 yml 先对表；表要改先过设计文档。</b></li>
+  <li>版本依据：均为原型实测在跑版本；runner 与 GitLab 主版本对齐（19.3.1），钉版纪律一致，离线机房预拉清单随之确定。</li>
+  <li>上限口径：生产主机 8C / 16G，四容器合计 8C / 12.5G，给 OS 与页缓存留余量。单机起步栈 runner 限 2G，重负载构建（固件交叉编译等）按需拆独立 Runner 虚机，不在本栈内扛。</li>
+  <li><b>本表是准绳：改 yml 先对表；表要改先评审。</b></li>
 </ul>
 
 <h2>查阅：日常运维</h2>
@@ -272,13 +271,13 @@ s.update!(vscode_extension_marketplace: m)'</pre></li>
   <img src="assets/02-admin-new-user.png" alt="GitLab 管理区新建用户页，填写姓名 / 用户名 / 邮箱与初始密码">
   <figcaption>新建用户 ｜ 用户名对齐 AD，初始密码线下交付，账号信息也通过该邮箱送达</figcaption>
 </figure>
-<p>初始密码线下交付（口述 / 凭证通道），要求首登改密。权限另算——建号后由仓库 Owner 加组加角色（CE 无分组同步，见 ADR-0005 边界表），账号 ≠ 权限。</p>
+<p>初始密码线下交付（口述 / 凭证通道），要求首登改密。权限另算——建号后由仓库 Owner 加组加角色（CE 无分组同步），账号 ≠ 权限。</p>
 
 <h3>6.2 封禁与离职回收</h3>
-<p>GitLab 不自动清离职者存量访问（SSH key / 令牌 / 会话）。阶段 1 实施定时脚本比对 AD 禁用名单 → 调 API 封禁账号（ADR-0005）。原型验证即以此模式操作（验证结论 §3 实测#12）。</p>
+<p>GitLab 不自动清离职者存量访问（SSH key / 令牌 / 会话）。阶段 1 实施定时脚本比对 AD 禁用名单 → 调 API 封禁账号。原型验证即以此模式操作。</p>
 
 <h3>6.3 备份与恢复</h3>
-<p>GitLab 原生全量备份每日，含配置 + 仓库 + 数据库，保留异地 / 离线副本；恢复演练每半年一次（ADR-0020）。MinIO 数据按资产备份（数据集 / 权重 / 现场采集不可再生）。<b>未演练过的备份等于没有备份。</b></p>
+<p>GitLab 原生全量备份每日，含配置 + 仓库 + 数据库，保留异地 / 离线副本；恢复演练每半年一次。MinIO 数据按资产备份（数据集 / 权重 / 现场采集不可再生）。<b>未演练过的备份等于没有备份。</b></p>
 
 <h2>查阅：原型复现（测试 fixture）</h2>
 
@@ -303,29 +302,21 @@ python3 rebuild_jh_state.py A|B|...|Z</pre>
     <tr><td>J</td><td>全员中文 + 吊销模拟 PAT + 终态核对</td></tr>
     <tr><td>Z</td><td>吊销模拟 PAT（收尾单独跑）</td></tr>
   </table>
-  <p>进度落盘 <code>/tmp/jh-rebuild-state.json</code>，可断点续跑。API 调用已按验证结论 §3 的坑位规避（<code>/repository/files</code> 恒 404 一律走 Commits API、merge 必带 sha 等）。</p>
-  <p><b>证据与留档</b>：实例终态镜像 <code>gitlab-compose-test/*-repo/</code>；验证截图 01–43 <code>gitlab-compose-test/screenshots/</code>；验证结论 <code>docs/design/2026-09-07-prototype-verification.md</code> §5。</p>
+  <p>进度落盘 <code>/tmp/jh-rebuild-state.json</code>，可断点续跑。API 调用已按实测坑位规避（<code>/repository/files</code> 恒 404 一律走 Commits API、merge 必带 sha 等）。</p>
+  <p><b>证据与留档</b>：实例终态镜像 <code>gitlab-compose-test/*-repo/</code>；验证截图 01–43 <code>gitlab-compose-test/screenshots/</code>。</p>
 </div>
 </details>
 
 <h2>查阅：已知坑位</h2>
-<p>极狐与 CE 的七处 API / 路由差异、组看板懒创建、<code>/repository/files</code> 恒 404 等规避方式，见 <code>docs/design/2026-09-07-prototype-verification.md</code> §3 差异表。凡脚本化操作（含 governance.html 的 API 批量建组树）先过一遍该表。</p>
+<p>极狐与 CE 的七处 API / 路由差异、组看板懒创建、<code>/repository/files</code> 恒 404 等规避方式。凡脚本化操作（含 governance.html 的 API 批量建组树）先逐条核对。</p>
 
 <h2>红线清单</h2>
-<div class="box danger"><b>🚫 未演练过的备份等于没有备份</b>恢复演练每半年一次（ADR-0020）。</div>
-<div class="box danger"><b>🚫 组件表是准绳</b>改 yml 先对表；表要改先过设计文档。</div>
+<div class="box danger"><b>🚫 未演练过的备份等于没有备份</b>恢复演练每半年一次。</div>
+<div class="box danger"><b>🚫 组件表是准绳</b>改 yml 先对表；表要改先评审。</div>
 <div class="box danger"><b>🚫 原型口令仅限原型栈</b>正式实施 root 口令走凭证通道，首登即改。</div>
 <div class="box danger"><b>🚫 实例运行过再改应用设置＝直改数据库</b>gitlab-rails runner 改 current_application_settings；改 compose 环境变量不再生效。</div>
 
-<h2>延伸阅读</h2>
-<ul>
-  <li>设计 §7 —— docs/design/2026-08-31-excavator-code-management-design.md</li>
-  <li>ADR-0003 / 0004 / 0005 / 0006 / 0009 / 0010 / 0020 / 0021 —— docs/adr/</li>
-  <li>验证结论 §3（极狐与 CE 差异表）—— docs/design/2026-09-07-prototype-verification.md</li>
-  <li>原型验证结论 §5（证据与留档）—— docs/design/2026-09-07-prototype-verification.md</li>
-</ul>
-
-<footer>智能挖机项目代码管理体系 · 前身 docs/ops/gitlab-ops.md（2026-09-10 教程化，设计见 docs/superpowers/specs/2026-09-10-tutorials-ia-rework-design.md） · 治理篇见 governance.html · 设计文档：docs/design/2026-08-31-excavator-code-management-design.md</footer>
+<footer>智能挖机项目代码管理体系 · 治理篇见 governance.html</footer>
 
 </div>
 </body>
